@@ -328,6 +328,9 @@ write.csv(oct.pre.filter, "R_outputs/Crangonyx_Oct17_pre-filter.csv")
 write.csv(oct.post.filter, "R_outputs/Crangonyx_Oct17_post-filter.csv")
 ```
 
+# FROM HERE!!!!
+To work on cleaning names, adding variables (time, location, sample_type, etc..) plus splitting eDNA from guts. Add kick-samples
+
 
 ```{r removing pos and neg samples plus renaming}
 rownames(crang.clean.may) = gsub("CH[.]", "CH", rownames(crang.clean.may))
