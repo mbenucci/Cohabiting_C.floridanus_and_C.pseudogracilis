@@ -237,66 +237,79 @@ After removing unwanted taxa we retained 95.16% and 84.01% of the total reads fr
 
 Investigate Negative and Positive samples to see the level of contamination.
 
-```{r may threshold}
-## Positive samples from `crang.clean.may`
-may.pos = may.clean[,c(grep("POS", colnames(may.clean)))]
-may.pos = as.data.frame(t(may.pos))
+```{r contamination control}
+pos.may = may.clean[,grep("POS", colnames(may.clean))]
+pos.oct = oct.clean[,grep("POS", colnames(oct.clean))]
 
-may.pos[,]/rowSums(may.pos)
-#colnames(may.pos)
+colSums(pos.may)
+colSums(pos.oct)
 
+# We remove all taxa equal to 0
+
+pos.may = subset(pos.may, subset = rowSums(pos.may) > 0)
+pos.oct = subset(pos.oct, subset = rowSums(pos.oct) > 0)
+
+rowSums(pos.may)
+rowSums(pos.oct)
+```
+
+Checking the N reads belonging to the positive Taxa _Osmia bicornis_ for both May positive samples (N reads=14867 and 39438), and October positive samples (N reads = 7284 and 4963). We detected however, also Hymeoptera taxa, which we decided to take into account as if it belonged to _O. bicornis_
+
+```{r positive taxa}
+colSums(pos.may["Osmia_bicornis",])
+colSums(pos.oct["Osmia_bicornis",])
+
+colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),])
+colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),])
+
+(colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.may)
+(colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.oct)
+
+# second level to test for May =0.00068
+thres.may =  0.00031
+
+# second level to test for October = 0.00073
+thres.oct =  0.0039
+```
+
+Considering these values of contamination, decided to use the threshold of 0.03% for May, and of 0.39% for October
+
+```{r creating pre and post filter}
 may.clean = subset(may.clean[,-c(grep("POS|NEG", colnames(may.clean))),])
 may.pre.filter = as.data.frame(t(may.clean))
 may.pre.filter = may.pre.filter[,]/rowSums(may.pre.filter)
-may.pre.filter[is.na(may.pre.filter)] <- 0
-
-thres.may =  0.0003
-```
-
-```{r october threshold}
-## Positive samples from `crang.clean.oct`
-oct.pos = oct.clean[,c(grep("POS", colnames(oct.clean)))]
-oct.pos = as.data.frame(t(oct.pos))
-
-oct.pos[,]/rowSums(oct.pos)
-#colnames(oct.pos)
 
 oct.clean = subset(oct.clean[,-c(grep("POS|NEG", colnames(oct.clean))),])
 oct.pre.filter = as.data.frame(t(oct.clean))
 oct.pre.filter = oct.pre.filter[,]/rowSums(oct.pre.filter)
-oct.pre.filter[is.na(oct.pre.filter)] <- 0
-
-thres.oct =  0.004
 ```
 
 
-
-```{r applying threshold May}
+```{r applying contamination threshold for May}
 may.post.filter = as.data.frame(may.pre.filter)
 may.post.filter[][may.post.filter <= thres.may] <- 0
 
-crang.clean.may = as.data.frame(t(crang.clean.may))
-crang.clean.may[][crang.clean.may[,]/rowSums(crang.clean.may) <= thres.may] <- 0
+may.clean = as.data.frame(t(may.clean))
+may.clean[][may.clean[,]/rowSums(may.clean) <= thres.may] <- 0
 
 ## Writing pre- and post-filter data to output
-write.csv(crang.clean.may, "Crangonyx_May17_cleaned_reads.csv")
-write.csv(may.pre.filter, "Crangonyx_May17_pre-filter.csv")
-write.csv(may.post.filter, "Crangonyx_May17_post-filter.csv")
+write.csv(may.clean, "R_outputs/Crangonyx_May17_cleaned_reads.csv")
+write.csv(may.pre.filter, "R_outputs/Crangonyx_May17_pre-filter.csv")
+write.csv(may.post.filter, "R_outputs/Crangonyx_May17_post-filter.csv")
 ```
 
 
-
-```{r applying threshold Oct}
+```{r applying contamination threshold for Oct}
 oct.post.filter = as.data.frame(oct.pre.filter)
 oct.post.filter[][oct.post.filter <= thres.oct] <- 0
 
-crang.clean.oct = as.data.frame(t(crang.clean.oct))
-crang.clean.oct[][crang.clean.oct[,]/rowSums(crang.clean.oct) <= thres.oct] <- 0
+oct.clean = as.data.frame(t(oct.clean))
+oct.clean[][oct.clean[,]/rowSums(oct.clean) <= thres.oct] <- 0
 
 ## Writing pre- and post-filter data to output
-write.csv(crang.clean.oct, "Crangonyx_Oct17_cleaned_reads.csv")
-write.csv(oct.pre.filter, "Crangonyx_Oct17_pre-filter.csv")
-write.csv(oct.post.filter, "Crangonyx_Oct17_post-filter.csv")
+write.csv(oct.clean, "R_outputs/Crangonyx_Oct17_cleaned_reads.csv")
+write.csv(oct.pre.filter, "R_outputs/Crangonyx_Oct17_pre-filter.csv")
+write.csv(oct.post.filter, "R_outputs/Crangonyx_Oct17_post-filter.csv")
 ```
 
 
