@@ -264,22 +264,22 @@ colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),])
 
 (colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.may)
 (colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.oct)
+```
 
-# second level to test for May =0.00068
+Considering these values of contamination, decided to use the threshold of 0.03% for May, and of 0.39% for October.
+
+```{r setting threshold values}
 thres.may =  0.00031
-
-# second level to test for October = 0.00073
 thres.oct =  0.0039
 ```
 
-Considering these values of contamination, decided to use the threshold of 0.03% for May, and of 0.39% for October
 
 ```{r creating pre and post filter}
-may.clean = subset(may.clean[,-c(grep("POS|NEG", colnames(may.clean))),])
+may.clean = subset(may.clean[,-c(grep("POS", colnames(may.clean))),])
 may.pre.filter = as.data.frame(t(may.clean))
 may.pre.filter = may.pre.filter[,]/rowSums(may.pre.filter)
 
-oct.clean = subset(oct.clean[,-c(grep("POS|NEG", colnames(oct.clean))),])
+oct.clean = subset(oct.clean[,-c(grep("POS", colnames(oct.clean))),])
 oct.pre.filter = as.data.frame(t(oct.clean))
 oct.pre.filter = oct.pre.filter[,]/rowSums(oct.pre.filter)
 ```
@@ -291,13 +291,27 @@ may.post.filter[][may.post.filter <= thres.may] <- 0
 
 may.clean = as.data.frame(t(may.clean))
 may.clean[][may.clean[,]/rowSums(may.clean) <= thres.may] <- 0
+```
 
+We still detected some contamination in the Negative sample from May containing 2889 reads from _Dikerogammarus villosus_, and 71 reads from _Gammarus tigrinus_; however that threshold would be too high to be applied and still retain valid information.
+
+```{r negative sample from May}
+may.clean["NEGATIVE",]
+may.clean["NEGATIVE",][may.clean["NEGATIVE",] > 0]
+
+may.clean = subset(may.clean[-c(grep("NEG", rownames(may.clean))),])
+may.pre.filter = subset(may.pre.filter[-c(grep("NEG", rownames(may.pre.filter))),])
+may.post.filter = subset(may.post.filter[-c(grep("NEG", rownames(may.post.filter))),])
+```
+
+```{r saving May outputs}
 ## Writing pre- and post-filter data to output
 write.csv(may.clean, "R_outputs/Crangonyx_May17_cleaned_reads.csv")
 write.csv(may.pre.filter, "R_outputs/Crangonyx_May17_pre-filter.csv")
 write.csv(may.post.filter, "R_outputs/Crangonyx_May17_post-filter.csv")
 ```
 
+We didn't detect any visible contamination in the October samples, and the Negative sample was removed upstream of the contamination control.
 
 ```{r applying contamination threshold for Oct}
 oct.post.filter = as.data.frame(oct.pre.filter)
@@ -305,7 +319,9 @@ oct.post.filter[][oct.post.filter <= thres.oct] <- 0
 
 oct.clean = as.data.frame(t(oct.clean))
 oct.clean[][oct.clean[,]/rowSums(oct.clean) <= thres.oct] <- 0
+```
 
+```{r saving October outputs}
 ## Writing pre- and post-filter data to output
 write.csv(oct.clean, "R_outputs/Crangonyx_Oct17_cleaned_reads.csv")
 write.csv(oct.pre.filter, "R_outputs/Crangonyx_Oct17_pre-filter.csv")
