@@ -49,6 +49,12 @@ infile_oct17 = read.csv("data/CO1DvAug18-merged-forwonly_nonchimera-c97-cov2-id9
 
 Removing the taxonomy column from each input files and saving them into separate files.
 
+
+```{r}
+head(infile_may17)
+head(infile_oct17)
+```
+
 ```{r removing_taxonomy}
 ## Custom function to format the taxonomy column
 
@@ -74,6 +80,10 @@ infile_oct17 = infile_oct17[,!(colnames(infile_oct17)%in% 'taxomomy')]
 
 taxa.split.oct = format_taxonomy(taxa.oct17)
 taxa.split.oct = data.frame(taxa.split.oct)
+```
+
+```{r}
+
 ```
 
 ```{r taxa_output, include=TRUE}
@@ -146,7 +156,9 @@ ggplot(full.depth, aes(time, value)) +
   theme_bw() + labs(x="Data sets", y="Sample read depth (N reads)")
 ```
 
-Calculating read depth threshold
+# 1. Initial Quality Control
+
+To calculate sample read depth for both input files, in order to quality check the overall sequencing, first all samples that didn't sequence at all (sample N read equal to 0) need to be removed. Then the mean and standard deviation for each data set can be calculated, and quality check of the samples read depth applied. 
 
 ```{r mean read depth, include=F}
 may17.reads = subset(may17.reads, select=colSums(may17.reads) > 0)
@@ -169,7 +181,7 @@ t.test(colSums(may17.reads), colSums(oct17.reads), var.equal = T)
 
 ## Read depth threshold
 
-The coverage filter (based on `mean(sample_DNA_reads)-sd(sample_DNA_reads)`) for the sequencing from May 2017 results negative. We then decided to use a standard 1000 reads as coverage filter, which is very similar to the coverage calculated for the sequencing from October 2017 (1185 reads). 
+The coverage filter (based on `mean(sample_DNA_reads)-sd(sample_DNA_reads)`) for the sequencing from May 2017 results negative. We then decided to use a standard 1000 reads as coverage filter, which is very similar to the coverage calculated for the sequencing from October 2017 (1902 reads). 
 
 ```{r read depth filter, include=T}
 cov_may17 = mean(colSums(may17.reads))-sd(colSums(may17.reads))
@@ -177,6 +189,13 @@ cov_oct17 = mean(colSums(oct17.reads))-sd(colSums(oct17.reads))
 
 crang.may = subset(may17.reads, select = colSums(may17.reads) >= 1000)
 crang.oct = subset(oct17.reads, select = colSums(oct17.reads) >= cov_oct17)
+
+# Checking N samples retained
+count(colSums(may17.reads) <= cov_may17)[1,2]
+count(colSums(oct17.reads) <= cov_oct17)[1,2]
+count(colSums(may17.reads) <= cov_may17)[1,2]/(count(colSums(may17.reads) > 0)[,2])
+count(colSums(oct17.reads) <= cov_oct17)[1,2]/(count(colSums(oct17.reads) > 0)[,2])
+```
 ```
 
 
