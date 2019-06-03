@@ -1,0 +1,601 @@
+---
+title: "C_floridanus"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=F}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r environment setup, include=F}
+## R(v3.5.1 - Win)
+#.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win")))
+
+## R(v3.5.1 - OSX)
+#.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_osx", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_osx")))
+
+## R(v3.5.1 - ubuntu)
+.libPaths(c("/home/mb/Dropbox/PhD Hull/PhD docs/Thesis/R_stats/rlib3.5_unix", .libPaths("/home/mb/Dropbox/PhD\ Hull/PhD\ docs/Thesis/R_stats/rlib3.5_unix")))
+```
+
+```{r directory, include=FALSE}
+dir()
+rm(list=ls())
+ls()
+```
+
+Setting up the environment for R using the following packages.
+
+```{r packages loading, include=F}
+pack.list = c("aod","ape","bipartite","boot","devtools","dplyr","EcoSimR","ggplot2","ggsignif","gplots","grid","gridExtra","iNEXT","lattice","lme4","lmtest","MASS","mgcv","msa","network","plyr","reshape2","spaa","stringi","tidyr","UpSetR","vegan","zoo")
+new.packages = pack.list[!(pack.list %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, repos="https://cran.rstudio.com")
+lapply(pack.list, require, character.only=T)
+```
+
+```{r session}
+sessionInfo()
+```
+
+The data used in this analysis were generated across 2 separate sequencing runs; one containing gut contentns and eDNA samples collected in May 2017, the second with samples collected in October 2017. Despite the date of the sequencing, all data frames and variable will be named after the month of collection for practicality.
+
+```{r input_files}
+infile_may17 = read.csv("data/CO1Aug17-merge-forwonly-nonchimera-c97-cov2_id97-by-taxonomy-readcounts.blast.csv", header=T)
+infile_oct17 = read.csv("data/CO1DvAug18-merged-forwonly_nonchimera-c97-cov2-id97_by-taxonomy-readcounts.csv", header=T)
+```
+
+Removing the taxonomy column from each input files and saving them into separate files.
+
+```{r removing_taxonomy}
+## Custom function to format the taxonomy column
+
+format_taxonomy <- function(input_data){
+  for (t in as.data.frame(input_data)){
+    n = gsub("\\['|\\']", "", t)
+    i = gsub("\\'", "", n)
+    taxa.split = data.frame(cbind(i))
+  }
+  return(taxa.split)
+}
+
+# First input file
+taxa.may17 = infile_may17$taxomomy
+infile_may17 = infile_may17[,!(colnames(infile_may17)%in% 'taxomomy')]
+
+taxa.split.may = format_taxonomy(taxa.may17)
+taxa.split.may = data.frame(taxa.split.may)
+
+# Second input file
+taxa.oct17 = infile_oct17$taxomomy
+infile_oct17 = infile_oct17[,!(colnames(infile_oct17)%in% 'taxomomy')]
+
+taxa.split.oct = format_taxonomy(taxa.oct17)
+taxa.split.oct = data.frame(taxa.split.oct)
+```
+
+```{r taxa_output, include=TRUE}
+# Writing taxonomy outputs
+write.csv(taxa.split.may, "R_outputs/CO1DvMay17_taxonomy.csv")
+write.csv(taxa.split.oct, "R_outputs/CO1DvOct17_taxonomy.csv")
+```
+
+Each initial input file was generated as the result of two separate taxonomic assignment operations. First DNA centroids were assigned against reference database, the DNA reads that resulted unassigned were then assigned against the NCBI nucleotide (nt) database (available at: `ftp://ftp.ncbi.nlm.nih.gov/blast/db/` - updated to early September 2018).
+Each operation generated two separate files which were then merged. The following step is to remove potential duplicate taxa records that would prevent R from definying the row names with the taxa names. Because we removed the last column with the taxonomy information, we can use the whole frame; otherwise we would have needed to avoid the last column in each frame.
+
+```{r removing duplicates}
+may17.reads = as.data.frame(infile_may17 %>% group_by(X.OTU.ID) %>% summarise_all(list(sum)))
+oct17.reads = as.data.frame(infile_oct17 %>% group_by(X.OTU.ID) %>% summarise_all(list(sum)))
+```
+
+Considering the sequencing runs included different experiments, we extract the columns containing headers belonging to the site in which both Crangonyx species were collected. In this case `CH` for the gut contents, and `eCH` for the kick-samples.
+
+```{r extracting_Dv-samples}
+rownames(may17.reads) = may17.reads$X.OTU.ID
+rownames(oct17.reads) = oct17.reads$X.OTU.ID
+
+may17.reads = may17.reads[,!(colnames(may17.reads)%in% 'X.OTU.ID')]
+oct17.reads = oct17.reads[,!(colnames(oct17.reads)%in% 'X.OTU.ID')]
+
+to_remove1 = grep("Ha|Dv5|WB|GW|RB", colnames(may17.reads))
+may17.reads = may17.reads[,-to_remove1]
+
+to_remove2 = grep("pl4|WB|GW|RB", colnames(oct17.reads))
+oct17.reads = oct17.reads[,-to_remove2]
+```
+
+## Checking the number of samples in DNA metbarcoding
+
+```{r setting the rownames}
+rownames(may17.reads) = may17.reads$X.OTU.ID
+rownames(oct17.reads) = oct17.reads$X.OTU.ID
+
+may17.reads = may17.reads[,!(colnames(may17.reads)%in% 'X.OTU.ID')]
+oct17.reads = oct17.reads[,!(colnames(oct17.reads)%in% 'X.OTU.ID')]
+```
+
+## Quality control of the data frames
+
+```{r initial read depth, include=TRUE}
+may17.reads = subset(may17.reads, select = colSums(may17.reads) > 0)
+oct17.reads = subset(oct17.reads, select = colSums(oct17.reads) > 0)
+
+may.depth = as.data.frame(may17.reads)
+oct.depth = as.data.frame(oct17.reads)
+
+may.depth$time = "May"
+oct.depth$time = "Oct"
+
+# Sum of DNA reads by samples to plot the sample read depth
+
+may.depth = melt(may.depth)
+may.depth = may.depth %>% group_by(time, variable) %>% summarise_all(list(sum))
+
+oct.depth = melt(oct.depth)
+oct.depth = oct.depth %>% group_by(time, variable) %>% summarise_all(list(sum))
+
+# Joining both frames, then plotting
+
+full.depth = rbind(may.depth, oct.depth)
+
+ggplot(full.depth, aes(time, value)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(color=c("gray30"), alpha=0.5) +
+  theme_bw() + labs(x="Data sets", y="Sample read depth (N reads)")
+```
+
+Calculating read depth threshold
+
+```{r mean read depth, include=F}
+may17.reads = subset(may17.reads, select=colSums(may17.reads) > 0)
+oct17.reads = subset(oct17.reads, select=colSums(oct17.reads) > 0)
+
+## Mean values
+mean(colSums(may17.reads))
+mean(colSums(oct17.reads))
+
+hist(colSums(may17.reads), breaks=15)
+hist(colSums(oct17.reads), breaks=15)
+```
+
+```{r reads distribution, include=T, echo=F}
+shapiro.test(colSums(may17.reads))
+shapiro.test(colSums(oct17.reads))
+
+t.test(colSums(may17.reads), colSums(oct17.reads), var.equal = T)
+```
+
+## Read depth threshold
+
+The coverage filter (based on `mean(sample_DNA_reads)-sd(sample_DNA_reads)`) for the sequencing from May 2017 results negative. We then decided to use a standard 1000 reads as coverage filter, which is very similar to the coverage calculated for the sequencing from October 2017 (1185 reads). 
+
+```{r read depth filter, include=T}
+cov_may17 = mean(colSums(may17.reads))-sd(colSums(may17.reads))
+cov_oct17 = mean(colSums(oct17.reads))-sd(colSums(oct17.reads))
+
+crang.may = subset(may17.reads, select = colSums(may17.reads) >= 1000)
+crang.oct = subset(oct17.reads, select = colSums(oct17.reads) >= cov_oct17)
+```
+
+
+```{r reads survival boxplot, include=TRUE, echo=FALSE}
+boxplot(colSums(crang.may), colSums(crang.oct), ylab="N reads", xlab="Data frames", names=c("May17", "Oct17"), las=1, cex.axis=0.8)
+```
+
+```{r subsetting samples, include=T}
+crang.may = subset(crang.may[,c(grep("CH|NEG|POS", colnames(crang.may)))])
+crang.oct = subset(crang.oct[,c(grep("CH|NEG.pl1|NEG.pl3|POS.pl1|POS.pl3", colnames(crang.oct)))])
+```
+
+```{r removing empty taxa}
+crang.may = subset(crang.may, subset=rowSums(crang.may) > 0)
+crang.oct = subset(crang.oct, subset=rowSums(crang.oct) > 0)
+
+crang.clean.may = crang.may[!(rownames(crang.may) %in% c("Chrysophyceae_sp.","Cyclostephanos_invisitatus","Dinobryon","Dinobryon_divergens","Dinophyceae","Mallomonas_sp","Melosira_ambiqua","Paraphysomonas_sp.","Penicillium_sclerotiorum","Pythium","Stephanodiscus_cf._minutulus","Thalassiosira_pseudonana","uncultured_Pythium","unassigned")),]
+
+crang.clean.oct = crang.oct[!(rownames(crang.oct) %in% c("Anser_anser","Ascomycota","Aves","Branta_canadensis","Cervus","Chroicocephalus_ridibundus","Chrysochromulina","Chrysochromulina_parva","Chrysophyceae_sp","Cyclostephanos_invisitatus","Cygnus_olor","Dinophyceae","Fistulifera_pelliculosa","Fulica_atra","Gomphonema_parvulum","invertebrate_environmental_sample","Melosira_ambiqua","Mucorales","Mycena_cf._purpureofusca","Navicula_minima","Nitzschia_palea","Paraphysomonas_sp","Percidae","Pinnularia_neomajor","Rhodotorula","Stephanodiscus","Tetradesmus_obliquus","Thalassiosira_pseudonana","unassigned","uncultured_Jaminaea","uncultured_Pythium","Vanellus_vanellus","Verticillium_dahliae")),]
+```
+
+```{r reads retained after clean up}
+(sum(crang.clean.may)/sum(crang.may))*100
+(sum(crang.clean.oct)/sum(crang.oct))*100
+```
+
+Investigate Negative and Positive samples to see the level of contamination.
+
+```{r may threshold}
+## Positive samples from `crang.clean.may`
+may.pos = crang.clean.may[,c(grep("POS", colnames(crang.clean.may)))]
+may.pos = as.data.frame(t(may.pos))
+
+may.pos[,]/rowSums(may.pos)
+#colnames(may.pos)
+
+crang.clean.may = subset(crang.clean.may[,-c(grep("POS|NEG", colnames(crang.clean.may))),])
+may.pre.filter = as.data.frame(t(crang.clean.may))
+may.pre.filter = may.pre.filter[,]/rowSums(may.pre.filter)
+may.pre.filter[is.na(may.pre.filter)] <- 0
+
+thres.may =  0.0003
+```
+
+```{r october threshold}
+## Positive samples from `crang.clean.oct`
+oct.pos = crang.clean.oct[,c(grep("POS", colnames(crang.clean.oct)))]
+oct.pos = as.data.frame(t(oct.pos))
+
+oct.pos[,]/rowSums(oct.pos)
+#colnames(oct.pos)
+
+crang.clean.oct = subset(crang.clean.oct[,-c(grep("POS|NEG", colnames(crang.clean.oct))),])
+oct.pre.filter = as.data.frame(t(crang.clean.oct))
+oct.pre.filter = oct.pre.filter[,]/rowSums(oct.pre.filter)
+oct.pre.filter[is.na(oct.pre.filter)] <- 0
+
+thres.oct =  0.004
+```
+
+
+
+```{r applying threshold May}
+may.post.filter = as.data.frame(may.pre.filter)
+may.post.filter[][may.post.filter <= thres.may] <- 0
+
+crang.clean.may = as.data.frame(t(crang.clean.may))
+crang.clean.may[][crang.clean.may[,]/rowSums(crang.clean.may) <= thres.may] <- 0
+
+## Writing pre- and post-filter data to output
+write.csv(crang.clean.may, "Crangonyx_May17_cleaned_reads.csv")
+write.csv(may.pre.filter, "Crangonyx_May17_pre-filter.csv")
+write.csv(may.post.filter, "Crangonyx_May17_post-filter.csv")
+```
+
+
+
+```{r applying threshold Oct}
+oct.post.filter = as.data.frame(oct.pre.filter)
+oct.post.filter[][oct.post.filter <= thres.oct] <- 0
+
+crang.clean.oct = as.data.frame(t(crang.clean.oct))
+crang.clean.oct[][crang.clean.oct[,]/rowSums(crang.clean.oct) <= thres.oct] <- 0
+
+## Writing pre- and post-filter data to output
+write.csv(crang.clean.oct, "Crangonyx_Oct17_cleaned_reads.csv")
+write.csv(oct.pre.filter, "Crangonyx_Oct17_pre-filter.csv")
+write.csv(oct.post.filter, "Crangonyx_Oct17_post-filter.csv")
+```
+
+
+```{r removing pos and neg samples plus renaming}
+rownames(crang.clean.may) = gsub("CH[.]", "CH", rownames(crang.clean.may))
+rownames(may.pre.filter) = gsub("CH[.]", "CH", rownames(may.pre.filter))
+rownames(may.post.filter) = gsub("CH[.]", "CH", rownames(may.post.filter))
+
+rownames(crang.clean.oct) = gsub(".pl[0-9]{1}.{4,5}.nc.blast$", "", rownames(crang.clean.oct))
+rownames(oct.pre.filter) = gsub(".pl[0-9]{1}.{4,5}.nc.blast$", "", rownames(oct.pre.filter))
+rownames(oct.post.filter) = gsub(".pl[0-9]{1}.{4,5}.nc.blast$", "", rownames(oct.post.filter))
+```
+
+`Euceraphis betulae` contamination still present in only one sample in `CH402` from May, and represented by only 11 reads (~0.1% of the sample). `Dikerogammarus villosus` contamination appears to be more problematic, since this taxa is present in multiple samples with varying levels of contaminations. Highest N reads detected for this taxa was 836 in sample `CH205`, corresponding to ~1.4% of the sample reads.
+To the best of our knowledge `D. villosus` has not been recorded on the studied site so far. In addition a similar high number of contamiantion couldn't be found in any of the other samples from May and October, and no specimen was collected and identified in any of the kick-samples collected across either season. This points towards a probable procedural contamination.
+The last source of known or suspected contamination detected was `Homo sapiens`, which was detected in 2 samples `CH104` and `CH301` collected in October, both show low levels ~1.8% (171 reads) and ~0.87% (120 reads) respectively.
+
+```{r checking the remaining unwanted taxa}
+may.post.filter = subset(may.post.filter, select = colSums(may.post.filter) > 0)
+oct.post.filter = subset(oct.post.filter, select = colSums(oct.post.filter) > 0)
+
+colSums(may.post.filter)
+
+rownames(may.post.filter[which(may.post.filter$Euceraphis_betulae > 0),])
+may.post.filter["CH402","Euceraphis_betulae"]
+crang.clean.may["CH402","Euceraphis_betulae"]
+
+rownames(may.post.filter[which(may.post.filter$Dikerogammarus_villosus > 0),])
+dv_cont = rownames(may.post.filter[which(may.post.filter$Dikerogammarus_villosus > 0),])
+may.post.filter[dv_cont,"Dikerogammarus_villosus"]
+crang.clean.may[dv_cont,"Dikerogammarus_villosus"]
+
+mean(may.post.filter[dv_cont,"Dikerogammarus_villosus"])
+min(may.post.filter[dv_cont,"Dikerogammarus_villosus"])
+max(may.post.filter[dv_cont,"Dikerogammarus_villosus"])
+
+colSums(oct.post.filter)
+
+rownames(oct.post.filter[which(oct.post.filter$Homo_sapiens > 0),])
+hs_cont = rownames(oct.post.filter[which(oct.post.filter$Homo_sapiens > 0),])
+oct.post.filter[hs_cont,"Homo_sapiens"]
+crang.clean.oct[hs_cont,"Homo_sapiens"]
+
+rownames(oct.post.filter[which(oct.post.filter$Dikerogammarus_villosus > 0),])
+dv_cont2 = rownames(oct.post.filter[which(oct.post.filter$Dikerogammarus_villosus > 0),])
+oct.post.filter[dv_cont2,"Dikerogammarus_villosus"]
+crang.clean.oct[dv_cont2,"Dikerogammarus_villosus"]
+```
+
+```{r cleaning known contaminations}
+may.post.filter = may.post.filter[!c(rownames(may.post.filter) %in% "CH211"),!c(colnames(may.post.filter) %in% c("Euceraphis_betulae","Dikerogammarus_villosus"))]
+oct.post.filter = oct.post.filter[,!c(colnames(oct.post.filter) %in% c("Dikerogammarus_villosus","Homo_sapiens"))]
+```
+
+
+```{r adding variables}
+may.pre.filter$filter = "pre.filter"
+may.pre.filter$sample_id = rownames(may.pre.filter)
+may.pre.filter$sample_type = "NA"
+may.pre.filter[grep("e", may.pre.filter$sample_id, invert=T), "sample_type"] = "gut"
+may.pre.filter[grep("e", may.pre.filter$sample_id), "sample_type"] = "water"
+may.pre.filter$time = "May"
+
+may.post.filter$filter = "post.filter"
+may.post.filter$sample_id = rownames(may.post.filter)
+may.post.filter$sample_type = "NA"
+may.post.filter[grep("e", may.post.filter$sample_id, invert=T), "sample_type"] = "gut"
+may.post.filter[grep("e", may.post.filter$sample_id), "sample_type"] = "water"
+may.post.filter$time = "May"
+
+oct.pre.filter$filter = "pre.filter"
+oct.pre.filter$sample_id = rownames(oct.pre.filter)
+oct.pre.filter$sample_type = "NA"
+oct.pre.filter[grep("e", oct.pre.filter$sample_id, invert=T), "sample_type"] = "gut"
+oct.pre.filter[grep("e", oct.pre.filter$sample_id), "sample_type"] = "water"
+oct.pre.filter$time = "Oct"
+
+oct.post.filter$filter = "post.filter"
+oct.post.filter$sample_id = rownames(oct.post.filter)
+oct.post.filter$sample_type = "NA"
+oct.post.filter[grep("e", oct.post.filter$sample_id, invert=T), "sample_type"] = "gut"
+oct.post.filter[grep("e", oct.post.filter$sample_id), "sample_type"] = "water"
+oct.post.filter$time = "Oct"
+```
+
+```{r separating guts from water}
+guts.may = may.post.filter[,][may.post.filter$sample_type == "gut",]
+water.may = may.post.filter[,][may.post.filter$sample_type == "water",]
+
+guts.oct = oct.post.filter[,][oct.post.filter$sample_type == "gut",]
+water.oct = oct.post.filter[,][oct.post.filter$sample_type == "water",]
+
+guts.full = full_join(guts.may, guts.oct)
+guts.full[is.na(guts.full)] <- 0
+
+water.full = full_join(water.may, water.oct)
+water.full[is.na(water.full)] <- 0
+```
+
+```{r setting names of predators}
+pr = which(guts.full[,!c(colnames(guts.full) %in% c("time","sample_id","sample_type","filter"))] >= 0.6, arr.ind=T)
+pr[,1]
+
+guts.full$predator = "NA"
+guts.full[pr[,1],"predator"] = colnames(guts.full[pr[,1],pr[,2]])
+guts.full$predator = gsub("[.][0-9]{1,2}", "", guts.full$predator)
+```
+
+```{r abundances}
+guts.info = guts.full[,c("time","sample_id","sample_type","filter","predator")]
+abund.guts = guts.full[,!c(colnames(guts.full) %in% c("time","sample_id","sample_type","filter","predator"))]
+
+cf = which(abund.guts[,"Crangonyx_floridanus"] > 0, arr.ind=T)
+
+for (r in cf){
+    if (abund.guts[r,"Crangonyx_floridanus"] >= 0.6){
+      abund.guts[r,"Crangonyx_floridanus"] <- 0
+    }else if (abund.guts[r,"Crangonyx_floridanus"] < 0.6){
+      abund.guts[r,"Crangonyx_floridanus"] <- 1
+    }
+}
+
+cp = which(abund.guts[,"Crangonyx_pseudogracilis"] > 0, arr.ind=T)
+
+for (r in cp){
+    if (abund.guts[r,"Crangonyx_pseudogracilis"] >= 0.6){
+      abund.guts[r,"Crangonyx_pseudogracilis"] <- 0
+    }else if (abund.guts[r,"Crangonyx_pseudogracilis"] < 0.6){
+      abund.guts[r,"Crangonyx_pseudogracilis"] <- 1
+    }
+}
+
+abund.guts[,][abund.guts[,] > 0] <- 1
+
+abund.guts = cbind(abund.guts, guts.info)
+abund.guts$predator = paste(abund.guts$predator, abund.guts$time, sep="_")
+
+abund.guts = abund.guts[,!c(colnames(abund.guts) %in% c("time","sample_id","sample_type","filter"))]
+abund.guts = as.data.frame(abund.guts %>% group_by(predator) %>% summarise_all(funs(sum)))
+
+abund.melt = melt(abund.guts)
+
+ggplot(abund.melt, aes(predator, value)) +
+  geom_bar(stat="identity", position="stack") +
+  theme(legend.position = "bottom")
+```
+
+## TO DO
+
+* eDNA for the community estimate
+* improve the plots and the stats
+* PERMANOVA
+* seasonality!
+* web parameters!
+
+
+## NOTE 
+Need to split species from genuses. Once splitted I can change names around and re-merge them before the bipartite.
+
+```{r bipartite web}
+web1 = abund.guts
+rownames(web1) = web1$predator
+web1 = web1[,-1]
+web1 = as.data.frame(t(web1))
+
+str(web1)
+
+#web1[,1] = as.integer(web1[,1])
+#web1[,2] = as.integer(web1[,2])
+#web1[,3] = as.integer(web1[,3])
+#web1[,4] = as.integer(web1[,4])
+
+web1 = data.matrix(web1)
+colnames(web1)
+
+colnames(web1)[1] <- "Cf_May"
+colnames(web1)[2] <- "Cf_Oct"
+colnames(web1)[3] <- "Cp_May"
+colnames(web1)[4] <- "Cp_Oct"
+
+rownames(web1)
+
+strsplit(rownames(web1), "_")
+
+for (i in (1:nrow(web1))){
+  print(paste(gsub("[a-z]{+}","",strsplit(rownames(web1), "_")[[i]][1]), strsplit(rownames(web1), "_")[[i]][2], sep="."))
+}
+
+plotweb(web1, y.width.low=0.1, y.width.high=0.05,	y.lim=c(0,3), adj.high=c(0.5,1.5), high.lab.dis=0.2, col.high="white", low.spacing=0.02, text.rot = 90, col.interaction=c("orange","yellow","blue","red"))
+```
+
+```{r end of main body}
+print("End of main body")
+```
+
+## SUPPLEMENTARY MATERIAL
+
+```{r survival plot frame1, include=T, echo=F}
+may.thre.survival = full_join(may.pre.filter, may.post.filter)
+may.thre.survival[is.na(may.thre.survival)] <- 0
+
+dim(may.thre.survival)
+
+may.melt = as.data.frame(may.thre.survival)
+
+may.melt = melt(may.melt)
+
+#color10=c("#E69F00", "#56B4E9", "#CC79A7", "#009E73", "#F0E442", "#999999", "#0072B2", "#D55E00", "#000000","#8B2323")
+
+ggplot(may.melt, aes(sample_id, value)) +
+  facet_grid(.~type) +
+  coord_flip() +
+#  scale_fill_manual(values = color10, name = "") +
+  geom_bar(stat="identity", aes(fill=variable)) + 
+  labs(title="Crangonyx gut contents (May 2017)", subtitle="Pre- vs. Post-filter of reads") +
+  theme(axis.text.x=element_text(angle=90,hjust=0.3,vjust=0.3), legend.position="none")
+```
+
+
+
+
+#### OLD SCRIPT
+
+```{r}
+## Removing Positive and Negative samples## Removing Positive and Negative samples
+dis17 = grep("POS|NEG", colnames(ch.may17), ignore.case=T)
+ch.may17 = as.data.frame(ch.may17[,-dis17])
+
+dis.oct = grep("POS|NEG", colnames(ch.oct17), ignore.case=T)
+ch.oct17 = as.data.frame(ch.oct17[,-dis.oct])
+
+ch.may17 = subset(ch.may17, subset=rowSums(ch.may17) > 0)
+ch.oct17 = subset(ch.oct17, subset=rowSums(ch.oct17) > 0)
+
+ch.oct17[!rownames(ch.oct17) %in% c("Cervus","Cygnus_olor","Fulica_atra","Homo_sapiens","invertebrate_environmental_sample"),] 
+
+ch.may_ratio = as.data.frame(t(ch.may17))
+ch.oct_ratio = as.data.frame(t(ch.oct17))
+
+ch.may_ratio = subset(ch.may_ratio, select=colSums(ch.may_ratio) > 0)
+ch.oct_ratio = subset(ch.oct_ratio, select=colSums(ch.oct_ratio) > 0)
+
+ch.may_ratio = ch.may_ratio/rowSums(ch.may_ratio)
+ch.oct_ratio = ch.oct_ratio/rowSums(ch.oct_ratio)
+
+ch.may_ratio[is.na(ch.may_ratio)] <- 0
+ch.oct_ratio[is.na(ch.oct_ratio)] <- 0
+```
+
+Splitting DNA metabarcoding of gut contents from the eDNA samples.
+
+```{r}
+edna.may = grep("e",rownames(ch.may_ratio), ignore.case=T)
+ch.water_may = ch.may_ratio[edna.may,]
+ch.guts_may = ch.may_ratio[-edna.may,]
+
+edna.oct = grep("e",rownames(ch.oct_ratio), ignore.case=T)
+ch.water_oct = ch.oct_ratio[edna.oct,]
+ch.guts_oct = ch.oct_ratio[-edna.oct,]
+```
+
+## PLOT
+
+```{r}
+ch.guts_may$samples_id = rownames(ch.guts_may)
+ch.guts_may$season = "May"
+
+ch.guts_oct$samples_id = rownames(ch.guts_oct)
+ch.guts_oct$season = "Oct"
+
+ch.water_may$samples_id = rownames(ch.water_may)
+ch.water_may$season = "May"
+
+ch.water_oct$samples_id = rownames(ch.water_oct)
+ch.water_oct$season = "Oct"
+
+ch.guts = full_join(ch.guts_may, ch.guts_oct)
+ch.guts[is.na(ch.guts)] <- 0
+
+ch.water = full_join(ch.water_may, ch.water_oct)
+ch.water[is.na(ch.water)] <- 0
+
+guts.melt = melt(ch.guts)
+water.melt = melt(ch.water)
+head(guts.melt)
+```
+
+
+```{r count}
+count(ch.guts$Crangonyx_floridanus[ch.guts$season=="May"] > 0.7)[2,]
+count(ch.guts$Crangonyx_floridanus[ch.guts$season=="Oct"] > 0.7)[2,]
+count(ch.guts$Crangonyx_pseudogracilis[ch.guts$season=="May"] > 0.7)[2,]
+count(ch.guts$Crangonyx_pseudogracilis[ch.guts$season=="Oct"] > 0.7)[2,]
+```
+
+
+
+```{r}
+head(ch.water)
+
+water.melt = melt(ch.water)
+head(water.melt)
+
+water.melt$value[water.melt$variable=="Crangonyx_floridanus"]
+water.melt$value[water.melt$variable=="Crangonyx_pseudogracilis"]
+
+unique(water.melt$variable[water.melt$value > 0])
+
+ggplot(water.melt, aes(samples_id, value)) + 
+  geom_bar(stat="identity", aes(fill=variable)) +
+  facet_grid(season~.) + 
+  theme(axis.text.x=element_text(angle=90,hjust=0.3,vjust=0.3), legend.position = "bottom")
+
+```
+
+```{r log session info}
+sink("log_session_analysis.txt")
+sessionInfo()
+citation()
+sink()
+```
+
+```{r packages citation}
+sink("packages_citations.txt")
+for (p in pack.list){
+ print(citation(p))
+}
+sink()
+```
+
+```{r}
+print("end")
+```
+
