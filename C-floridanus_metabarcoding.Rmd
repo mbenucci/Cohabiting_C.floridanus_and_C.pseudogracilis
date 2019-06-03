@@ -51,8 +51,8 @@ Removing the taxonomy column from each input files and saving them into separate
 
 
 ```{r}
-head(infile_may17)
-head(infile_oct17)
+#head(infile_may17)
+#head(infile_oct17)
 ```
 
 ```{r removing_taxonomy}
@@ -69,27 +69,23 @@ format_taxonomy <- function(input_data){
 
 # First input file
 taxa.may17 = infile_may17$taxomomy
-infile_may17 = infile_may17[,!(colnames(infile_may17)%in% 'taxomomy')]
+infile_may17 = infile_may17[,!(colnames(infile_may17) %in% 'taxomomy')]
 
 taxa.split.may = format_taxonomy(taxa.may17)
 taxa.split.may = data.frame(taxa.split.may)
 
 # Second input file
 taxa.oct17 = infile_oct17$taxomomy
-infile_oct17 = infile_oct17[,!(colnames(infile_oct17)%in% 'taxomomy')]
+infile_oct17 = infile_oct17[,!(colnames(infile_oct17) %in% 'taxomomy')]
 
 taxa.split.oct = format_taxonomy(taxa.oct17)
 taxa.split.oct = data.frame(taxa.split.oct)
 ```
 
-```{r}
-
-```
-
 ```{r taxa_output, include=TRUE}
 # Writing taxonomy outputs
-write.csv(taxa.split.may, "R_outputs/CO1DvMay17_taxonomy.csv")
-write.csv(taxa.split.oct, "R_outputs/CO1DvOct17_taxonomy.csv")
+write.csv(taxa.split.may, "R_outputs/CO1Crang_May17_taxonomy.csv")
+write.csv(taxa.split.oct, "R_outputs/CO1Crang_Oct17_taxonomy.csv")
 ```
 
 Each initial input file was generated as the result of two separate taxonomic assignment operations. First DNA centroids were assigned against reference database, the DNA reads that resulted unassigned were then assigned against the NCBI nucleotide (nt) database (available at: `ftp://ftp.ncbi.nlm.nih.gov/blast/db/` - updated to early September 2018).
