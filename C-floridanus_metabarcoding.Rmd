@@ -223,28 +223,30 @@ ggplot(full.retain, aes(time, value)) +
 crang.may = subset(crang.may, subset=rowSums(crang.may) > 0)
 crang.oct = subset(crang.oct, subset=rowSums(crang.oct) > 0)
 
-crang.clean.may = crang.may[!(rownames(crang.may) %in% c("Chrysophyceae_sp.","Cyclostephanos_invisitatus","Dinobryon","Dinobryon_divergens","Dinophyceae","Mallomonas_sp","Melosira_ambiqua","Paraphysomonas_sp.","Penicillium_sclerotiorum","Pythium","Stephanodiscus_cf._minutulus","Thalassiosira_pseudonana","uncultured_Pythium","unassigned")),]
+may.clean = crang.may[!(rownames(crang.may) %in% c("Chrysophyceae_sp.","Cyclostephanos_invisitatus","Dinobryon","Dinobryon_divergens","Dinophyceae","Euceraphis_betulae","Mallomonas_sp","Melosira_ambiqua","Paraphysomonas_sp.","Penicillium_sclerotiorum","Pythium","Stephanodiscus_cf._minutulus","Thalassiosira_pseudonana","uncultured_Pythium","unassigned")),]
 
-crang.clean.oct = crang.oct[!(rownames(crang.oct) %in% c("Anser_anser","Ascomycota","Aves","Branta_canadensis","Cervus","Chroicocephalus_ridibundus","Chrysochromulina","Chrysochromulina_parva","Chrysophyceae_sp","Cyclostephanos_invisitatus","Cygnus_olor","Dinophyceae","Fistulifera_pelliculosa","Fulica_atra","Gomphonema_parvulum","invertebrate_environmental_sample","Melosira_ambiqua","Mucorales","Mycena_cf._purpureofusca","Navicula_minima","Nitzschia_palea","Paraphysomonas_sp","Percidae","Pinnularia_neomajor","Rhodotorula","Stephanodiscus","Tetradesmus_obliquus","Thalassiosira_pseudonana","unassigned","uncultured_Jaminaea","uncultured_Pythium","Vanellus_vanellus","Verticillium_dahliae")),]
+oct.clean = crang.oct[!(rownames(crang.oct) %in% c("Anser_anser","Ascomycota","Aves","Branta_canadensis","Cervus","Chroicocephalus_ridibundus","Chrysochromulina","Chrysochromulina_parva","Chrysophyceae_sp","Cyclostephanos_invisitatus","Cygnus_olor","Dinophyceae","Fistulifera_pelliculosa","Fulica_atra","Gomphonema_parvulum","invertebrate_environmental_sample","Melosira_ambiqua","Mucorales","Mycena_cf._purpureofusca_MUSH159-07","Navicula_minima","Nitzschia_palea","Paraphysomonas_sp","Percidae","Pinnularia_neomajor","Rhodotorula","Stephanodiscus","Tetradesmus_obliquus","Thalassiosira_pseudonana","unassigned","uncultured_Jaminaea","uncultured_Pythium","Vanellus_vanellus","Verticillium_dahliae")),]
 ```
 
+After removing unwanted taxa we retained 95.16% and 84.01% of the total reads from respectively May and October.
+
 ```{r reads retained after clean up}
-(sum(crang.clean.may)/sum(crang.may))*100
-(sum(crang.clean.oct)/sum(crang.oct))*100
+(sum(may.clean)/sum(crang.may))*100
+(sum(oct.clean)/sum(crang.oct))*100
 ```
 
 Investigate Negative and Positive samples to see the level of contamination.
 
 ```{r may threshold}
 ## Positive samples from `crang.clean.may`
-may.pos = crang.clean.may[,c(grep("POS", colnames(crang.clean.may)))]
+may.pos = may.clean[,c(grep("POS", colnames(may.clean)))]
 may.pos = as.data.frame(t(may.pos))
 
 may.pos[,]/rowSums(may.pos)
 #colnames(may.pos)
 
-crang.clean.may = subset(crang.clean.may[,-c(grep("POS|NEG", colnames(crang.clean.may))),])
-may.pre.filter = as.data.frame(t(crang.clean.may))
+may.clean = subset(may.clean[,-c(grep("POS|NEG", colnames(may.clean))),])
+may.pre.filter = as.data.frame(t(may.clean))
 may.pre.filter = may.pre.filter[,]/rowSums(may.pre.filter)
 may.pre.filter[is.na(may.pre.filter)] <- 0
 
@@ -253,14 +255,14 @@ thres.may =  0.0003
 
 ```{r october threshold}
 ## Positive samples from `crang.clean.oct`
-oct.pos = crang.clean.oct[,c(grep("POS", colnames(crang.clean.oct)))]
+oct.pos = oct.clean[,c(grep("POS", colnames(oct.clean)))]
 oct.pos = as.data.frame(t(oct.pos))
 
 oct.pos[,]/rowSums(oct.pos)
 #colnames(oct.pos)
 
-crang.clean.oct = subset(crang.clean.oct[,-c(grep("POS|NEG", colnames(crang.clean.oct))),])
-oct.pre.filter = as.data.frame(t(crang.clean.oct))
+oct.clean = subset(oct.clean[,-c(grep("POS|NEG", colnames(oct.clean))),])
+oct.pre.filter = as.data.frame(t(oct.clean))
 oct.pre.filter = oct.pre.filter[,]/rowSums(oct.pre.filter)
 oct.pre.filter[is.na(oct.pre.filter)] <- 0
 
