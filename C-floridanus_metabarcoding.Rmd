@@ -9,6 +9,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Environment set-up
 
 ```{r environment setup, include=F}
 ## R(v3.5.1 - Win)
@@ -105,26 +106,22 @@ rownames(oct17.reads) = oct17.reads$X.OTU.ID
 may17.reads = may17.reads[,!(colnames(may17.reads)%in% 'X.OTU.ID')]
 oct17.reads = oct17.reads[,!(colnames(oct17.reads)%in% 'X.OTU.ID')]
 
-to_remove1 = grep("Ha|Dv5|WB|GW|RB", colnames(may17.reads))
-may17.reads = may17.reads[,-to_remove1]
+to_keep.may = grep("CH|POSITIVE|NEGATIVE", colnames(may17.reads))
+may17.reads = may17.reads[,c(to_keep.may)]
 
-to_remove2 = grep("pl4|WB|GW|RB", colnames(oct17.reads))
-oct17.reads = oct17.reads[,-to_remove2]
+to_remove.oct = grep("WB|RB|GW|pl2|pl4", colnames(oct17.reads))
+oct17.reads = oct17.reads[,-to_remove.oct]
 ```
 
-## Checking the number of samples in DNA metbarcoding
 
-```{r setting the rownames}
-rownames(may17.reads) = may17.reads$X.OTU.ID
-rownames(oct17.reads) = oct17.reads$X.OTU.ID
+# 1. Initial Quality Control
 
-may17.reads = may17.reads[,!(colnames(may17.reads)%in% 'X.OTU.ID')]
-oct17.reads = oct17.reads[,!(colnames(oct17.reads)%in% 'X.OTU.ID')]
-```
-
-## Quality control of the data frames
+To calculate sample read depth for both input files, in order to quality check the overall sequencing, first all samples that didn't sequence at all (sample N read equal to 0) need to be removed. Then the mean and standard deviation for each data set can be calculated, and quality check of the samples read depth applied. 
 
 ```{r initial read depth, include=TRUE}
+colnames(may17.reads)
+colnames(oct17.reads)
+
 may17.reads = subset(may17.reads, select = colSums(may17.reads) > 0)
 oct17.reads = subset(oct17.reads, select = colSums(oct17.reads) > 0)
 
@@ -152,9 +149,6 @@ ggplot(full.depth, aes(time, value)) +
   theme_bw() + labs(x="Data sets", y="Sample read depth (N reads)")
 ```
 
-# 1. Initial Quality Control
-
-To calculate sample read depth for both input files, in order to quality check the overall sequencing, first all samples that didn't sequence at all (sample N read equal to 0) need to be removed. Then the mean and standard deviation for each data set can be calculated, and quality check of the samples read depth applied. 
 
 ```{r mean read depth, include=F}
 may17.reads = subset(may17.reads, select=colSums(may17.reads) > 0)
@@ -183,26 +177,47 @@ The coverage filter (based on `mean(sample_DNA_reads)-sd(sample_DNA_reads)`) for
 cov_may17 = mean(colSums(may17.reads))-sd(colSums(may17.reads))
 cov_oct17 = mean(colSums(oct17.reads))-sd(colSums(oct17.reads))
 
+colnames(may17.reads)
+colSums(may17.reads)
+
+colnames(oct17.reads)
+colSums(oct17.reads)
+
 crang.may = subset(may17.reads, select = colSums(may17.reads) >= 1000)
 crang.oct = subset(oct17.reads, select = colSums(oct17.reads) >= cov_oct17)
-
-# Checking N samples retained
-count(colSums(may17.reads) <= cov_may17)[1,2]
-count(colSums(oct17.reads) <= cov_oct17)[1,2]
-count(colSums(may17.reads) <= cov_may17)[1,2]/(count(colSums(may17.reads) > 0)[,2])
-count(colSums(oct17.reads) <= cov_oct17)[1,2]/(count(colSums(oct17.reads) > 0)[,2])
-```
 ```
 
+```{r boxplot after read depth QC}
+may.retain = as.data.frame(crang.may)
+oct.retain = as.data.frame(crang.oct)
 
-```{r reads survival boxplot, include=TRUE, echo=FALSE}
-boxplot(colSums(crang.may), colSums(crang.oct), ylab="N reads", xlab="Data frames", names=c("May17", "Oct17"), las=1, cex.axis=0.8)
+may.retain$time = "May"
+oct.retain$time = "Oct"
+
+# Sum of DNA reads by samples to plot the sample read depth
+
+may.retain = melt(may.retain)
+may.retain = may.retain %>% group_by(time, variable) %>% summarise_all(list(sum))
+
+oct.retain = melt(oct.retain)
+oct.retain = oct.retain %>% group_by(time, variable) %>% summarise_all(list(sum))
+
+# Joining both frames, then plotting
+
+full.retain = rbind(may.retain, oct.retain)
+
+ggplot(full.retain, aes(time, value)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(color=c("gray30"), alpha=0.5) +
+  theme_bw() + labs(x="Data sets", y="Sample read depth (N reads)")
 ```
+
 
 ```{r subsetting samples, include=T}
-crang.may = subset(crang.may[,c(grep("CH|NEG|POS", colnames(crang.may)))])
-crang.oct = subset(crang.oct[,c(grep("CH|NEG.pl1|NEG.pl3|POS.pl1|POS.pl3", colnames(crang.oct)))])
+#crang.may = subset(crang.may[,c(grep("CH|NEG|POS", colnames(crang.may)))])
+#crang.oct = subset(crang.oct[,c(grep("CH|NEG.pl1|NEG.pl3|POS.pl1|POS.pl3", colnames(crang.oct)))])
 ```
+
 
 ```{r removing empty taxa}
 crang.may = subset(crang.may, subset=rowSums(crang.may) > 0)
