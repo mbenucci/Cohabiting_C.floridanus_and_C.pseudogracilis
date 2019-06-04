@@ -471,45 +471,45 @@ Now that all variable have been added, the ratio and DNA reads of predators can 
 ```{r removing predator ratio}
 # Removal of predator ratios and DNA reads
 # May
-m.row = rownames(filter.may[filter.may$predator_id != "water", c("site","sample_id","time","sample_type","predator_id")])
-m.col = filter.may[filter.may$predator_id != "water", "predator_id"]
+m.row = rownames(may.post.filter[may.post.filter$predator_id != "water", c("site","sample_id","time","sample_type","predator_id")])
+m.col = may.post.filter[may.post.filter$predator_id != "water", "predator_id"]
 
-filter.may[m.row,unique(m.col)]
+may.post.filter[m.row,unique(m.col)]
 
 for (i in m.row){
-  pred_id = filter.may[i,"predator_id"]
-  pred_read = clean.may[i, "predator_id"]
-  filter.may[i,pred_id] <- 0
-  clean.may[i,pred_read] <- 0
+  pred_id = may.post.filter[i,"predator_id"]
+  pred_read = may.clean[i, "predator_id"]
+  may.post.filter[i,pred_id] <- 0
+  may.clean[i,pred_read] <- 0
 }
 
 # Confirming the function worked
-filter.may[m.row,unique(m.col)]
+may.post.filter[m.row,unique(m.col)]
 
 # Oct
-o.row = rownames(filter.oct[filter.oct$predator_id != "water", c("site","sample_id","time","sample_type","predator_id")])
-o.col = filter.oct[filter.oct$predator_id != "water", "predator_id"]
+o.row = rownames(oct.post.filter[oct.post.filter$predator_id != "water", c("site","sample_id","time","sample_type","predator_id")])
+o.col = oct.post.filter[oct.post.filter$predator_id != "water", "predator_id"]
 
-filter.oct[o.row,unique(o.col)]
+oct.post.filter[o.row,unique(o.col)]
 
 for (i in o.row){
-  pred_id = filter.oct[i,"predator_id"]
-  pred_read = clean.oct[i, "predator_id"]
-  filter.oct[i,pred_id] <- 0
-  clean.oct[i,pred_read] <- 0
+  pred_id = oct.post.filter[i,"predator_id"]
+  pred_read = oct.clean[i, "predator_id"]
+  oct.post.filter[i,pred_id] <- 0
+  oct.clean[i,pred_read] <- 0
 }
 
 # Confirming the function worked
-filter.oct[o.row,unique(o.col)]
+oct.post.filter[o.row,unique(o.col)]
 ```
 
 Now that predators DNA ratio have been removed, the focus can move towards the prey id. The current data are going to be saved into ".csv" files before continuing.
 
 ```{r saving files}
-write.csv(clean.may, "R_outputs/May_reads_filtered.csv")
-write.csv(filter.may, "R_outputs/May_ratio_filtered.csv")
-write.csv(clean.oct, "R_outputs/Oct_reads_filtered.csv")
-write.csv(filter.oct, "R_outputs/Oct_ratio_filtered.csv")
+write.csv(may.clean, "R_outputs/May_reads_filtered.csv")
+write.csv(may.post.filter, "R_outputs/May_ratio_filtered.csv")
+write.csv(oct.clean, "R_outputs/Oct_reads_filtered.csv")
+write.csv(oct.post.filter, "R_outputs/Oct_ratio_filtered.csv")
 ```
 
 ```{r separating guts and eDNA water}
