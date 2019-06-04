@@ -540,22 +540,73 @@ write.csv(edna.full, "R_outputs/eDNA_reads.csv")
 info.guts = guts.full[,c(colnames(guts.full) %in% c("time","site","sample_id","sample_type","predator_id"))]
 info.edna = edna.full[,c(colnames(edna.full) %in% c("time","site","sample_id","sample_type","predator_id"))]
 
-
-
 # Cleaning empty taxa
 # gut content samples
 guts.full = subset(guts.full[,!c(colnames(guts.full) %in% colnames(info.guts))], select=colSums(guts.full[,!c(colnames(guts.full) %in% colnames(info.guts))]) > 0)
 # eDNA samples
 edna.full = subset(edna.full[,!c(colnames(edna.full) %in% colnames(info.edna))], select=colSums(edna.full[,!c(colnames(edna.full) %in% colnames(info.edna))]) > 0)
+```
 
 
-abund.guts = as.data.frame(abund.guts %>% group_by(predator) %>% summarise_all(funs(sum)))
+```{r cleaning gut contents data frame}
+# converting reads into ratio
+ratio.guts = guts.full[,]/rowSums(guts.full)
+ratio.guts[is.na(ratio.guts)] <- 0
+ratio.guts = cbind(ratio.guts, info.guts)
 
-abund.melt = melt(abund.guts)
+melt.guts = melt(ratio.guts)
 
-ggplot(abund.melt, aes(predator, value)) +
-  geom_bar(stat="identity", position="stack") +
-  theme(legend.position = "bottom")
+ggplot(melt.guts, aes(site, value)) +
+  geom_jitter(aes(color=predator_id)) +
+  facet_grid(.~time) + theme_bw() +
+  ylab("prey DNA ratio") + xlab("sampling month")
+```
+
+
+```{r transforming into abundances}
+# removing `sample_type` and `sample_id` variables and transforming detections into abundances
+ratio.guts[,!c(colnames(ratio.guts) %in% c("time","site","predator_id","sample_id","sample_type"))][ratio.guts[,!c(colnames(ratio.guts) %in% c("time","site","predator_id","sample_id","sample_type"))] > 0] <- 1
+
+abund.guts = as.data.frame(ratio.guts)
+abund.guts.site = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id","sample_type"))] %>% group_by(time, site, predator_id) %>% summarise_all(list(sum)))
+
+# replacing predator id with initials
+abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "C.flor"
+abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "C.pseu"
+
+abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "C.flor"
+abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "C.pseu"
+
+# setting rownames and removing extra variables
+rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$site, abund.guts.site$time, sep="_")
+```
+
+```{r PERMANOVA gut contents}
+# comparing D.vil and G.zad
+adonis.guts = abund.guts[,!c(colnames(abund.guts) %in% c("time","site","sample_type","predator_id","sample_id"))]
+
+fact_time.guts = matrix(c(abund.guts$time), ncol=1)
+fact_site.guts = matrix(c(abund.guts$site), ncol=1)
+fact_predator.guts = matrix(c(abund.guts$predator_id), ncol=1)
+
+adonis.guts = vegdist(as.matrix(adonis.guts), method = "euclidean")
+adonis(adonis.guts~fact_predator.guts*fact_site.guts*fact_time.guts, permutations = 9999, method="euclidean")
+```
+
+```{r NMDS of gut contents}
+meta.guts = metaMDS(adonis.guts, trymax=200, distance="euclidean")
+```
+
+```{r NMDS plot of gut contents}
+# full symbols for May, hollow symbols for October
+png("R_images/guts_predator_NMDS_euclidean.png", width = 3000, height = 3000, units = "px", res = 300)
+plot(meta.guts, type="n", main="Crangonyx spp. gut contents NMDS", xlim=c(-1,1.5), ylim=c(-1.5,2))
+points(meta.guts, select=which(fact_time.guts[,1]=="May"),col="black",pch=20)
+points(meta.guts, select=which(fact_time.guts[,1]=="Oct"),col="blue",pch=1)
+ordispider(meta.guts, group=fact_predator.guts[,1],col=c("blue","orange"),label=T)
+ordiellipse(meta.guts, group=fact_predator.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
+text(1,-1,label=paste0("Stress: ",round(meta.guts$stress, 6)))
+dev.off()
 ```
 
 ## TO DO
