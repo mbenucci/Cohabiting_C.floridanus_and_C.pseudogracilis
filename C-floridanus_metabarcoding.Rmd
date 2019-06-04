@@ -266,7 +266,7 @@ colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),])
 (colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.oct)
 ```
 
-Considering these values of contamination, decided to use the threshold of 0.03% for May, and of 0.39% for October.
+Considering these values of contamination, decided to use the threshold of 0.03% for May, and of 0.39% for October. Following this step, we also applied a fied threshold of 5 reads acoss the both whole datasets. We generated pre- and post-filter to quality check the data, but we have been using the DNA reads for downstream analysis.
 
 ```{r setting threshold values}
 thres.may =  0.00031
@@ -284,13 +284,13 @@ oct.pre.filter = as.data.frame(t(oct.clean))
 oct.pre.filter = oct.pre.filter[,]/rowSums(oct.pre.filter)
 ```
 
-
 ```{r applying contamination threshold for May}
 may.post.filter = as.data.frame(may.pre.filter)
 may.post.filter[][may.post.filter <= thres.may] <- 0
 
 may.clean = as.data.frame(t(may.clean))
 may.clean[][may.clean[,]/rowSums(may.clean) <= thres.may] <- 0
+may.clean[][may.clean[,] <= 5] <- 0
 ```
 
 We still detected some contamination in the Negative sample from May containing 2889 reads from _Dikerogammarus villosus_, and 71 reads from _Gammarus tigrinus_; however that threshold would be too high to be applied and still retain valid information.
@@ -319,6 +319,7 @@ oct.post.filter[][oct.post.filter <= thres.oct] <- 0
 
 oct.clean = as.data.frame(t(oct.clean))
 oct.clean[][oct.clean[,]/rowSums(oct.clean) <= thres.oct] <- 0
+oct.clean[][oct.clean[,] <= 5] <- 0
 ```
 
 ```{r saving October outputs}
@@ -350,19 +351,30 @@ colSums(oct.clean)
 _Dikerogammarus villosus_ contamination appears to be more problematic, since this taxa is present in multiple samples with varying levels of contaminations. Highest N reads detected for this taxa unfortunately is  was 85933 redas in sample `CH211`, corresponding to 100% of the sample.
 To the best of our knowledge _D. villosus_ has not been recorded on the studied site so far, however because these samples were sequenced in conjunction with other _D. villosus_ gut contents we cannot exclude a an error during PCR. 
 All specimens collected for gut contents analysis in the site were quickly identified as `Crangonyx` on field and back in the lab, and none results to be `Dikerogammarus`; plus in the kick-samples we couldn't identify any specimen belonging to the genus `Dikerogammarus` either. This points towards a probable procedural contamination due to a mis-placement of one of the samples belonging to _Dikerogammarus villosus_ gut contents analysis. We decided to remove this sample from downstream analysis.
-The last source of known or suspected contamination detected was `Homo sapiens`, which was detected in 2 samples `CH104` and `CH301` collected in October, both show low levels ~1.8% (171 reads) and ~0.87% (120 reads) respectively.
+Outside of this huge sample, we had some extra contamination from the same taxa peaking at 836 reads in `CH205` (corresponding to ~1.4% of the sample reads). Again, despite is far less than ideal, we  have to aknowledge that applying such a fixed threshold it would remove most of our prey DNA detections, which represent in most cases less than 1% of each gut contents DNA reads.
+_Gammarus_zaddachi_ was present in the dataset of May with only few reads, again we suspect these might come from external contamination sources.
 
-```{r}
+```{r remaining contaminations in May}
 may.clean[22,"Dikerogammarus_villosus"]
+may.clean = may.clean[!c(rownames(may.clean) %in% "CH211"),]
 
+may.clean[which(may.clean$Dikerogammarus_villosus > 0),"Dikerogammarus_villosus"]
+rownames(may.clean[which(may.clean$Dikerogammarus_villosus > 0),])
 
+may.clean$Dikerogammarus_villosus
+
+may.clean = may.clean[,!c(colnames(may.clean) %in% "Dikerogammarus_villosus")]
+
+may.clean[41,]
+may.clean$Gammarus_zaddachi
 ```
 
+The last source of known or suspected contamination detected was `Homo sapiens`, which was detected in 2 samples `CH104` and `CH301` collected in October, both show low levels ~1.8% (171 reads) and ~0.87% (120 reads) respectively.
 
 
 ```{r checking the remaining unwanted taxa}
-may.post.filter = subset(may.post.filter, select = colSums(may.post.filter) > 0)
-oct.post.filter = subset(oct.post.filter, select = colSums(oct.post.filter) > 0)
+#may.post.filter = subset(may.post.filter, select = colSums(may.post.filter) > 0)
+#oct.post.filter = subset(oct.post.filter, select = colSums(oct.post.filter) > 0)
 
 colSums(may.post.filter)
 
