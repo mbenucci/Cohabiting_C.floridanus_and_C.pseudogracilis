@@ -512,6 +512,10 @@ write.csv(oct.clean, "R_outputs/Oct_reads_filtered.csv")
 write.csv(oct.post.filter, "R_outputs/Oct_ratio_filtered.csv")
 ```
 
+# 3. Detection of prey DNA in gut contents
+
+Dividing gut contents and eDNA samples.
+
 ```{r separating guts and eDNA water}
 guts.may = may.clean[,][may.clean$sample_type == "gut",]
 edna.may = may.clean[,][may.clean$sample_type == "eDNA",]
@@ -522,42 +526,29 @@ edna.oct = oct.clean[,][oct.clean$sample_type == "eDNA",]
 guts.full = full_join(guts.may, guts.oct)
 guts.full[is.na(guts.full)] <- 0
 
-water.full = full_join(edna.may, edna.oct)
-water.full[is.na(water.full)] <- 0
+edna.full = full_join(edna.may, edna.oct)
+edna.full[is.na(edna.full)] <- 0
+
+# Saving gut contents and eDNA files
+write.csv(guts.full, "R_outputs/gut_contents_reads.csv")
+write.csv(edna.full, "R_outputs/eDNA_reads.csv")
 ```
 
-## FROM HERE!!!!!
 
-```{r abundances}
-guts.info = guts.full[,c("time","sample_id","sample_type","filter","predator")]
-abund.guts = guts.full[,!c(colnames(guts.full) %in% c("time","sample_id","sample_type","filter","predator"))]
+```{r removing empty taxa}
+# Extracting metadata
+info.guts = guts.full[,c(colnames(guts.full) %in% c("time","site","sample_id","sample_type","predator_id"))]
+info.edna = edna.full[,c(colnames(edna.full) %in% c("time","site","sample_id","sample_type","predator_id"))]
 
-cf = which(abund.guts[,"Crangonyx_floridanus"] > 0, arr.ind=T)
 
-for (r in cf){
-    if (abund.guts[r,"Crangonyx_floridanus"] >= 0.6){
-      abund.guts[r,"Crangonyx_floridanus"] <- 0
-    }else if (abund.guts[r,"Crangonyx_floridanus"] < 0.6){
-      abund.guts[r,"Crangonyx_floridanus"] <- 1
-    }
-}
 
-cp = which(abund.guts[,"Crangonyx_pseudogracilis"] > 0, arr.ind=T)
+# Cleaning empty taxa
+# gut content samples
+guts.full = subset(guts.full[,!c(colnames(guts.full) %in% colnames(info.guts))], select=colSums(guts.full[,!c(colnames(guts.full) %in% colnames(info.guts))]) > 0)
+# eDNA samples
+edna.full = subset(edna.full[,!c(colnames(edna.full) %in% colnames(info.edna))], select=colSums(edna.full[,!c(colnames(edna.full) %in% colnames(info.edna))]) > 0)
 
-for (r in cp){
-    if (abund.guts[r,"Crangonyx_pseudogracilis"] >= 0.6){
-      abund.guts[r,"Crangonyx_pseudogracilis"] <- 0
-    }else if (abund.guts[r,"Crangonyx_pseudogracilis"] < 0.6){
-      abund.guts[r,"Crangonyx_pseudogracilis"] <- 1
-    }
-}
 
-abund.guts[,][abund.guts[,] > 0] <- 1
-
-abund.guts = cbind(abund.guts, guts.info)
-abund.guts$predator = paste(abund.guts$predator, abund.guts$time, sep="_")
-
-abund.guts = abund.guts[,!c(colnames(abund.guts) %in% c("time","sample_id","sample_type","filter"))]
 abund.guts = as.data.frame(abund.guts %>% group_by(predator) %>% summarise_all(funs(sum)))
 
 abund.melt = melt(abund.guts)
