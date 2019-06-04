@@ -427,7 +427,7 @@ For the `predator_id`, the taxa ID was extracted from the taxa with ratio greate
 # Adding predator ID based on the DNA ratio greater than 0.9
 # May
 ednamay = grep("e", rownames(may.post.filter))
-predmay = which(may.post.filter[-ednamay,!c(colnames(may.post.filter) %in% c("time","site","sample_id","sample_type"))] >= 0.9, arr.ind=T)
+predmay = which(may.post.filter[-ednamay,!c(colnames(may.post.filter) %in% c("sample_id","sample_type","site","time"))] >= 0.9, arr.ind=T)
 
 may.post.filter$predator_id = "NA"
 may.post.filter[ednamay,"predator_id"] = "water"
@@ -435,37 +435,35 @@ may.post.filter[rownames(predmay),"predator_id"] = gsub("[.]?[0-9]{1,3}$", "", c
 
 # October
 ednaoct = grep("e", rownames(oct.post.filter))
-predoct = which(oct.post.filter[-ednaoct,!c(colnames(oct.post.filter) %in% c("time","site","sample_id","sample_type"))] >= 0.9, arr.ind=T)
+predoct = which(oct.post.filter[-ednaoct,!c(colnames(oct.post.filter) %in% c("sample_id","sample_type","site","time"))] >= 0.9, arr.ind=T)
 
 oct.post.filter$predator_id = "NA"
 oct.post.filter[ednaoct,"predator_id"] = "water"
 oct.post.filter[rownames(predoct),"predator_id"] = gsub("[.]?[0-9]{1,3}$", "", colnames(oct.post.filter[rownames(predoct),as.vector(predoct[,2])]))
 ```
 
-Initial predator assignment was done using taxa with a proportion greater or equal to 90% of each sample. We now check thos samples that had a lower values.
-
-### FROM HERE!!!!
+Initial predator assignment was done using taxa with a proportion greater or equal to 90% of each sample. We now check thos samples that had a lower values. In May data set we managed to set all predator ids, while in October we need to sort out 22 predator ids.
 
 ```{r checking for missing predators}
 # May
 count(may.post.filter$predator_id == "NA")
-miss.may = gsub("[.]", "", rownames(may.post.filter[may.post.filter$predator_id == "NA",]))
-miss.may
-
-may.post.filter$predator_id[may.post.filter$sample_id %in% "WB507"] = "Dikerogammarus_villosus"
-may.post.filter$predator_id[may.post.filter$sample_id %in% c("RB304","RB303")] = "Corophium_multisetosum"
-may.post.filter$predator_id[may.post.filter$sample_id %in% c(miss.may[!miss.may %in% c("WB507","RB304","RB303")])] = "Gammarus_zaddachi"
-clean.may$predator_id = may.post.filter$predator_id
+may.clean$predator_id = may.post.filter$predator_id
 
 # October
 count(oct.post.filter$predator_id == "NA")
 miss.oct = rownames(oct.post.filter[oct.post.filter$predator_id == "NA",])
 miss.oct
 
-oct.post.filter$predator_id[oct.post.filter$sample_id %in% c("GW103","GW108","GW401","GW601","WB627")] = "Dikerogammarus_villosus"
-oct.post.filter$predator_id[oct.post.filter$sample_id %in% c("RB301","RB302","RB303","RB304","RB305","RB606","RB613","RB616")] = "Gammarus_zaddachi"
-oct.post.filter$predator_id[oct.post.filter$sample_id %in% c("RB403","RB412")] = "Crangonyx_pseudogracilis"
-clean.oct$predator_id = oct.post.filter$predator_id
+misspred = which(oct.post.filter[miss.oct,!c(colnames(oct.post.filter) %in% c("sample_id","sample_type","site","time","predator_id"))] >= 0.8, arr.ind=T)
+
+oct.post.filter[rownames(misspred),"predator_id"] = gsub("[.]?[0-9]{1,3}$", "", colnames(oct.post.filter[rownames(misspred), as.vector(misspred[,2])]))
+
+count(oct.post.filter$predator_id == "NA")
+
+# Still 6 missing that need to be manually added.
+oct.post.filter$predator_id[oct.post.filter$sample_id %in% c("CH111","CH302","CH502")] = "Crangonyx_pseudogracilis"
+oct.post.filter$predator_id[oct.post.filter$sample_id %in% c("CH305","CH310","CH506")] = "Crangonyx_floridanus"
+oct.clean$predator_id = oct.post.filter$predator_id
 ```
 
 Now that all variable have been added, the ratio and DNA reads of predators can be set to be equal to 0. This will allow further downstream analysis to calulate accurate indexes of prey diversity and diet breadth without the risk of overinflating.
