@@ -328,23 +328,37 @@ write.csv(oct.pre.filter, "R_outputs/Crangonyx_Oct17_pre-filter.csv")
 write.csv(oct.post.filter, "R_outputs/Crangonyx_Oct17_post-filter.csv")
 ```
 
-# FROM HERE!!!!
-To work on cleaning names, adding variables (time, location, sample_type, etc..) plus splitting eDNA from guts. Add kick-samples
+Cleaning names, adding variables (time, location, sample_type, etc..) plus splitting eDNA from guts. Add kick-samples
 
 
 ```{r removing pos and neg samples plus renaming}
-rownames(crang.clean.may) = gsub("CH[.]", "CH", rownames(crang.clean.may))
+rownames(may.clean) = gsub("CH[.]", "CH", rownames(may.clean))
 rownames(may.pre.filter) = gsub("CH[.]", "CH", rownames(may.pre.filter))
 rownames(may.post.filter) = gsub("CH[.]", "CH", rownames(may.post.filter))
 
-rownames(crang.clean.oct) = gsub(".pl[0-9]{1}.{4,5}.nc.blast$", "", rownames(crang.clean.oct))
+rownames(oct.clean) = gsub(".pl[0-9]{1}.{4,5}.nc.blast$", "", rownames(oct.clean))
 rownames(oct.pre.filter) = gsub(".pl[0-9]{1}.{4,5}.nc.blast$", "", rownames(oct.pre.filter))
 rownames(oct.post.filter) = gsub(".pl[0-9]{1}.{4,5}.nc.blast$", "", rownames(oct.post.filter))
 ```
 
-`Euceraphis betulae` contamination still present in only one sample in `CH402` from May, and represented by only 11 reads (~0.1% of the sample). `Dikerogammarus villosus` contamination appears to be more problematic, since this taxa is present in multiple samples with varying levels of contaminations. Highest N reads detected for this taxa was 836 in sample `CH205`, corresponding to ~1.4% of the sample reads.
-To the best of our knowledge `D. villosus` has not been recorded on the studied site so far. In addition a similar high number of contamiantion couldn't be found in any of the other samples from May and October, and no specimen was collected and identified in any of the kick-samples collected across either season. This points towards a probable procedural contamination.
+```{r}
+colSums(may.clean)
+colSums(oct.clean)
+```
+
+
+_Dikerogammarus villosus_ contamination appears to be more problematic, since this taxa is present in multiple samples with varying levels of contaminations. Highest N reads detected for this taxa unfortunately is  was 85933 redas in sample `CH211`, corresponding to 100% of the sample.
+To the best of our knowledge _D. villosus_ has not been recorded on the studied site so far, however because these samples were sequenced in conjunction with other _D. villosus_ gut contents we cannot exclude a an error during PCR. 
+All specimens collected for gut contents analysis in the site were quickly identified as `Crangonyx` on field and back in the lab, and none results to be `Dikerogammarus`; plus in the kick-samples we couldn't identify any specimen belonging to the genus `Dikerogammarus` either. This points towards a probable procedural contamination due to a mis-placement of one of the samples belonging to _Dikerogammarus villosus_ gut contents analysis. We decided to remove this sample from downstream analysis.
 The last source of known or suspected contamination detected was `Homo sapiens`, which was detected in 2 samples `CH104` and `CH301` collected in October, both show low levels ~1.8% (171 reads) and ~0.87% (120 reads) respectively.
+
+```{r}
+may.clean[22,"Dikerogammarus_villosus"]
+
+
+```
+
+
 
 ```{r checking the remaining unwanted taxa}
 may.post.filter = subset(may.post.filter, select = colSums(may.post.filter) > 0)
