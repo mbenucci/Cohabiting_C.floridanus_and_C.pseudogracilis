@@ -609,6 +609,96 @@ text(1,-1,label=paste0("Stress: ",round(meta.guts$stress, 6)))
 dev.off()
 ```
 
+# 4. Diversity analysis of eDNA samples
+To avoid over-estimating the diversity present in the eDNA samples, the data set need to be cleaned a bit further. For this purpose assignment at higher taxonomic rank (mainly Order), were removed from the dataset, while assignments to Family, were spearated from the assignments to Genus and Species level. 
+
+```{r eDNA samples rarefaction curves}
+# Removing high rank taxa
+edna.full = edna.full[,!c(colnames(edna.full) %in% c("Cyclopidae","Diptera","Daphniidae"))]
+
+# calculating ratio
+edna.ratio = edna.full[]/rowSums(edna.full)
+edna.ratio = cbind(edna.ratio, info.edna)
+
+# removing `predator_id` variables and transforming eDNA detections into abundances
+occup.edna = edna.ratio
+occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))][occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))] > 0] <- 1
+
+# adding genus information to help in plotting
+melt.occup.edna = melt(occup.edna)
+melt.occup.edna$genus = gsub("([_]{1}[A-Za-z0-9-]{+}.{+}[.]{0,1}){0,+}$","", melt.occup.edna$variable)
+
+# Rarefaction curves calculated on abundance data without genus information
+inext.edna = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_id","sample_type","predator_id"))] %>% group_by(site, time) %>% summarise_all(list(sum)))
+rownames(inext.edna) = paste(inext.edna$site, inext.edna$time, sep="_")
+
+# removing `time`, `sample_id` and `site` variables as no more necessary.
+inext.edna = t(inext.edna[,!c(colnames(inext.edna) %in% c("time","site"))])
+
+# extrapolating rarefaction curves for Species richness and Shannon Diversity
+incid.edna = iNEXT(inext.edna, q=c(0,1), datatype = "abundance", se=T, endpoint=50)
+
+strip_labels=c("0"="Species Richness","1"="Shannon Diversity")
+
+png("R_images/eDNA_species_rarefactions.png", width = 1000, height = 800, units = "px")
+ggiNEXT(incid.edna) +
+  labs(y = "", x="Number of samples") +
+  theme(legend.position="right") +
+  facet_grid(order~., labeller=as_labeller(strip_labels), scales="free") +
+  ggtitle("Species level rarefaction curves of eDNA samples")
+dev.off()
+```
+
+```{r shannon diversity in eDNA}
+divers.edna = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_type","site","predator_id"))] %>% group_by(time,sample_id) %>% summarise_all(funs(sum)))
+
+rownames(divers.edna) = paste(divers.edna$sample_id, divers.edna$time, sep="_")
+sp_richness = rowSums(divers.edna[,!c(colnames(divers.edna) %in% c("sample_id","time"))])
+
+# CH May
+may_rich = sp_richness[grep("CH._May", names(sp_richness))]
+mean(may_rich)
+sd(may_rich)/sqrt(length(may_rich))
+
+# CH Oct
+oct_rich = sp_richness[grep("CH._Oct", names(sp_richness))]
+mean(oct_rich)
+sd(oct_rich)/sqrt(length(oct_rich))
+```
+
+```{r PERMANOVA eDNA}
+# eDNA PERMANOVA
+occup.edna$sample_id
+rownames(occup.edna)=paste(occup.edna$sample_id, occup.edna$time, sep="_")
+
+adonis.edna = occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))]
+
+fact_site.edna = matrix(c(occup.edna$site), ncol=1)
+fact_time.edna = matrix(c(occup.edna$time), ncol=1)
+
+adonis.edna = vegdist(as.matrix(adonis.edna))
+
+adonis(adonis.edna~fact_site.edna*fact_time.edna, permutations = 9999, method="jaccard")
+```
+
+```{r nmds based on distances and on abundance data}
+# NMDS based on the abundance data (will give the species scores as well)
+meta.edna = metaMDS(adonis.edna, distance="jaccard")
+```
+
+
+```{r plotting eDNA nmds}
+# full symbols for May, hollow symbols for October
+png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
+plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
+points(meta.guts, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
+points(meta.guts, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
+ordispider(meta.edna, group=fact_site.edna[,1],col=c("blue","orange","green"),label=T)
+ordiellipse(meta.edna, group=fact_site.edna[,1],kind="ehull",lty=c(1,3,5),label=F,lwd=1)
+text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
+dev.off()
+```
+
 ## TO DO
 
 * eDNA for the community estimate
