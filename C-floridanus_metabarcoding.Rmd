@@ -650,7 +650,7 @@ dev.off()
 ```
 
 ```{r shannon diversity in eDNA}
-divers.edna = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_type","site","predator_id"))] %>% group_by(time,sample_id) %>% summarise_all(funs(sum)))
+divers.edna = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_type","site","predator_id"))] %>% group_by(time,sample_id) %>% summarise_all(list(sum)))
 
 rownames(divers.edna) = paste(divers.edna$sample_id, divers.edna$time, sep="_")
 sp_richness = rowSums(divers.edna[,!c(colnames(divers.edna) %in% c("sample_id","time"))])
@@ -698,6 +698,115 @@ ordiellipse(meta.edna, group=fact_site.edna[,1],kind="ehull",lty=c(1,3,5),label=
 text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
 dev.off()
 ```
+
+
+
+# 8. Niche/Diet breadth
+
+After analysisng the detection of prey species in the gut contents, and after having analysed the communities compositions from eDNA and kick samples. The niche breadth of _D. villosus_ across the 2 invaded sites can be analysed. Further, the comparison of niche overlap between _D. villosus_ and _G. zaddachi_ can be calculated.
+
+```{r niche breadth of amphipods across sites}
+# Summing
+breadth.cfcp.time = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site"))] %>% group_by(predator_id, time) %>% summarise_all(list(sum)))
+
+rownames(breadth.cfcp.time) = paste(breadth.cfcp.time$predator_id, breadth.cfcp.time$time, sep="_")
+
+breadth.cfcp.time = t(breadth.cfcp.time[,!c(colnames(breadth.cfcp.time) %in% c("predator_id","time"))])
+
+niche.dvgz = breadth.cfcp.time
+
+#breadth.cfcp.time[,1] = breadth.cfcp.time[,1]/
+#breadth.cfcp.time[,2] = breadth.cfcp.time[,2]/100
+
+niche.width(breadth.cfcp.time, method="levins")
+niche.width(breadth.cfcp.time, method="shannon")
+
+# C.floridanus May
+(niche.width(breadth.cfcp.time, method="levins")[1]-1)/(nrow(breadth.cfcp.time)-1)
+# C.floridanus Oct
+(niche.width(breadth.cfcp.time, method="levins")[2]-1)/(nrow(breadth.cfcp.time)-1)
+# C.pseudogracilis May
+(niche.width(breadth.cfcp.time, method="levins")[3]-1)/(nrow(breadth.cfcp.time)-1)
+# C.pseudogracilis Oct
+(niche.width(breadth.cfcp.time, method="levins")[4]-1)/(nrow(breadth.cfcp.time)-1)
+
+niche.overlap(breadth.cfcp.time, method="levins")
+niche.overlap(breadth.cfcp.time, method="pianka")
+```
+
+```{r niche breadth of amphipods species (no sites)}
+# summing prey DNA reads by predator ID
+breadth.cfcp = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site","time"))] %>% group_by(predator_id) %>% summarise_all(list(sum)))
+
+rownames(breadth.cfcp) = breadth.cfcp$predator_id
+
+breadth.cfcp = t(breadth.cfcp[,!c(colnames(breadth.cfcp) %in% c("predator_id"))])
+
+#breadth.cfcp[,1] = breadth.cfcp[,1]/216
+#breadth.cfcp[,2] = breadth.cfcp[,2]/107
+
+niche.width(breadth.cfcp, method="levins")
+niche.width(breadth.cfcp, method="shannon")
+
+(niche.width(breadth.cfcp, method="levins")[1]-1)/(nrow(breadth.cfcp)-1)
+(niche.width(breadth.cfcp, method="levins")[2]-1)/(nrow(breadth.cfcp)-1)
+
+niche.overlap(breadth.cfcp, method="levins")
+niche.overlap(breadth.cfcp, method="pianka")
+```
+
+# 9. Food web bipartite network
+
+For the bipartite network the gut contents data frame with the detections of preys can now be used. The gut contents data first needs to be summarised by site and season, then the data frame can be transposed to have a matrix with the prey along the rows and the predators along the columns. The prey taxa names (bottom level) will also be simplified from the extended binomial names only to allow a better reading in the bipartite plot.
+
+```{r food web network plus bipartite}
+# Summing prey DNA reads by predator ID, site and time.
+food.web = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site"))] %>% group_by(predator_id, time) %>% summarise_all(list(sum)))
+rownames(food.web) = paste(food.web$predator_id, food.web$time, sep="_")
+
+# Removing metadata column and transposing to have predators in columns and prey in rows.
+food.web = food.web[,!c(colnames(food.web) %in% c("predator_id","time"))]
+food.web = as.data.frame(t(food.web))
+#food.web = subset(food.web, subset=rowSums(food.web) > 0)
+
+# Renaming the preys taxa in a more legible format for the plot (e.g. from extended binomial "Asellus aquaticus" to "A.aquaticus")
+rownames(food.web) = gsub("[a-z]{3,13}_",".", rownames(food.web))
+```
+
+Setting up the order of the top and bottom levels in the bipartite plot, this will allow to colour code the taxa. The taxa in this plot were organised by higher rank (e.g. Diptera, Amphipoda, Oligochaeta, etc.). While the order of the taxa in the plot is organised according to the interactions, in the legend the order was organised by high rank to make it more accessible and easy to read.
+
+```{r plot order}
+#seq.high=c("D.vil_GW_May","D.vil_GW_Oct","D.vil_WB_May","D.vil_WB_Oct","G.zad_RB_May","G.zad_RB_Oct")
+
+#seq.low=c("C.luridus","C.laricomalis","T.tubifex","A.chlorotica","P.acuta","D.polymorpha","G.tigrinus","Cricotopus","C.brevilabris","Daphnia","P.pediculus","G.zaddachi","P.moldaviensis","B.vejdovskyanum","L.hoffmeisteri","C.floridanus","C.pseudogracilis","C.multisetosum","C.sp._BOLD:AAI4299","Hydra","H.oligactis","C.diastrophus","S.lacustris","S.sthenum","A.sieboldi","E.dilatata","L.phaeopa","Chironomidae","T.medius","S.crystallina")
+
+col.network=c("red","red","red","red","cyan3","cyan3","cyan3","yellow","tan4","tan4","darkorchid3","cyan3","tan4","cyan3")
+  
+#c("yellow","yellow","tan4","tan4","darkorchid3","darkorchid3","red","yellow","cyan3","cyan3","cyan3","red","tan4","tan4","tan4","red","red","red","yellow","darkcyan","darkcyan","tan4","tan4","grey48","darkgreen","darkgreen","khaki3","yellow","yellow","darkorchid3")
+```
+
+```{r legend order}
+name.legend=c("Daphnia","C.brevilabris","P.pediculus","C.floridanus","C.pseudogracilis","C.multisetosum","G.tigrinus","G.zaddachi","Chironomidae","Cricotopus","C.luridus","C.laricomalis","C.sp._BOLD:AAI4299","T.medius","Hydra","H.oligactis","D.polymorpha","P.acuta","S.crystallina","A.chlorotica","B.vejdovskyanum","C.diastrophus","L.hoffmeisteri","P.moldaviensis","S.lacustris","T.tubifex","S.sthenum","A.sieboldi","E.dilatata","L.phaeopa")
+
+col.legend=c("cyan3","cyan3","cyan3","red","red","red","red","red","yellow","yellow","yellow","yellow","yellow","yellow","darkcyan","darkcyan","darkorchid3","darkorchid3","darkorchid3","tan4","tan4","tan4","tan4","tan4","tan4","tan4","grey48","darkgreen","darkgreen","khaki3")
+```
+
+After having set up the orders of taxa in top and bottom levels with their corresponding colours, the bipartite plot and the legend can be generated. The legend was generated separately due to limits in the plot dimensions, which if reduced would have made either the plot, or the legend non readable. The legend and the plot were merged externally to R.
+
+```{r plotting the networks}
+# Producing the bipartite network
+#sortweb(food.web, sort.order="seq", sequence=list(seq.higher=seq.high, seq.lower=seq.low))
+png("R_images/bipartite_network.png", width=4000, height=2500, units="px", res=300)
+plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lablength=5, low.lab.dis=0.1, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network)
+dev.off()
+
+# Producing the legend
+png("R_images/bipartite_network_legend.png", width=4000, height=2500, units="px", res=300)
+plotweb(sortweb(food.web, sort.order="seq", sequence=list(seq.higher=seq.high, seq.lower=seq.low)),high.plot=F, low.plot=F, col.interaction = "white", bor.col.interaction = "white")
+legend("center", xpd=T, legend=name.legend, fill=col.legend, bty="n", border="black")
+dev.off()
+```
+
 
 ## TO DO
 
