@@ -906,9 +906,141 @@ plot(fit.oct, col="red", cex=1)
 dev.off()
 ```
 
-# 7. 
+#  7. Comparison of gut contents detection against community composition
+
+```{r merging guts, and community data sets}
+# Previously the sample type for the gut contents data frame was removed, so we first add it again.
+abund.guts.site$sample_type = "guts"
+occup.kick.edna$sample_type
+
+occup.gut.edna.kick = full_join(abund.guts.site, occup.kick.edna)
+occup.gut.edna.kick[is.na(occup.gut.edna.kick)] <- 0
+
+adonis.guts.edna.kick = occup.gut.edna.kick[,!c(colnames(occup.gut.edna.kick) %in% c("site","sample_type","time","predator_id","sample_id"))]
+
+fact_site.full = matrix(c(occup.gut.edna.kick$site), ncol=1)
+fact_time.full = matrix(c(occup.gut.edna.kick$time), ncol=1)
+fact_type.full = matrix(c(occup.gut.edna.kick$sample_type), ncol=1)
+
+adonis.guts.edna.kick = vegdist(as.matrix(adonis.guts.edna.kick))
+
+adonis(adonis.guts.edna.kick~fact_type.full*fact_site.full*fact_time.full, permutations = 9999, method = "jaccard")
+```
+
+```{r permanova of guts, eDNA and kick-samples}
+meta.full = metaMDS(adonis.guts.edna.kick, trymax = 200, methods = "jaccard")
+```
 
 
+```{r NMDS plot of guts against kick-samples and eDNA}
+# full symbols for May, hollow symbols for October
+png("R_images/guts_community_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
+plot(meta.full, type="n", main="Gut contents and Community NMDS", xlim=c(-0.5,0.5), ylim=c(-0.6,0.7))
+points(meta.full, select=which(fact_time.full[,1]=="May"),col="black",pch=20)
+points(meta.full, select=which(fact_time.full[,1]=="Oct"),col="black",pch=1)
+ordispider(meta.full, group=fact_type.full[,1],col=c("blue","orange","green"),label=T)
+ordiellipse(meta.full, group=fact_type.full[,1],kind="ehull",lty=c(1,5,3),label=F,lwd=1)
+text(0, -0.5, label=paste0("Stress: ",round(meta.full$stress, 6)))
+dev.off()
+```
+
+## FROM HERE!!!!
+
+```{r}
+colnames(occup.gut.edna.kick)
+```
+
+```{r}
+grep("Chironomus", colnames(occup.gut.edna.kick))
+```
+
+```{r barplot of guts and community}
+occup.melt = melt(occup.gut.edna.kick)
+
+# Adding order groups to the data frame
+occup.melt$order = "NA"
+occup.melt[grep("Hydracarina|Limnesia|Platynothrus", occup.melt$variable),"order"] = "Arachnida"
+occup.melt[grep("Chydoridae|Chydorus|Daphnia|Daphniidae|Diaphanosoma|Eubosmina|Eurycercus|Macrothrix|Polyphemus", occup.melt$variable),"order"] = "Cladocera"
+occup.melt[grep("Agabus|Dytiscidae|Elmidae|Haliplidae|Haliplus|Hyphydrus|Limnius|Platambus", occup.melt$variable), "order"] = "Coleoptera"
+occup.melt[grep("Ploima|Xenylla|Podura", occup.melt$variable), "order"] = "Collembola"
+occup.melt[grep("Asellus", occup.melt$variable), "order"] = "Isopoda"
+occup.melt[grep("Corophium|Crangonyx|Gammaridae|Gammarus", occup.melt$variable), "order"] = "Amphipoda"
+occup.melt[grep("Acanthocyclops|Cyclops|Eucyclops|Eudiaptomus|Eurytemora|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
+occup.melt[grep("Brachycera|Ceratopogonidae|Chironomidae|Chironomus|Cricotopus|Culicoides|Dolichopodidae|Euchironomus|Nematocera|Polypedilum|Procladius|Tanytarsus|Psychodidae|Stratiomys|Tipulidae", occup.melt$variable), "order"]= "Diptera"
+occup.melt[grep("Caenis|Cloeon|Procleon", occup.melt$variable), "order"] = "Ephemeroptera"
+#occup.melt[grep("Chaetonotus", occup.melt$variable), "order"] = "Gastrotricha"
+occup.melt[grep("Corixa|Corixidae|Micronecta|Nepa|Notonecta|Plea|Velliidae", occup.melt$variable), "order"] = "Hemiptera"
+occup.melt[grep("Erpobdella|Glossiphonia|Haemopis|Helobdella|Placobdella", occup.melt$variable), "order"] = "Hirudinea"
+occup.melt[grep("Hydra", occup.melt$variable), "order"] = "Hydrozoa"
+#occup.melt[grep("Sialidae", occup.melt$variable), "order"] = "Megaloptera"
+occup.melt[grep("Theodoxus|Stagnicola|Valvatidae|Segmentina|Anodonta|Bithynia|Bithyniidae|Corbicula|Dreissena|Hydrobiidae|Lymnaea|Lymnaeidae|Physa|Physella|Pisidium|Planorbidae|Planorbis|Radix|Sida|Sphaerium|Unio|Valvata|Potamopyrgus", occup.melt$variable), "order"] = "Mollusca"
+#occup.melt[grep("Plectus", occup.melt$variable), "order"] = "Nematoda"
+occup.melt[grep("Bothrioneurum|Allolobophora_chlorotica|Chaetogaster|Lumbricillus|Nais|Ophidonais|Polyarthra|Potamothrix|Stylaria|Synchaeta|Tubifex|Tubificidae|Limnodrilus|Uncinais|Cyprideis|Cypridopsis", occup.melt$variable), "order"] = "Oligochaeta"
+#occup.melt[grep("Limnocythere", occup.melt$variable), "order"] = "Ostracoda"
+#occup.melt[grep("Stenostomum|Stempellinella", occup.melt$variable), "order"] = "Platyhelminthes"
+occup.melt[grep("Polyarthra|Asplanchna|Brachionus|Euchlanis|Keratella|Philodina", occup.melt$variable), "order"] = "Rotifera"
+occup.melt[grep("Ceraclea|Ecnomus|Hydropsychidae|Leptoceridae|Lype|Oecetis|Oxyethira", occup.melt$variable), "order"] = "Trichoptera"
+occup.melt[grep("Coenagrionidae|Erythromma", occup.melt$variable), "order"] = "Zygoptera"
+
+cols_barplot = c("red","darkorange", "cyan3", "greenyellow", "plum2", "deeppink", "yellow", "rosybrown",  "green","salmon","palevioletred","aquamarine","goldenrod","khaki4","darkorchid3","gainsboro","tan4", "brown","grey50","black","darkgreen","khaki3","blue")
+
+png("R_images/barplot_summary_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
+occup.melt %>% mutate(site = factor(site, levels=c("GW","WB","RB"))) %>% 
+  ggplot(aes(sample_type, value)) +
+  geom_bar(stat="identity", position="fill", aes(fill=order)) +
+  scale_fill_manual(values = cols_barplot, name = "") +
+  scale_x_discrete(limits=c("eDNA","kick","guts")) +
+  theme_bw() +
+  facet_grid(time~site) +
+  labs(x="", y="Community composition (%)", title = "Community composition (individual taxa grouped by high rank taxonomy)") +
+  theme(legend.position = "right")
+dev.off()
+```
+
+```{r summary barplot of amphipod}
+melt.kick = melt(abund.kick[,!c(colnames(abund.kick) %in% "REPLICATE")])
+
+melt.kick$order = "NA"
+melt.kick[grep("Limnesia|Platynothrus", melt.kick$variable),"order"] = "Arachnida"
+melt.kick[grep("Chydoridae|Chydorus|Daphnia|Daphniidae|Diaphanosoma|Eubosmina|Eurycercus|Macrothrix|Polyphemus", melt.kick$variable),"order"] = "Cladocera"
+melt.kick[grep("Dytiscidae|Elmidae|Haliplidae|Limnius|Platambus", melt.kick$variable), "order"] = "Coleoptera"
+melt.kick[grep("Ploima|Xenylla|Podura", melt.kick$variable), "order"] = "Collembola"
+melt.kick[grep("Asellus", melt.kick$variable), "order"] = "Isopoda"
+melt.kick[grep("Corophium|Crangonyx|Dikerogammarus|Gammarus", melt.kick$variable), "order"] = "Amphipoda"
+melt.kick[grep("Acanthocyclops|Cyclops|Eucyclops|Eudiaptomus|Eurytemora|Mesocyclops", melt.kick$variable), "order"] = "Cyclopoida"
+melt.kick[grep("Polypedilum|Brachycera|Ceratopogonidae|Chironomidae|Chironomus|Cricotopus|Culicoides|Dolichopodidae|Nematocera|Polypedilum|Procladius|Tanytarsus|Psychodidae|Tipulidae", melt.kick$variable), "order"]= "Diptera"
+melt.kick[grep("Caenis|Cloeon", melt.kick$variable), "order"] = "Ephemeroptera"
+melt.kick[grep("Chaetonotus", melt.kick$variable), "order"] = "Gastrotricha"
+melt.kick[grep("Corixa|Corixidae|Micronecta|Nepa|Notonecta|Plea|Velliidae", melt.kick$variable), "order"] = "Hemiptera"
+melt.kick[grep("Placobdella|Erpobdella|Glossiphonia|Helobdella", melt.kick$variable), "order"] = "Hirudinea"
+melt.kick[grep("Hydra", melt.kick$variable), "order"] = "Hydrozoa"
+melt.kick[grep("Sialidae", melt.kick$variable), "order"] = "Megaloptera"
+melt.kick[grep("Theodoxus|Stagnicola|Valvatidae|Segmentina|Anodonta|Bithynia|Bithyniidae|Corbicula|Dreissena|Hydrobiidae|Lymnaea|Lymnaeidae|Physa|Physella|Pisidium|Planorbidae|Planorbis|Radix|Sida|Sphaerium|Unio|Valvata|Potamopyrgus", melt.kick$variable), "order"] = "Mollusca"
+melt.kick[grep("Plectus", melt.kick$variable), "order"] = "Nematoda"
+melt.kick[grep("Bothrioneurum|Allolobophora_chlorotica|Chaetogaster|Lumbricillus|Nais|Ophidonais|Polyarthra|Potamothrix|Stylaria|Synchaeta|Tubifex|Tubificidae|Limnodrilus|Uncinais|Cyprideis|Cypridopsis", melt.kick$variable), "order"] = "Oligochaeta"
+melt.kick[grep("Limnocythere", melt.kick$variable), "order"] = "Ostracoda"
+melt.kick[grep("Stenostomum|Stempellinella", melt.kick$variable), "order"] = "Platyhelminthes"
+melt.kick[grep("Polyarthra|Asplanchna|Brachionus|Euchlanis|Keratella|Philodina", melt.kick$variable), "order"] = "Rotifera"
+melt.kick[grep("Ceraclea|Ecnomus|Leptoceridae|Lype|Oecetis|Oxyethira", melt.kick$variable), "order"] = "Trichoptera"
+melt.kick[grep("Coenagrionidae|Erythromma", melt.kick$variable), "order"] = "Zygoptera"
+melt.kick[grep("Liposcelis", melt.kick$variable), "order"] = "Psocoptera"
+
+col_crustacea = c("olivedrab","springgreen","darkblue","steelblue1","skyblue1","darkorchid2","plum","orchid1","tomato","tan1")
+#c("#00CC99","#006666","#3399CC","#0000FF","#000033","#9900FF","#660066","#CC00CC","#FF00FF","#9966FF","#808080")
+
+png("R_images/barplot_summary_amphipod.png", width = 3000, height = 3000, units = "px", res = 300)
+melt.kick[melt.kick$order == "Amphipoda",] %>% 
+  mutate(variable = factor(variable, levels=c("Corophium_sp.", "Corophium_curvispinum", "Crangonyx_sp.", "Crangonyx_floridanus", "Crangonyx_pseudogracilis", "Gammarus_sp.", "Gammarus_tigrinus", "Gammarus_zaddachi", "Dikerogammarus_sp.", "Dikerogammarus_villosus"))) %>% 
+  mutate(site = factor(site, levels=c("GW","WB","RB"))) %>% 
+  ggplot(aes(sample_id, value, group=time)) +
+  geom_bar(stat="identity", position=position_dodge(1), aes(fill=variable)) +
+  scale_fill_manual(values = col_crustacea, name = "") +
+  theme_bw() +
+  facet_grid(time~site, scales="free_x") +
+  labs(x="", y="Abundance (count)", title = "Amphipoda kick-samples composition") +
+  theme(legend.position = "right")
+dev.off()
+```
 
 # 8. Niche/Diet breadth
 
