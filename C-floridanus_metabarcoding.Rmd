@@ -866,6 +866,50 @@ text(0, -1, label=paste0("Stress: ",round(meta.kick.edna$stress, 6)))
 dev.off()
 ```
 
+```{r envfit of communities from October}
+# loading the file
+water.measure = read.csv("data/env_measures/Chasewater_measures.csv", sep=",", header=T, row.names = 1)
+occup.oct = occup.kick.edna[occup.kick.edna$time == "Oct",]
+
+rownames(occup.oct) = occup.oct$sample_id
+
+occup.oct = occup.oct[,!c(colnames(occup.oct) %in% c("time","sample_id","site","sample_type"))]
+
+test = as.data.frame(water.measure %>% transmute(temp_mean = (temp1+temp2+temp3)/3,
+                            pH_mean = (pH1+pH2+pH3)/3,
+                            cond_mean = (cond1+cond2+cond3)/3))
+
+rownames(test) = rownames(water.measure)
+test.comm = as.data.frame(t(occup.oct))
+
+sum.comm = as.data.frame(test.comm %>% transmute(CH1 = CH1,
+                        CH2 = CH2+eCH2,
+                        CH3 = CH3+eCH3,
+                        CH4 = CH4+eCH4,
+                        CH5 = CH5+eCH5,
+                        CH6 = CH6))
+
+sum.comm = as.data.frame(t(sum.comm))
+colnames(sum.comm) = colnames(occup.oct)
+
+ord = metaMDS(sum.comm, distance = "jaccard", trymax = 200)
+fit.oct = envfit(ord, test, permu = 9999, na.rm=T, labels=T)
+```
+
+```{r envfit plot}
+png("R_images/envift_on_October_communities.png", width = 3000, height = 3000, units = "px", res = 300)
+plot(ord, type="n")
+points(ord, select=which(rownames(ord$points) == c("CH1","CH2","CH3","CH4","CH5","CH6")), col="blue", pch=22)
+orditorp(ord, display="sites", cex=1, col=c("blue","blue","blue","blue","blue","blue"))
+orditorp(ord, display="species", type="n")
+plot(fit.oct, col="red", cex=1)
+dev.off()
+```
+
+# 7. 
+
+
+
 # 8. Niche/Diet breadth
 
 After analysisng the detection of prey species in the gut contents, and after having analysed the communities compositions from eDNA and kick samples. The niche breadth of _D. villosus_ across the 2 invaded sites can be analysed. Further, the comparison of niche overlap between _D. villosus_ and _G. zaddachi_ can be calculated.
