@@ -668,7 +668,6 @@ sd(oct_rich)/sqrt(length(oct_rich))
 
 ```{r PERMANOVA eDNA}
 # eDNA PERMANOVA
-occup.edna$sample_id
 rownames(occup.edna)=paste(occup.edna$sample_id, occup.edna$time, sep="_")
 
 adonis.edna = occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))]
@@ -689,14 +688,14 @@ meta.edna = metaMDS(adonis.edna, distance="jaccard")
 
 ```{r plotting eDNA nmds}
 # full symbols for May, hollow symbols for October
-png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
-plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
-points(meta.guts, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
-points(meta.guts, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
-ordispider(meta.edna, group=fact_site.edna[,1],col=c("blue","orange","green"),label=T)
-ordiellipse(meta.edna, group=fact_site.edna[,1],kind="ehull",lty=c(1,3,5),label=F,lwd=1)
-text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
-dev.off()
+#png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
+#plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
+#points(meta.guts, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
+#points(meta.guts, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
+#ordispider(meta.edna, group=fact_site.edna[,1],col=c("blue","orange","green"),label=T)
+#ordiellipse(meta.edna, group=fact_site.edna[,1],kind="ehull",lty=c(1,3,5),label=F,lwd=1)
+#text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
+#dev.off()
 ```
 
 Microscopy data from the community collected with the kick-samples are available in 6 separate files belonging to each lake from either sampling season.
@@ -774,10 +773,8 @@ ggiNEXT(inext.kick) +
 occupancy.kick = abund.kick[,!c(colnames(abund.kick) %in% c("location"))]
 
 occupancy.kick[,!c(colnames(occupancy.kick) %in% c("time","sample_id","site","sample_type"))][occupancy.kick[,!c(colnames(occupancy.kick) %in% c("time","sample_id","site","sample_type"))] > 0] <- 1
-View(occupancy.kick)
 
-
-grep("CH.May", paste0(occupancy.kick$sample_id, occupancy.kick$time))
+#grep("CH.May", paste0(occupancy.kick$sample_id, occupancy.kick$time))
 
 rich.kick = rowSums(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("sample_id","site","time","sample_type"))])
 
@@ -794,9 +791,7 @@ sd(choct_kickrich)/sqrt(length(choct_kickrich))
 
 
 ```{r PERMANOVA of kick-samples}
-
 adonis.kick = as.data.frame(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("site","sample_type"))] %>% group_by(sample_id, time) %>% summarise_all(list(sum)))
-
 
 fact_site.kick = matrix(c(adonis.kick$sample_id), ncol=1)
 fact_time.kick = matrix(c(adonis.kick$time), ncol=1)
@@ -826,10 +821,16 @@ dev.off()
 # 6. Community composition of eDNA and kick-samples
 
 ```{r merging kick-samples and eDNA frames}
-occup.kick.edna = full_join(occupancy.edna, occupancy.kick)
+occupancy.kick$site = occupancy.kick$sample_id
+occup.edna$site = gsub("^e", "", occup.edna$site)
+
+occup.kick.edna = full_join(occup.edna[,!c(colnames(occup.edna) %in% "predator_id")], occupancy.kick)
 occup.kick.edna[is.na(occup.kick.edna)] <- 0
 
-adonis.kick.edna = occup.kick.edna[,!c(colnames(occup.kick.edna) %in% c("site","sample_id","sample_type","time","REPLICATE"))]
+
+occup.kick.edna = as.data.frame(occup.kick.edna %>% group_by(sample_id, sample_type, site, time) %>% summarise_all(list(sum)))
+
+adonis.kick.edna = occup.kick.edna[,!c(colnames(occup.kick.edna) %in% c("site","sample_id","sample_type","time"))]
 
 fact_site.edki = matrix(c(occup.kick.edna$site), ncol=1)
 fact_time.edki = matrix(c(occup.kick.edna$time), ncol=1)
@@ -855,15 +856,11 @@ for (s in grep("_", rownames(meta.kick.edna$species))){
 }
 
 png("R_images/kick-eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
-plot(meta.kick.edna, type="n", main="Community NMDS\neDNA and kick-samples by sample type", xlim=c(-1.5,1.5), ylim=c(-1,1.1))
-points(meta.kick.edna, select=which(fact_site.edki[,1]=="WB" & fact_time.edki[,1]=="May"),col="black",pch=20)
-points(meta.kick.edna, select=which(fact_site.edki[,1]=="WB" & fact_time.edki[,1]=="Oct"),col="black",pch=1)
-points(meta.kick.edna, select=which(fact_site.edki[,1]=="GW" & fact_time.edki[,1]=="May"),col="blue",pch=15)
-points(meta.kick.edna, select=which(fact_site.edki[,1]=="GW" & fact_time.edki[,1]=="Oct"),col="blue",pch=22)
-points(meta.kick.edna, select=which(fact_site.edki[,1]=="RB" & fact_time.edki[,1]=="May"),col="red",pch=17)
-points(meta.kick.edna, select=which(fact_site.edki[,1]=="RB" & fact_time.edki[,1]=="Oct"),col="red",pch=24)
+plot(meta.kick.edna, type="n", main="Community NMDS\neDNA and kick-samples by sample type")#, xlim=c(-1.5,1.5), ylim=c(-1,1.1))
+points(meta.kick.edna, select=which(fact_time.edki[,1]=="May"),col="black",pch=20)
+points(meta.kick.edna, select=which(fact_time.edki[,1]=="Oct"),col="black",pch=1)
 orditorp(meta.kick.edna, display="species")
-ordispider(meta.kick.edna, group=fact_site.edki[,1],col=c("blue","orange","green"),label=T)
+ordispider(meta.kick.edna, group=fact_site.edki[,1],col=c("blue","orange"),label=T)
 ordiellipse(meta.kick.edna, group=fact_type.edki[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
 text(0, -1, label=paste0("Stress: ",round(meta.kick.edna$stress, 6)))
 dev.off()
