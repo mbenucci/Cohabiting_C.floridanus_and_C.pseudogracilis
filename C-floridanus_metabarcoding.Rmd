@@ -744,28 +744,21 @@ colnames(abund.kick)
 
 ```{r rarefaction curves on kick-samples}
 # removing high order taxa
-colnames(abund.kick)
+abund.kick = abund.kick[,!c(colnames(abund.kick) %in% c("Trichoptera","Diptera","Oligochaeta","Ostracoda","Araneae","Coleoptera","Mollusca","Zygoptera","Nematoda"))]
 
-abund.kick = abund.kick[,!c(colnames(abund.kick) %in% c("Trichoptera","Diptera","Oligochaeta","Ostracoda","Araneae","Coleoptera","Mollusca","Zygoptera","Plecoptera","Nematoda"))]
-
-#abund.kick = as.data.frame(abund.kick %>% group_by(site, sample_id, sample_type, time, location) %>% summarise_all(list(sum)))
+raref.kick = as.data.frame(abund.kick %>% group_by(site, sample_id, sample_type, time, location) %>% summarise_all(list(sum)))
 
 # setting rownames and removing extra variables
-rownames(abund.kick) = paste(abund.kick$sample_id, abund.kick$time, sep="_")
-raref.kick = abund.kick[,!c(colnames(abund.kick) %in% c("site","sample_id","sample_type","time","location"))]
+rownames(raref.kick) = paste(raref.kick$sample_id, raref.kick$time, sep="_")
+raref.kick = raref.kick[,!c(colnames(raref.kick) %in% c("site","sample_id","sample_type","time","location"))]
 
 # list of families in data set to be removed
 kick.fam = colnames(raref.kick[,grepl("idae", colnames(raref.kick)) == T])
 raref.sp.kick = raref.kick[,!c(colnames(raref.kick) %in% kick.fam)]
 
-# summarising data set by lake and season
-raref.sp.kick = as.data.frame(raref.sp.kick %>% group_by(site, time) %>% summarise_all(funs(sum)))
-
-rownames(raref.sp.kick) = paste(raref.sp.kick$site, raref.sp.kick$time, sep="_")
-raref.sp.kick[is.na(raref.sp.kick)] <- 0
 raref.sp.kick = t(raref.sp.kick[,!c(colnames(raref.sp.kick) %in% c("site","time"))])
 
-inext.kick = iNEXT(t(raref.sp.kick), q=c(0,1), datatype = "abundance", se=T, endpoint=1400)
+inext.kick = iNEXT(raref.sp.kick, q=c(0,1), datatype = "abundance", se=T, nboot=50, endpoint=1400)
 
 strip_labels=c("0"="Species Richness","1"="Shannon Diversity")
 #png("R_images/kick-samples_rarefactions.png", width = 1000, height = 800, units = "px")
@@ -778,11 +771,13 @@ ggiNEXT(inext.kick) +
 ```
 
 ```{r species richness kick-samples}
-View(abund.kick)
 occupancy.kick = abund.kick[,!c(colnames(abund.kick) %in% c("location"))]
 
 occupancy.kick[,!c(colnames(occupancy.kick) %in% c("time","sample_id","site","sample_type"))][occupancy.kick[,!c(colnames(occupancy.kick) %in% c("time","sample_id","site","sample_type"))] > 0] <- 1
 View(occupancy.kick)
+
+
+grep("CH.May", paste0(occupancy.kick$sample_id, occupancy.kick$time))
 
 rich.kick = rowSums(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("sample_id","site","time","sample_type"))])
 
@@ -799,12 +794,15 @@ sd(choct_kickrich)/sqrt(length(choct_kickrich))
 
 
 ```{r PERMANOVA of kick-samples}
-adonis.kick = occupancy.kick[,!c(colnames(occupancy.kick) %in% c("time","sample_id","site","sample_type"))]
 
-fact_site.kick = matrix(c(occupancy.kick$sample_id), ncol=1)
-fact_time.kick = matrix(c(occupancy.kick$time), ncol=1)
+adonis.kick = as.data.frame(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("site","sample_type"))] %>% group_by(sample_id, time) %>% summarise_all(list(sum)))
 
-adonis.kick = vegdist(as.matrix(adonis.kick))
+
+fact_site.kick = matrix(c(adonis.kick$sample_id), ncol=1)
+fact_time.kick = matrix(c(adonis.kick$time), ncol=1)
+
+rownames(adonis.kick) = paste(adonis.kick$sample_id, adonis.kick$time, sep="_")
+adonis.kick = vegdist(as.matrix(adonis.kick[,!c(colnames(adonis.kick) %in% c("sample_id","time"))]))
 
 adonis(adonis.kick~fact_site.kick*fact_time.kick, permutations = 9999, method="jaccard")
 ```
@@ -819,8 +817,8 @@ png("R_images/kick-samples_NMDS_jaccard.png", width = 3000, height = 3000, units
 plot(meta.kick, type="n", main="kick-samples NMDS", xlim=c(-0.6,0.6), ylim=c(-0.6,0.6))
 points(meta.kick, select=which(fact_time.kick[,1]=="May"),col="black",pch=20)
 points(meta.kick, select=which(fact_time.kick[,1]=="Oct"),col="black",pch=1)
-ordispider(meta.kick, group=fact_site.kick[,1],col=c("blue","orange","green"),label=T)
-ordiellipse(meta.kick, group=fact_site.kick[,1],kind="ehull",lty=c(1,3,5),label=F,lwd=1)
+ordispider(meta.kick, group=fact_time.kick[,1],col=c("blue","orange"),label=T)
+ordiellipse(meta.kick, group=fact_time.kick[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
 text(-0.5,-0.4, label=paste0("Stress: ", round(meta.kick$stress,6)))
 dev.off()
 ```
