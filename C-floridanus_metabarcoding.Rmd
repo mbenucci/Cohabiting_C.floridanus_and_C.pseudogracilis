@@ -171,7 +171,7 @@ t.test(colSums(may17.reads), colSums(oct17.reads), var.equal = T)
 
 ## Read depth threshold
 
-The coverage filter (based on `mean(sample_DNA_reads)-sd(sample_DNA_reads)`) for the sequencing from May 2017 results negative. We then decided to use a standard 1000 reads as coverage filter, which is very similar to the coverage calculated for the sequencing from October 2017 (1902 reads). 
+The coverage filter (based on `mean(sample_DNA_reads)-sd(sample_DNA_reads)`) for the sequencing from May 2017 results negative. So we decided to use a standard 1000 reads as coverage filter. The coverage calculated for the sequencing from October 2017 instead is equal to 1902 reads.
 
 ```{r read depth filter, include=T}
 cov_may17 = mean(colSums(may17.reads))-sd(colSums(may17.reads))
@@ -212,27 +212,25 @@ ggplot(full.retain, aes(time, value)) +
   theme_bw() + labs(x="Data sets", y="Sample read depth (N reads)")
 ```
 
-
-```{r subsetting samples, include=T}
-#crang.may = subset(crang.may[,c(grep("CH|NEG|POS", colnames(crang.may)))])
-#crang.oct = subset(crang.oct[,c(grep("CH|NEG.pl1|NEG.pl3|POS.pl1|POS.pl3", colnames(crang.oct)))])
-```
-
+Cleaning the dataset from unwanted taxa.
 
 ```{r removing empty taxa}
 crang.may = subset(crang.may, subset=rowSums(crang.may) > 0)
 crang.oct = subset(crang.oct, subset=rowSums(crang.oct) > 0)
 
-may.clean = crang.may[!(rownames(crang.may) %in% c("Chrysophyceae_sp.","Cyclostephanos_invisitatus","Dinobryon","Dinobryon_divergens","Dinophyceae","Euceraphis_betulae","Mallomonas_sp","Melosira_ambiqua","Paraphysomonas_sp.","Penicillium_sclerotiorum","Pythium","Stephanodiscus_cf._minutulus","Thalassiosira_pseudonana","uncultured_Pythium","unassigned")),]
+may.clean = crang.may[!(rownames(crang.may) %in% c("Chrysophyceae_sp.","Cyclostephanos_invisitatus","Dinobryon","Dinobryon_divergens","Dinophyceae","Euceraphis_betulae","Mallomonas_sp.","Melosira_ambiqua","Paraphysomonas_sp.","Penicillium_sclerotiorum","Pythium","Stephanodiscus_cf._minutulus","Thalassiosira_pseudonana","uncultured_Pythium","unassigned")),]
 
-oct.clean = crang.oct[!(rownames(crang.oct) %in% c("Anser_anser","Ascomycota","Aves","Branta_canadensis","Cervus","Chroicocephalus_ridibundus","Chrysochromulina","Chrysochromulina_parva","Chrysophyceae_sp","Cyclostephanos_invisitatus","Cygnus_olor","Dinophyceae","Fistulifera_pelliculosa","Fulica_atra","Gomphonema_parvulum","invertebrate_environmental_sample","Melosira_ambiqua","Mucorales","Mycena_cf._purpureofusca_MUSH159-07","Navicula_minima","Nitzschia_palea","Paraphysomonas_sp","Percidae","Pinnularia_neomajor","Rhodotorula","Stephanodiscus","Tetradesmus_obliquus","Thalassiosira_pseudonana","unassigned","uncultured_Jaminaea","uncultured_Pythium","Vanellus_vanellus","Verticillium_dahliae")),]
+oct.clean = crang.oct[!(rownames(crang.oct) %in% c("Anser_anser","Ascomycota","Aves","Branta_canadensis","Cervus","Chroicocephalus_ridibundus","Chrysochromulina","Chrysochromulina_parva","Chrysophyceae_sp.","Cyclostephanos_invisitatus","Cygnus_olor","Dinophyceae","Fistulifera_pelliculosa","Fulica_atra","Gomphonema_parvulum","invertebrate_environmental_sample","Melosira_ambiqua","Mucorales","Mycena_cf._purpureofusca_MUSH159-07","Navicula_minima","Nitzschia_palea","Paraphysomonas_sp","Percidae","Pinnularia_neomajor","Rhodotorula","Stephanodiscus","Tetradesmus_obliquus","Thalassiosira_pseudonana","unassigned","uncultured_Jaminaea","uncultured_Pythium","Vanellus_vanellus","Verticillium_dahliae")),]
 ```
 
-After removing unwanted taxa we retained 95.16% and 84.01% of the total reads from respectively May and October.
+The DNA reads belonging to unwanted taxa were removed from each dataset. May dataset contained 126038 (~5.85%) reads belonging these unwanted taxa, while October dataset contained 158562 (~15.99%) reads belonging to unwanted taxa. These left us with 95.15% and 84.01% of the total reads from respectively May and October for downstream analysis.
 
 ```{r reads retained after clean up}
-(sum(may.clean)/sum(crang.may))*100
-(sum(oct.clean)/sum(crang.oct))*100
+sum(crang.may)-sum(may.clean)
+(sum(crang.may)-sum(may.clean))/sum(crang.may)*100
+
+sum(crang.oct)-sum(oct.clean)
+(sum(crang.oct)-sum(oct.clean))/sum(crang.oct)*100
 ```
 
 Investigate Negative and Positive samples to see the level of contamination.
@@ -688,14 +686,14 @@ meta.edna = metaMDS(adonis.edna, distance="jaccard")
 
 ```{r plotting eDNA nmds}
 # full symbols for May, hollow symbols for October
-#png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
-#plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
-#points(meta.guts, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
-#points(meta.guts, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
-#ordispider(meta.edna, group=fact_site.edna[,1],col=c("blue","orange","green"),label=T)
-#ordiellipse(meta.edna, group=fact_site.edna[,1],kind="ehull",lty=c(1,3,5),label=F,lwd=1)
-#text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
-#dev.off()
+png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
+plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
+points(meta.guts, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
+points(meta.guts, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
+ordispider(meta.edna, group=fact_time.edna[,1],col=c("blue","orange"),label=T)
+ordiellipse(meta.edna, group=fact_time.edna[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
+text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
+dev.off()
 ```
 
 Microscopy data from the community collected with the kick-samples are available in 6 separate files belonging to each lake from either sampling season.
@@ -944,10 +942,11 @@ text(0, -0.5, label=paste0("Stress: ",round(meta.full$stress, 6)))
 dev.off()
 ```
 
-## FROM HERE!!!!
-
 ```{r}
 colnames(occup.gut.edna.kick)
+#which(occup.gut.edna.kick$Chrysophyceae_sp. > 0)
+
+#occup.gut.edna.kick[which(occup.gut.edna.kick$Chrysophyceae_sp. > 0),c("sample_type","time")]
 ```
 
 ```{r}
@@ -961,11 +960,13 @@ occup.melt = melt(occup.gut.edna.kick)
 occup.melt$order = "NA"
 occup.melt[grep("Hydracarina|Limnesia|Platynothrus", occup.melt$variable),"order"] = "Arachnida"
 occup.melt[grep("Chydoridae|Chydorus|Daphnia|Daphniidae|Diaphanosoma|Eubosmina|Eurycercus|Macrothrix|Polyphemus", occup.melt$variable),"order"] = "Cladocera"
+occup.melt[grep("Acanthocyclops|Cyclops|Eucyclops|Eudiaptomus|Eurytemora|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
+
 occup.melt[grep("Agabus|Dytiscidae|Elmidae|Haliplidae|Haliplus|Hyphydrus|Limnius|Platambus", occup.melt$variable), "order"] = "Coleoptera"
 occup.melt[grep("Ploima|Xenylla|Podura", occup.melt$variable), "order"] = "Collembola"
 occup.melt[grep("Asellus", occup.melt$variable), "order"] = "Isopoda"
 occup.melt[grep("Corophium|Crangonyx|Gammaridae|Gammarus", occup.melt$variable), "order"] = "Amphipoda"
-occup.melt[grep("Acanthocyclops|Cyclops|Eucyclops|Eudiaptomus|Eurytemora|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
+
 occup.melt[grep("Brachycera|Ceratopogonidae|Chironomidae|Chironomus|Cricotopus|Culicoides|Dolichopodidae|Euchironomus|Nematocera|Polypedilum|Procladius|Tanytarsus|Psychodidae|Stratiomys|Tipulidae", occup.melt$variable), "order"]= "Diptera"
 occup.melt[grep("Caenis|Cloeon|Procleon", occup.melt$variable), "order"] = "Ephemeroptera"
 #occup.melt[grep("Chaetonotus", occup.melt$variable), "order"] = "Gastrotricha"
