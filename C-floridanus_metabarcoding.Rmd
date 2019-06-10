@@ -958,41 +958,49 @@ occup.melt = melt(occup.gut.edna.kick)
 
 # Adding order groups to the data frame
 occup.melt$order = "NA"
+#1
 occup.melt[grep("Hydracarina|Limnesia|Platynothrus", occup.melt$variable),"order"] = "Arachnida"
+#2
 occup.melt[grep("Chydorus|Daphnia|Diaphanosoma|Eurycercus|Polyphemus|Sida", occup.melt$variable),"order"] = "Cladocera"
-occup.melt[grep("Cyclops|Eucyclops|Eudiaptomus|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
-
-## FROM HERE!
-
-occup.melt[grep("Agabus|Dytiscidae|Elmidae|Haliplidae|Haliplus|Hyphydrus|Limnius|Platambus", occup.melt$variable), "order"] = "Coleoptera"
-occup.melt[grep("Ploima|Xenylla|Podura", occup.melt$variable), "order"] = "Collembola"
+#3
+occup.melt[grep("Cyclops|Eucyclops|Eudiaptomus|Maxillopoda|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
+#4
+occup.melt[grep("Agabus|Dryopidae|Haliplus|Hyphydrus|Limnius|Platambus", occup.melt$variable), "order"] = "Coleoptera"
+#5
 occup.melt[grep("Asellus", occup.melt$variable), "order"] = "Isopoda"
-occup.melt[grep("Corophium|Crangonyx|Gammaridae|Gammarus", occup.melt$variable), "order"] = "Amphipoda"
-
-occup.melt[grep("Brachycera|Ceratopogonidae|Chironomidae|Chironomus|Cricotopus|Culicoides|Dolichopodidae|Euchironomus|Nematocera|Polypedilum|Procladius|Tanytarsus|Psychodidae|Stratiomys|Tipulidae", occup.melt$variable), "order"]= "Diptera"
-occup.melt[grep("Caenis|Cloeon|Procleon", occup.melt$variable), "order"] = "Ephemeroptera"
-#occup.melt[grep("Chaetonotus", occup.melt$variable), "order"] = "Gastrotricha"
-occup.melt[grep("Corixa|Corixidae|Micronecta|Nepa|Notonecta|Plea|Velliidae", occup.melt$variable), "order"] = "Hemiptera"
-occup.melt[grep("Erpobdella|Glossiphonia|Haemopis|Helobdella|Placobdella", occup.melt$variable), "order"] = "Hirudinea"
+#6
+occup.melt[grep("Corophium|Crangonyx", occup.melt$variable), "order"] = "Amphipoda"
+#7
+occup.melt[grep("Ceratopogonidae|Chironomidae|Cricotopus|Endochironomus|Limoniidae|Polypedilum|Stratiomys|Tabanidae|Tipulidae", occup.melt$variable), "order"]= "Diptera"
+#8
+occup.melt[grep("Caenis|Procleon", occup.melt$variable), "order"] = "Ephemeroptera"
+#9
+occup.melt[grep("Corixidae", occup.melt$variable), "order"] = "Hemiptera"
+#10
+occup.melt[grep("Bereobdella|Erpobdella|Glossiphonia|Haemopis|Helobdella", occup.melt$variable), "order"] = "Hirudinea"
+#11
 occup.melt[grep("Hydra", occup.melt$variable), "order"] = "Hydrozoa"
-#occup.melt[grep("Sialidae", occup.melt$variable), "order"] = "Megaloptera"
-occup.melt[grep("Theodoxus|Stagnicola|Valvatidae|Segmentina|Anodonta|Bithynia|Bithyniidae|Corbicula|Dreissena|Hydrobiidae|Lymnaea|Lymnaeidae|Physa|Physella|Pisidium|Planorbidae|Planorbis|Radix|Sida|Sphaerium|Unio|Valvata|Potamopyrgus", occup.melt$variable), "order"] = "Mollusca"
-#occup.melt[grep("Plectus", occup.melt$variable), "order"] = "Nematoda"
-occup.melt[grep("Bothrioneurum|Allolobophora_chlorotica|Chaetogaster|Lumbricillus|Nais|Ophidonais|Polyarthra|Potamothrix|Stylaria|Synchaeta|Tubifex|Tubificidae|Limnodrilus|Uncinais|Cyprideis|Cypridopsis", occup.melt$variable), "order"] = "Oligochaeta"
-#occup.melt[grep("Limnocythere", occup.melt$variable), "order"] = "Ostracoda"
-#occup.melt[grep("Stenostomum|Stempellinella", occup.melt$variable), "order"] = "Platyhelminthes"
-occup.melt[grep("Polyarthra|Asplanchna|Brachionus|Euchlanis|Keratella|Philodina", occup.melt$variable), "order"] = "Rotifera"
-occup.melt[grep("Ceraclea|Ecnomus|Hydropsychidae|Leptoceridae|Lype|Oecetis|Oxyethira", occup.melt$variable), "order"] = "Trichoptera"
-occup.melt[grep("Coenagrionidae|Erythromma", occup.melt$variable), "order"] = "Zygoptera"
+#12
+occup.melt[grep("Bithynia|Dreissena|Lymnaea|Pisidium|Planorbis|Potamopyrgus|Segmentina|Sphaerium|Valvata", occup.melt$variable), "order"] = "Mollusca"
+#13
+occup.melt[grep("Limnodrilus|Lumbriculus|Tubifex", occup.melt$variable), "order"] = "Oligochaeta"
+#14
+occup.melt[grep("Cypridopsis|Eucypris", occup.melt$variable), "order"] = "Ostracoda"
+#15
+occup.melt[grep("Ascomorpha|Euchlanis|Kellicottia|Keratella|Ploima|Polyarthra|Synchaeta", occup.melt$variable), "order"] = "Rotifera"
+#16
+occup.melt[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", occup.melt$variable), "order"] = "Trichoptera"
+#17
+occup.melt[grep("Coenagrionidae", occup.melt$variable), "order"] = "Zygoptera"
 
-cols_barplot = c("red","darkorange", "cyan3", "greenyellow", "plum2", "deeppink", "yellow", "rosybrown",  "green","salmon","palevioletred","aquamarine","goldenrod","khaki4","darkorchid3","gainsboro","tan4", "brown","grey50","black","darkgreen","khaki3","blue")
+cols_barplot = c("red","darkorange", "cyan3", "greenyellow", "plum2", "deeppink", "yellow", "rosybrown",  "green","salmon","palevioletred","aquamarine","goldenrod","khaki4","darkorchid3","gainsboro","tan4")
+#, "brown","grey50","black","darkgreen","khaki3","blue")
 
 png("R_images/barplot_summary_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
-occup.melt %>% mutate(site = factor(site, levels=c("GW","WB","RB"))) %>% 
-  ggplot(aes(sample_type, value)) +
+ggplot(occup.melt, aes(sample_type, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values = cols_barplot, name = "") +
-  scale_x_discrete(limits=c("eDNA","kick","guts")) +
+  scale_x_discrete(limits=c("kick","eDNA","guts")) +
   theme_bw() +
   facet_grid(time~site) +
   labs(x="", y="Community composition (%)", title = "Community composition (individual taxa grouped by high rank taxonomy)") +
