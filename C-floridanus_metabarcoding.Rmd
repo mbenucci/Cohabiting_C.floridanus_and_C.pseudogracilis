@@ -262,10 +262,6 @@ colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),])
 
 (colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.may)
 (colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.oct)
-
-
-#(colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/rowsumS(may.clean[,!c(colnames(may.clean) %in% c("site","sample_type","sample_id","time","predator_id"))])
-#(colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/rowSums(oct.clean[,!c(colnames(oct.clean) %in% c("site","sample_type","sample_id","time","predator_id"))])
 ```
 
 Considering these values of contamination, decided to use the threshold of 0.03% for May, and of 0.39% for October. Following this step, we also applied a fied threshold of 5 reads acoss the both whole datasets. We generated pre- and post-filter to quality check the data, but we have been using the DNA reads for downstream analysis.
@@ -292,7 +288,7 @@ may.post.filter[][may.post.filter <= thres.may] <- 0
 
 may.clean = as.data.frame(t(may.clean))
 may.clean[][may.clean[,]/rowSums(may.clean) <= thres.may] <- 0
-may.clean[][may.clean[,] <= 5] <- 0
+#may.clean[][may.clean[,] <= 5] <- 0
 ```
 
 We still detected some contamination in the Negative sample from May containing 2889 reads from _Dikerogammarus villosus_, and 71 reads from _Gammarus tigrinus_; however that threshold would be too high to be applied and still retain valid information.
@@ -321,7 +317,7 @@ oct.post.filter[][oct.post.filter <= thres.oct] <- 0
 
 oct.clean = as.data.frame(t(oct.clean))
 oct.clean[][oct.clean[,]/rowSums(oct.clean) <= thres.oct] <- 0
-oct.clean[][oct.clean[,] <= 5] <- 0
+#oct.clean[][oct.clean[,] <= 5] <- 0
 ```
 
 ```{r saving October outputs}
@@ -1108,13 +1104,13 @@ rownames(food.web) = gsub("[a-z]{3,13}_",".", rownames(food.web))
 Setting up the order of the top and bottom levels in the bipartite plot, this will allow to colour code the taxa. The taxa in this plot were organised by higher rank (e.g. Diptera, Amphipoda, Oligochaeta, etc.). While the order of the taxa in the plot is organised according to the interactions, in the legend the order was organised by high rank to make it more accessible and easy to read.
 
 ```{r plot order}
-col.network=c("red","red","red","red","khaki3","khaki3","cyan3","yellow","tan4","tan4","darkorchid3","cyan3","tan4","cyan3")
+col.network=c("red","red","red","red","khaki3","khaki3","cyan3","yellow","tan4","tan4","darkorchid3","darkgreen","cyan3","tan4","cyan3")
 ```
 
 ```{r legend order}
-name.legend=c("C.multisetosum","Crangonyx","C.floridanus","C.pseudogracilis","C.brevilabris","D.brachyurum","S.crystallina","Cyclops","C.abyssorum","E.albipennis","P.antipodarum","L.hoffmeisteri","L.variegatus","T.tubifex")
+name.legend=c("C.multisetosum","Crangonyx","C.floridanus","C.pseudogracilis","C.brevilabris","D.brachyurum","S.crystallina","Cyclops","C.abyssorum","E.albipennis","P.antipodarum","L.hoffmeisteri","L.variegatus","T.tubifex","S.polychroa")
 
-col.legend=c("red","red","red","red","cyan3","cyan3","cyan3","khaki3","khaki3","yellow","darkorchid3","tan4","tan4","tan4")
+col.legend=c("red","red","red","red","cyan3","cyan3","cyan3","khaki3","khaki3","yellow","darkorchid3","tan4","tan4","tan4","darkgreen")
 ```
 
 After having set up the orders of taxa in top and bottom levels with their corresponding colours, the bipartite plot and the legend can be generated. The legend was generated separately due to limits in the plot dimensions, which if reduced would have made either the plot, or the legend non readable. The legend and the plot were merged externally to R.
@@ -1132,14 +1128,6 @@ legend("center", xpd=T, legend=name.legend, fill=col.legend, bty="n", border="bl
 dev.off()
 ```
 
-
-## TO DO
-
-* eDNA for the community estimate
-* improve the plots and the stats
-* PERMANOVA
-* seasonality!
-* web parameters!
 ```{r log session info}
 sink("log_session_analysis.txt")
 sessionInfo()
@@ -1158,3 +1146,11 @@ sink()
 ```{r}
 print("end")
 ```
+
+## TO DO
+
+* eDNA for the community estimate
+* improve the plots and the stats
+* PERMANOVA
+* seasonality!
+* web parameters!
