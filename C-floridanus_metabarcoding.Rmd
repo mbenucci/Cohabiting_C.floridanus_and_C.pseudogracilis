@@ -959,8 +959,10 @@ occup.melt = melt(occup.gut.edna.kick)
 # Adding order groups to the data frame
 occup.melt$order = "NA"
 occup.melt[grep("Hydracarina|Limnesia|Platynothrus", occup.melt$variable),"order"] = "Arachnida"
-occup.melt[grep("Chydoridae|Chydorus|Daphnia|Daphniidae|Diaphanosoma|Eubosmina|Eurycercus|Macrothrix|Polyphemus", occup.melt$variable),"order"] = "Cladocera"
-occup.melt[grep("Acanthocyclops|Cyclops|Eucyclops|Eudiaptomus|Eurytemora|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
+occup.melt[grep("Chydorus|Daphnia|Diaphanosoma|Eurycercus|Polyphemus|Sida", occup.melt$variable),"order"] = "Cladocera"
+occup.melt[grep("Cyclops|Eucyclops|Eudiaptomus|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
+
+## FROM HERE!
 
 occup.melt[grep("Agabus|Dytiscidae|Elmidae|Haliplidae|Haliplus|Hyphydrus|Limnius|Platambus", occup.melt$variable), "order"] = "Coleoptera"
 occup.melt[grep("Ploima|Xenylla|Podura", occup.melt$variable), "order"] = "Collembola"
