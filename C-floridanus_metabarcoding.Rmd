@@ -262,13 +262,17 @@ colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),])
 
 (colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.may)
 (colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.oct)
+
+
+(colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/sum(may.clean[,!c(colnames(may.clean) %in% c("site","sample_type","sample_id","time","predator_id"))])
+(colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/sum(oct.clean[,!c(colnames(oct.clean) %in% c("site","sample_type","sample_id","time","predator_id"))])
 ```
 
 Considering these values of contamination, decided to use the threshold of 0.03% for May, and of 0.39% for October. Following this step, we also applied a fied threshold of 5 reads acoss the both whole datasets. We generated pre- and post-filter to quality check the data, but we have been using the DNA reads for downstream analysis.
 
 ```{r setting threshold values}
-thres.may =  0.00031
-thres.oct =  0.0039
+thres.may =  0.00015 #0.00031
+thres.oct =  0.000393#0.0039
 ```
 
 
@@ -383,7 +387,7 @@ oct.clean = oct.clean[,!c(colnames(oct.clean) %in% c("Dikerogammarus_villosus","
 oct.post.filter = oct.post.filter[,!c(colnames(oct.post.filter) %in% c("Dikerogammarus_villosus","Gammarus_zaddachi","Homo_sapiens"))]
 ```
 
-#2. eDNA and gut contents
+# 2. eDNA and gut contents
 
 Before continuing with data analysis we add the needed variables, and we split the data sets into gut contentns and eDNA.
 
@@ -1138,46 +1142,25 @@ dev.off()
 * PERMANOVA
 * seasonality!
 * web parameters!
+```{r log session info}
+sink("log_session_analysis.txt")
+sessionInfo()
+citation()
+sink()
+```
 
-
-## NOTE 
-Need to split species from genuses. Once splitted I can change names around and re-merge them before the bipartite.
-
-```{r bipartite web}
-web1 = abund.guts
-rownames(web1) = web1$predator
-web1 = web1[,-1]
-web1 = as.data.frame(t(web1))
-
-str(web1)
-
-#web1[,1] = as.integer(web1[,1])
-#web1[,2] = as.integer(web1[,2])
-#web1[,3] = as.integer(web1[,3])
-#web1[,4] = as.integer(web1[,4])
-
-web1 = data.matrix(web1)
-colnames(web1)
-
-colnames(web1)[1] <- "Cf_May"
-colnames(web1)[2] <- "Cf_Oct"
-colnames(web1)[3] <- "Cp_May"
-colnames(web1)[4] <- "Cp_Oct"
-
-rownames(web1)
-
-strsplit(rownames(web1), "_")
-
-for (i in (1:nrow(web1))){
-  print(paste(gsub("[a-z]{+}","",strsplit(rownames(web1), "_")[[i]][1]), strsplit(rownames(web1), "_")[[i]][2], sep="."))
+```{r packages citation}
+sink("packages_citations.txt")
+for (p in pack.list){
+ print(citation(p))
 }
-
-plotweb(web1, y.width.low=0.1, y.width.high=0.05,	y.lim=c(0,3), adj.high=c(0.5,1.5), high.lab.dis=0.2, col.high="white", low.spacing=0.02, text.rot = 90, col.interaction=c("orange","yellow","blue","red"))
+sink()
 ```
 
-```{r end of main body}
-print("End of main body")
+```{r}
+print("end")
 ```
+
 
 ## SUPPLEMENTARY MATERIAL
 
@@ -1202,119 +1185,4 @@ ggplot(may.melt, aes(sample_id, value)) +
   theme(axis.text.x=element_text(angle=90,hjust=0.3,vjust=0.3), legend.position="none")
 ```
 
-
-
-
-#### OLD SCRIPT
-
-```{r}
-## Removing Positive and Negative samples## Removing Positive and Negative samples
-dis17 = grep("POS|NEG", colnames(ch.may17), ignore.case=T)
-ch.may17 = as.data.frame(ch.may17[,-dis17])
-
-dis.oct = grep("POS|NEG", colnames(ch.oct17), ignore.case=T)
-ch.oct17 = as.data.frame(ch.oct17[,-dis.oct])
-
-ch.may17 = subset(ch.may17, subset=rowSums(ch.may17) > 0)
-ch.oct17 = subset(ch.oct17, subset=rowSums(ch.oct17) > 0)
-
-ch.oct17[!rownames(ch.oct17) %in% c("Cervus","Cygnus_olor","Fulica_atra","Homo_sapiens","invertebrate_environmental_sample"),] 
-
-ch.may_ratio = as.data.frame(t(ch.may17))
-ch.oct_ratio = as.data.frame(t(ch.oct17))
-
-ch.may_ratio = subset(ch.may_ratio, select=colSums(ch.may_ratio) > 0)
-ch.oct_ratio = subset(ch.oct_ratio, select=colSums(ch.oct_ratio) > 0)
-
-ch.may_ratio = ch.may_ratio/rowSums(ch.may_ratio)
-ch.oct_ratio = ch.oct_ratio/rowSums(ch.oct_ratio)
-
-ch.may_ratio[is.na(ch.may_ratio)] <- 0
-ch.oct_ratio[is.na(ch.oct_ratio)] <- 0
-```
-
-Splitting DNA metabarcoding of gut contents from the eDNA samples.
-
-```{r}
-edna.may = grep("e",rownames(ch.may_ratio), ignore.case=T)
-ch.water_may = ch.may_ratio[edna.may,]
-ch.guts_may = ch.may_ratio[-edna.may,]
-
-edna.oct = grep("e",rownames(ch.oct_ratio), ignore.case=T)
-ch.water_oct = ch.oct_ratio[edna.oct,]
-ch.guts_oct = ch.oct_ratio[-edna.oct,]
-```
-
-## PLOT
-
-```{r}
-ch.guts_may$samples_id = rownames(ch.guts_may)
-ch.guts_may$season = "May"
-
-ch.guts_oct$samples_id = rownames(ch.guts_oct)
-ch.guts_oct$season = "Oct"
-
-ch.water_may$samples_id = rownames(ch.water_may)
-ch.water_may$season = "May"
-
-ch.water_oct$samples_id = rownames(ch.water_oct)
-ch.water_oct$season = "Oct"
-
-ch.guts = full_join(ch.guts_may, ch.guts_oct)
-ch.guts[is.na(ch.guts)] <- 0
-
-ch.water = full_join(ch.water_may, ch.water_oct)
-ch.water[is.na(ch.water)] <- 0
-
-guts.melt = melt(ch.guts)
-water.melt = melt(ch.water)
-head(guts.melt)
-```
-
-
-```{r count}
-count(ch.guts$Crangonyx_floridanus[ch.guts$season=="May"] > 0.7)[2,]
-count(ch.guts$Crangonyx_floridanus[ch.guts$season=="Oct"] > 0.7)[2,]
-count(ch.guts$Crangonyx_pseudogracilis[ch.guts$season=="May"] > 0.7)[2,]
-count(ch.guts$Crangonyx_pseudogracilis[ch.guts$season=="Oct"] > 0.7)[2,]
-```
-
-
-
-```{r}
-head(ch.water)
-
-water.melt = melt(ch.water)
-head(water.melt)
-
-water.melt$value[water.melt$variable=="Crangonyx_floridanus"]
-water.melt$value[water.melt$variable=="Crangonyx_pseudogracilis"]
-
-unique(water.melt$variable[water.melt$value > 0])
-
-ggplot(water.melt, aes(samples_id, value)) + 
-  geom_bar(stat="identity", aes(fill=variable)) +
-  facet_grid(season~.) + 
-  theme(axis.text.x=element_text(angle=90,hjust=0.3,vjust=0.3), legend.position = "bottom")
-
-```
-
-```{r log session info}
-sink("log_session_analysis.txt")
-sessionInfo()
-citation()
-sink()
-```
-
-```{r packages citation}
-sink("packages_citations.txt")
-for (p in pack.list){
- print(citation(p))
-}
-sink()
-```
-
-```{r}
-print("end")
-```
 
