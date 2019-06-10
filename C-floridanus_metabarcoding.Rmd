@@ -958,43 +958,26 @@ occup.melt = melt(occup.gut.edna.kick)
 
 # Adding order groups to the data frame
 occup.melt$order = "NA"
-#1
 occup.melt[grep("Hydracarina|Limnesia|Platynothrus", occup.melt$variable),"order"] = "Arachnida"
-#2
 occup.melt[grep("Chydorus|Daphnia|Diaphanosoma|Eurycercus|Polyphemus|Sida", occup.melt$variable),"order"] = "Cladocera"
-#3
 occup.melt[grep("Cyclops|Eucyclops|Eudiaptomus|Maxillopoda|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
-#4
 occup.melt[grep("Agabus|Dryopidae|Haliplus|Hyphydrus|Limnius|Platambus", occup.melt$variable), "order"] = "Coleoptera"
-#5
 occup.melt[grep("Asellus", occup.melt$variable), "order"] = "Isopoda"
-#6
 occup.melt[grep("Corophium|Crangonyx", occup.melt$variable), "order"] = "Amphipoda"
-#7
 occup.melt[grep("Ceratopogonidae|Chironomidae|Cricotopus|Endochironomus|Limoniidae|Polypedilum|Stratiomys|Tabanidae|Tipulidae", occup.melt$variable), "order"]= "Diptera"
-#8
 occup.melt[grep("Caenis|Procleon", occup.melt$variable), "order"] = "Ephemeroptera"
-#9
 occup.melt[grep("Corixidae", occup.melt$variable), "order"] = "Hemiptera"
-#10
 occup.melt[grep("Bereobdella|Erpobdella|Glossiphonia|Haemopis|Helobdella", occup.melt$variable), "order"] = "Hirudinea"
-#11
 occup.melt[grep("Hydra", occup.melt$variable), "order"] = "Hydrozoa"
-#12
 occup.melt[grep("Bithynia|Dreissena|Lymnaea|Pisidium|Planorbis|Potamopyrgus|Segmentina|Sphaerium|Valvata", occup.melt$variable), "order"] = "Mollusca"
-#13
 occup.melt[grep("Limnodrilus|Lumbriculus|Tubifex", occup.melt$variable), "order"] = "Oligochaeta"
-#14
 occup.melt[grep("Cypridopsis|Eucypris", occup.melt$variable), "order"] = "Ostracoda"
-#15
 occup.melt[grep("Ascomorpha|Euchlanis|Kellicottia|Keratella|Ploima|Polyarthra|Synchaeta", occup.melt$variable), "order"] = "Rotifera"
-#16
 occup.melt[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", occup.melt$variable), "order"] = "Trichoptera"
-#17
 occup.melt[grep("Coenagrionidae", occup.melt$variable), "order"] = "Zygoptera"
 
-cols_barplot = c("red","darkorange", "cyan3", "greenyellow", "plum2", "deeppink", "yellow", "rosybrown",  "green","salmon","palevioletred","aquamarine","goldenrod","khaki4","darkorchid3","gainsboro","tan4")
-#, "brown","grey50","black","darkgreen","khaki3","blue")
+cols_barplot = c("red","darkorange", "cyan3", "greenyellow", "plum2", "deeppink", "yellow", "grey50",  "green","blue","palevioletred","aquamarine","goldenrod","khaki4","darkorchid3","gainsboro","tan4")
+#, "brown","","black","darkgreen","khaki3",)
 
 png("R_images/barplot_summary_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
 ggplot(occup.melt, aes(sample_type, value)) +
@@ -1009,45 +992,40 @@ dev.off()
 ```
 
 ```{r summary barplot of amphipod}
-melt.kick = melt(abund.kick[,!c(colnames(abund.kick) %in% "REPLICATE")])
+melt.kick = melt(abund.kick)
 
 melt.kick$order = "NA"
-melt.kick[grep("Limnesia|Platynothrus", melt.kick$variable),"order"] = "Arachnida"
-melt.kick[grep("Chydoridae|Chydorus|Daphnia|Daphniidae|Diaphanosoma|Eubosmina|Eurycercus|Macrothrix|Polyphemus", melt.kick$variable),"order"] = "Cladocera"
-melt.kick[grep("Dytiscidae|Elmidae|Haliplidae|Limnius|Platambus", melt.kick$variable), "order"] = "Coleoptera"
-melt.kick[grep("Ploima|Xenylla|Podura", melt.kick$variable), "order"] = "Collembola"
+melt.kick[grep("Hydracarina|Limnesia|Platynothrus", melt.kick$variable),"order"] = "Arachnida"
+melt.kick[grep("Chydorus|Daphnia|Diaphanosoma|Eurycercus|Polyphemus|Sida", melt.kick$variable),"order"] = "Cladocera"
+melt.kick[grep("Cyclops|Eucyclops|Eudiaptomus|Maxillopoda|Mesocyclops", melt.kick$variable), "order"] = "Cyclopoida"
+melt.kick[grep("Agabus|Dryopidae|Haliplus|Hyphydrus|Limnius|Platambus", melt.kick$variable), "order"] = "Coleoptera"
 melt.kick[grep("Asellus", melt.kick$variable), "order"] = "Isopoda"
-melt.kick[grep("Corophium|Crangonyx|Dikerogammarus|Gammarus", melt.kick$variable), "order"] = "Amphipoda"
-melt.kick[grep("Acanthocyclops|Cyclops|Eucyclops|Eudiaptomus|Eurytemora|Mesocyclops", melt.kick$variable), "order"] = "Cyclopoida"
-melt.kick[grep("Polypedilum|Brachycera|Ceratopogonidae|Chironomidae|Chironomus|Cricotopus|Culicoides|Dolichopodidae|Nematocera|Polypedilum|Procladius|Tanytarsus|Psychodidae|Tipulidae", melt.kick$variable), "order"]= "Diptera"
-melt.kick[grep("Caenis|Cloeon", melt.kick$variable), "order"] = "Ephemeroptera"
-melt.kick[grep("Chaetonotus", melt.kick$variable), "order"] = "Gastrotricha"
-melt.kick[grep("Corixa|Corixidae|Micronecta|Nepa|Notonecta|Plea|Velliidae", melt.kick$variable), "order"] = "Hemiptera"
-melt.kick[grep("Placobdella|Erpobdella|Glossiphonia|Helobdella", melt.kick$variable), "order"] = "Hirudinea"
+melt.kick[grep("Corophium|Crangonyx", melt.kick$variable), "order"] = "Amphipoda"
+melt.kick[grep("Ceratopogonidae|Chironomidae|Cricotopus|Endochironomus|Limoniidae|Polypedilum|Stratiomys|Tabanidae|Tipulidae", melt.kick$variable), "order"]= "Diptera"
+melt.kick[grep("Caenis|Procleon", melt.kick$variable), "order"] = "Ephemeroptera"
+melt.kick[grep("Corixidae", melt.kick$variable), "order"] = "Hemiptera"
+melt.kick[grep("Bereobdella|Erpobdella|Glossiphonia|Haemopis|Helobdella", melt.kick$variable), "order"] = "Hirudinea"
 melt.kick[grep("Hydra", melt.kick$variable), "order"] = "Hydrozoa"
-melt.kick[grep("Sialidae", melt.kick$variable), "order"] = "Megaloptera"
-melt.kick[grep("Theodoxus|Stagnicola|Valvatidae|Segmentina|Anodonta|Bithynia|Bithyniidae|Corbicula|Dreissena|Hydrobiidae|Lymnaea|Lymnaeidae|Physa|Physella|Pisidium|Planorbidae|Planorbis|Radix|Sida|Sphaerium|Unio|Valvata|Potamopyrgus", melt.kick$variable), "order"] = "Mollusca"
-melt.kick[grep("Plectus", melt.kick$variable), "order"] = "Nematoda"
-melt.kick[grep("Bothrioneurum|Allolobophora_chlorotica|Chaetogaster|Lumbricillus|Nais|Ophidonais|Polyarthra|Potamothrix|Stylaria|Synchaeta|Tubifex|Tubificidae|Limnodrilus|Uncinais|Cyprideis|Cypridopsis", melt.kick$variable), "order"] = "Oligochaeta"
-melt.kick[grep("Limnocythere", melt.kick$variable), "order"] = "Ostracoda"
-melt.kick[grep("Stenostomum|Stempellinella", melt.kick$variable), "order"] = "Platyhelminthes"
-melt.kick[grep("Polyarthra|Asplanchna|Brachionus|Euchlanis|Keratella|Philodina", melt.kick$variable), "order"] = "Rotifera"
-melt.kick[grep("Ceraclea|Ecnomus|Leptoceridae|Lype|Oecetis|Oxyethira", melt.kick$variable), "order"] = "Trichoptera"
-melt.kick[grep("Coenagrionidae|Erythromma", melt.kick$variable), "order"] = "Zygoptera"
-melt.kick[grep("Liposcelis", melt.kick$variable), "order"] = "Psocoptera"
+melt.kick[grep("Bithynia|Dreissena|Lymnaea|Pisidium|Planorbis|Potamopyrgus|Segmentina|Sphaerium|Valvata", melt.kick$variable), "order"] = "Mollusca"
+melt.kick[grep("Limnodrilus|Lumbriculus|Tubifex", melt.kick$variable), "order"] = "Oligochaeta"
+melt.kick[grep("Cypridopsis|Eucypris", melt.kick$variable), "order"] = "Ostracoda"
+melt.kick[grep("Ascomorpha|Euchlanis|Kellicottia|Keratella|Ploima|Polyarthra|Synchaeta", melt.kick$variable), "order"] = "Rotifera"
+melt.kick[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", melt.kick$variable), "order"] = "Trichoptera"
+melt.kick[grep("Coenagrionidae", melt.kick$variable), "order"] = "Zygoptera"
 
 col_crustacea = c("olivedrab","springgreen","darkblue","steelblue1","skyblue1","darkorchid2","plum","orchid1","tomato","tan1")
-#c("#00CC99","#006666","#3399CC","#0000FF","#000033","#9900FF","#660066","#CC00CC","#FF00FF","#9966FF","#808080")
+
+melt.kick[grep("Crangonyx_pseudogracilis", melt.kick$variable),"value"]
+
 
 png("R_images/barplot_summary_amphipod.png", width = 3000, height = 3000, units = "px", res = 300)
 melt.kick[melt.kick$order == "Amphipoda",] %>% 
-  mutate(variable = factor(variable, levels=c("Corophium_sp.", "Corophium_curvispinum", "Crangonyx_sp.", "Crangonyx_floridanus", "Crangonyx_pseudogracilis", "Gammarus_sp.", "Gammarus_tigrinus", "Gammarus_zaddachi", "Dikerogammarus_sp.", "Dikerogammarus_villosus"))) %>% 
-  mutate(site = factor(site, levels=c("GW","WB","RB"))) %>% 
+  mutate(variable = factor(variable, levels=c("Corophium_sp.","Crangonyx_sp.","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
   ggplot(aes(sample_id, value, group=time)) +
-  geom_bar(stat="identity", position=position_dodge(1), aes(fill=variable)) +
+  geom_bar(stat="identity", position="stack", aes(fill=variable)) +
   scale_fill_manual(values = col_crustacea, name = "") +
   theme_bw() +
-  facet_grid(time~site, scales="free_x") +
+  facet_grid(time~., scales="free_x") +
   labs(x="", y="Abundance (count)", title = "Amphipoda kick-samples composition") +
   theme(legend.position = "right")
 dev.off()
