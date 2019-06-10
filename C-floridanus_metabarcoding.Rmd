@@ -1106,33 +1106,26 @@ rownames(food.web) = gsub("[a-z]{3,13}_",".", rownames(food.web))
 Setting up the order of the top and bottom levels in the bipartite plot, this will allow to colour code the taxa. The taxa in this plot were organised by higher rank (e.g. Diptera, Amphipoda, Oligochaeta, etc.). While the order of the taxa in the plot is organised according to the interactions, in the legend the order was organised by high rank to make it more accessible and easy to read.
 
 ```{r plot order}
-#seq.high=c("D.vil_GW_May","D.vil_GW_Oct","D.vil_WB_May","D.vil_WB_Oct","G.zad_RB_May","G.zad_RB_Oct")
-
-#seq.low=c("C.luridus","C.laricomalis","T.tubifex","A.chlorotica","P.acuta","D.polymorpha","G.tigrinus","Cricotopus","C.brevilabris","Daphnia","P.pediculus","G.zaddachi","P.moldaviensis","B.vejdovskyanum","L.hoffmeisteri","C.floridanus","C.pseudogracilis","C.multisetosum","C.sp._BOLD:AAI4299","Hydra","H.oligactis","C.diastrophus","S.lacustris","S.sthenum","A.sieboldi","E.dilatata","L.phaeopa","Chironomidae","T.medius","S.crystallina")
-
-col.network=c("red","red","red","red","cyan3","cyan3","cyan3","yellow","tan4","tan4","darkorchid3","cyan3","tan4","cyan3")
-  
-#c("yellow","yellow","tan4","tan4","darkorchid3","darkorchid3","red","yellow","cyan3","cyan3","cyan3","red","tan4","tan4","tan4","red","red","red","yellow","darkcyan","darkcyan","tan4","tan4","grey48","darkgreen","darkgreen","khaki3","yellow","yellow","darkorchid3")
+col.network=c("red","red","red","red","khaki3","khaki3","cyan3","yellow","tan4","tan4","darkorchid3","cyan3","tan4","cyan3")
 ```
 
 ```{r legend order}
-name.legend=c("Daphnia","C.brevilabris","P.pediculus","C.floridanus","C.pseudogracilis","C.multisetosum","G.tigrinus","G.zaddachi","Chironomidae","Cricotopus","C.luridus","C.laricomalis","C.sp._BOLD:AAI4299","T.medius","Hydra","H.oligactis","D.polymorpha","P.acuta","S.crystallina","A.chlorotica","B.vejdovskyanum","C.diastrophus","L.hoffmeisteri","P.moldaviensis","S.lacustris","T.tubifex","S.sthenum","A.sieboldi","E.dilatata","L.phaeopa")
+name.legend=c("C.multisetosum","Crangonyx","C.floridanus","C.pseudogracilis","C.brevilabris","D.brachyurum","S.crystallina","Cyclops","C.abyssorum","E.albipennis","P.antipodarum","L.hoffmeisteri","L.variegatus","T.tubifex")
 
-col.legend=c("cyan3","cyan3","cyan3","red","red","red","red","red","yellow","yellow","yellow","yellow","yellow","yellow","darkcyan","darkcyan","darkorchid3","darkorchid3","darkorchid3","tan4","tan4","tan4","tan4","tan4","tan4","tan4","grey48","darkgreen","darkgreen","khaki3")
+col.legend=c("red","red","red","red","cyan3","cyan3","cyan3","khaki3","khaki3","yellow","darkorchid3","tan4","tan4","tan4")
 ```
 
 After having set up the orders of taxa in top and bottom levels with their corresponding colours, the bipartite plot and the legend can be generated. The legend was generated separately due to limits in the plot dimensions, which if reduced would have made either the plot, or the legend non readable. The legend and the plot were merged externally to R.
 
 ```{r plotting the networks}
 # Producing the bipartite network
-#sortweb(food.web, sort.order="seq", sequence=list(seq.higher=seq.high, seq.lower=seq.low))
 png("R_images/bipartite_network.png", width=4000, height=2500, units="px", res=300)
 plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lablength=5, low.lab.dis=0.1, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network)
 dev.off()
 
 # Producing the legend
 png("R_images/bipartite_network_legend.png", width=4000, height=2500, units="px", res=300)
-plotweb(sortweb(food.web, sort.order="seq", sequence=list(seq.higher=seq.high, seq.lower=seq.low)),high.plot=F, low.plot=F, col.interaction = "white", bor.col.interaction = "white")
+plotweb(food.web,high.plot=F, low.plot=F, col.interaction = "white", bor.col.interaction = "white")
 legend("center", xpd=T, legend=name.legend, fill=col.legend, bty="n", border="black")
 dev.off()
 ```
