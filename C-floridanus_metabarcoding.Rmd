@@ -264,15 +264,15 @@ colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),])
 (colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.oct)
 
 
-(colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/sum(may.clean[,!c(colnames(may.clean) %in% c("site","sample_type","sample_id","time","predator_id"))])
-(colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/sum(oct.clean[,!c(colnames(oct.clean) %in% c("site","sample_type","sample_id","time","predator_id"))])
+#(colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/rowsumS(may.clean[,!c(colnames(may.clean) %in% c("site","sample_type","sample_id","time","predator_id"))])
+#(colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/rowSums(oct.clean[,!c(colnames(oct.clean) %in% c("site","sample_type","sample_id","time","predator_id"))])
 ```
 
 Considering these values of contamination, decided to use the threshold of 0.03% for May, and of 0.39% for October. Following this step, we also applied a fied threshold of 5 reads acoss the both whole datasets. We generated pre- and post-filter to quality check the data, but we have been using the DNA reads for downstream analysis.
 
 ```{r setting threshold values}
-thres.may =  0.00015 #0.00031
-thres.oct =  0.000393#0.0039
+thres.may =  0.00031
+thres.oct =  0.0039
 ```
 
 
@@ -492,7 +492,7 @@ may.post.filter[m.row,unique(m.col)]
 o.row = rownames(oct.post.filter[oct.post.filter$predator_id != "water", c("site","sample_id","time","sample_type","predator_id")])
 o.col = oct.post.filter[oct.post.filter$predator_id != "water", "predator_id"]
 
-oct.post.filter[o.row,unique(o.col)]
+oct.post.filter[o.row, unique(o.col)]
 
 for (i in o.row){
   pred_id = oct.post.filter[i,"predator_id"]
@@ -692,8 +692,8 @@ meta.edna = metaMDS(adonis.edna, distance="jaccard")
 # full symbols for May, hollow symbols for October
 png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
 plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
-points(meta.guts, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
-points(meta.guts, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
+points(meta.edna, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
+points(meta.edna, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
 ordispider(meta.edna, group=fact_time.edna[,1],col=c("blue","orange"),label=T)
 ordiellipse(meta.edna, group=fact_time.edna[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
 text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
@@ -862,7 +862,7 @@ plot(meta.kick.edna, type="n", main="Community NMDS\neDNA and kick-samples by sa
 points(meta.kick.edna, select=which(fact_time.edki[,1]=="May"),col="black",pch=20)
 points(meta.kick.edna, select=which(fact_time.edki[,1]=="Oct"),col="black",pch=1)
 orditorp(meta.kick.edna, display="species")
-ordispider(meta.kick.edna, group=fact_site.edki[,1],col=c("blue","orange"),label=T)
+ordispider(meta.kick.edna, group=fact_type.edki[,1],col=c("blue","orange"),label=T)
 ordiellipse(meta.kick.edna, group=fact_type.edki[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
 text(0, -1, label=paste0("Stress: ",round(meta.kick.edna$stress, 6)))
 dev.off()
@@ -948,14 +948,12 @@ dev.off()
 
 ```{r}
 colnames(occup.gut.edna.kick)
+
 #which(occup.gut.edna.kick$Chrysophyceae_sp. > 0)
 
 #occup.gut.edna.kick[which(occup.gut.edna.kick$Chrysophyceae_sp. > 0),c("sample_type","time")]
 ```
 
-```{r}
-grep("Chironomus", colnames(occup.gut.edna.kick))
-```
 
 ```{r barplot of guts and community}
 occup.melt = melt(occup.gut.edna.kick)
@@ -1160,29 +1158,3 @@ sink()
 ```{r}
 print("end")
 ```
-
-
-## SUPPLEMENTARY MATERIAL
-
-```{r survival plot frame1, include=T, echo=F}
-may.thre.survival = full_join(may.pre.filter, may.post.filter)
-may.thre.survival[is.na(may.thre.survival)] <- 0
-
-dim(may.thre.survival)
-
-may.melt = as.data.frame(may.thre.survival)
-
-may.melt = melt(may.melt)
-
-#color10=c("#E69F00", "#56B4E9", "#CC79A7", "#009E73", "#F0E442", "#999999", "#0072B2", "#D55E00", "#000000","#8B2323")
-
-ggplot(may.melt, aes(sample_id, value)) +
-  facet_grid(.~type) +
-  coord_flip() +
-#  scale_fill_manual(values = color10, name = "") +
-  geom_bar(stat="identity", aes(fill=variable)) + 
-  labs(title="Crangonyx gut contents (May 2017)", subtitle="Pre- vs. Post-filter of reads") +
-  theme(axis.text.x=element_text(angle=90,hjust=0.3,vjust=0.3), legend.position="none")
-```
-
-
