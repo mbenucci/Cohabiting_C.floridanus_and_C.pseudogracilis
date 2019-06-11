@@ -33,7 +33,7 @@ ls()
 Setting up the environment for R using the following packages.
 
 ```{r packages loading, include=F}
-pack.list = c("broom","devtools","dplyr","ggplot2","ggsn","leaflet","maps","maptools","mapview","raster","RColorBrewer","rgdal","rgeos","rworldmap","tmap")
+pack.list = c("broom","devtools","dplyr","ggplot2","ggsn","gridExtra","leaflet","maps","maptools","mapview","raster","RColorBrewer","rgdal","rgeos","rworldmap","tmap")
 new.packages = pack.list[!(pack.list %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos="https://cran.rstudio.com")
 lapply(pack.list, require, character.only=T)
@@ -73,14 +73,12 @@ uk_shape_wgs = spTransform(uk_shape, CRS(wgs84))
 uk_map = fortify(uk_shape_wgs)
 
 # Saving map to file directly
-png("map/Site_location.png", width=600, height=820, units="px")
 ggplot(uk_map) +
   geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
   geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=3) +
   geom_text(data=lake.coords, aes(Longitude,Latitude, label=short.name), nudge_x=-0.4, cex=4) +
   coord_fixed(2) +
   theme_void()
-dev.off()
 ```
 
 Importing the lakes shapefiles to plot the sampling points
@@ -92,7 +90,6 @@ ch.sites
 chasewater_wgs = spTransform(chasewater_shape, CRS(wgs84))
 ch_map = fortify(chasewater_wgs)
 
-png("map/Chasewater_sampling_locations.png", width=820, height=600, units="px")
 ggplot(ch_map) +
   geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
   geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=3) +
@@ -100,7 +97,6 @@ ggplot(ch_map) +
   xlim(-1.963,-1.937) + ylim(52.660,52.679) +
   coord_fixed(1.5) +
   theme_void()
-dev.off()
 ```
 ```{r}
 a = ggplot(uk_map) +
