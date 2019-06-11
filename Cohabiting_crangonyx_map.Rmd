@@ -1,0 +1,143 @@
+---
+title: "Cohabiting_crangonyx_map"
+author: "Marco Benucci"
+date: "11 June 2019"
+output: 
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Environment set-up
+
+```{r environment setup, include=F}
+## R(v3.5.1 - Win)
+#.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win")))
+
+## R(v3.5.1 - OSX)
+#.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_osx", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_osx")))
+
+## R(v3.5.1 - ubuntu)
+.libPaths(c("/home/mb/Dropbox/PhD Hull/PhD docs/Thesis/R_stats/rlib3.5_unix", .libPaths("/home/mb/Dropbox/PhD\ Hull/PhD\ docs/Thesis/R_stats/rlib3.5_unix")))
+```
+
+```{r directory, include=FALSE}
+dir()
+rm(list=ls())
+ls()
+```
+
+Setting up the environment for R using the following packages.
+
+```{r packages loading, include=F}
+pack.list = c("broom","devtools","dplyr","ggplot2","ggsn","leaflet","maps","maptools","mapview","raster","RColorBrewer","rgdal","rgeos","rworldmap","tmap")
+new.packages = pack.list[!(pack.list %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages, repos="https://cran.rstudio.com")
+lapply(pack.list, require, character.only=T)
+```
+
+```{r session}
+sessionInfo()
+```
+
+## Plotting the map for Chapter 3 on DNA metabarcoding and MATI of invasive _D. villosus_ against non-invasive _G. zaddachi_.
+
+```{r input data}
+ch.sites = read.csv("map/Chasewater_sites.csv")
+lake.coords = read.csv("map/site_coords.csv")
+```
+
+Lakes coordinates include also a fourth lake which is part of this study, so it needs to be excluded from our current analysis.
+
+```{r checking files plus removing one lake}
+head(ch.sites)
+head(lake.coords)
+```
+
+Adding the labels short name
+
+```{r}
+lake.coords$short.name = "CH"
+```
+
+```{r map plot}
+uk_shape = readOGR("map/shapefiles/GB_IRworld.shp")
+
+# Because we have coordinates in National Grid, we convert into WGS84
+wgs84 = '+proj=longlat +datum=WGS84'
+uk_shape_wgs = spTransform(uk_shape, CRS(wgs84))
+
+uk_map = fortify(uk_shape_wgs)
+
+# Saving map to file directly
+png("map/Site_location.png", width=600, height=820, units="px")
+ggplot(uk_map) +
+  geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
+  geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=3) +
+  geom_text(data=lake.coords, aes(Longitude,Latitude, label=short.name), nudge_x=-0.4, cex=4) +
+  coord_fixed(2) +
+  theme_void()
+dev.off()
+```
+
+Importing the lakes shapefiles to plot the sampling points
+
+```{r grafham shapefile}
+chasewater_shape = readOGR("map/shapefiles/SK_SurfaceWater_Area.shp")
+ch.sites
+# Because we have coordinates in National Grid, we convert into WGS84
+chasewater_wgs = spTransform(chasewater_shape, CRS(wgs84))
+ch_map = fortify(chasewater_wgs)
+
+png("map/Chasewater_sampling_locations.png", width=820, height=600, units="px")
+ggplot(ch_map) +
+  geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
+  geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=3) +
+  geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=-0.001, nudge_y=0.001, cex=4) +
+  xlim(-1.963,-1.937) + ylim(52.660,52.679) +
+  coord_fixed(1.5) +
+  theme_void()
+dev.off()
+```
+```{r}
+a = ggplot(uk_map) +
+  geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
+  geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=3) +
+  geom_text(data=lake.coords, aes(Longitude,Latitude, label=ID), nudge_x=0.6, nudge_y=-0.2, cex=4) +
+  coord_fixed(2) +
+  theme_void()
+
+b = ggplot(ch_map) +
+  geom_polygon(aes(long,lat,group = group), fill="lightblue", color="black") +
+  geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=3) +
+  geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=-0.0013, nudge_y=0, cex=4) +
+  xlim(-1.963,-1.937) + ylim(52.660,52.679) +
+  coord_fixed(1.5) +
+  theme_void()
+
+png("map/sampling_map.png", width=3000, height=3000, units="px", res=300)
+grid.arrange(a,b, ncol=2)
+dev.off()
+```
+
+```{r log session info}
+sink("log_session_map-creation.txt")
+sessionInfo()
+citation()
+sink()
+```
+
+```{r packages citation}
+sink("map-creation_packages_citations.txt")
+for (p in pack.list){
+ print(citation(p))
+}
+sink()
+```
+
+```{r}
+print("end")
+```

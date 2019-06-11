@@ -1,5 +1,7 @@
 ---
 title: "C_floridanus"
+author: "Marco Benucci"
+date: "01 June 2019"
 output:
   pdf_document: default
   html_document: default
@@ -50,12 +52,6 @@ infile_oct17 = read.csv("data/CO1DvAug18-merged-forwonly_nonchimera-c97-cov2-id9
 
 Removing the taxonomy column from each input files and saving them into separate files.
 
-
-```{r}
-#head(infile_may17)
-#head(infile_oct17)
-```
-
 ```{r removing_taxonomy}
 ## Custom function to format the taxonomy column
 
@@ -83,8 +79,9 @@ taxa.split.oct = format_taxonomy(taxa.oct17)
 taxa.split.oct = data.frame(taxa.split.oct)
 ```
 
+The taxonomy is saved as `.csv` file
+
 ```{r taxa_output, include=TRUE}
-# Writing taxonomy outputs
 write.csv(taxa.split.may, "R_outputs/CO1Crang_May17_taxonomy.csv")
 write.csv(taxa.split.oct, "R_outputs/CO1Crang_Oct17_taxonomy.csv")
 ```
@@ -112,7 +109,6 @@ may17.reads = may17.reads[,c(to_keep.may)]
 to_remove.oct = grep("WB|RB|GW|pl2|pl4", colnames(oct17.reads))
 oct17.reads = oct17.reads[,-to_remove.oct]
 ```
-
 
 # 1. Initial Quality Control
 
@@ -257,9 +253,11 @@ Checking the N reads belonging to the positive Taxa _Osmia bicornis_ for both Ma
 colSums(pos.may["Osmia_bicornis",])
 colSums(pos.oct["Osmia_bicornis",])
 
+# Calculating N reads not belonging to psotive taxa
 colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),])
 colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),])
 
+# Calculating ratio of contanimantion in POSITIVE samples
 (colSums(pos.may)-colSums(pos.may[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.may)
 (colSums(pos.oct)-colSums(pos.oct[c("Osmia_bicornis","Hymenoptera"),]))/colSums(pos.oct)
 ```
