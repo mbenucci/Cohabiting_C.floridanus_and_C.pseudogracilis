@@ -1078,9 +1078,6 @@ breadth.cfcp.time = t(breadth.cfcp.time[,!c(colnames(breadth.cfcp.time) %in% c("
 
 niche.dvgz = breadth.cfcp.time
 
-#breadth.cfcp.time[,1] = breadth.cfcp.time[,1]/
-#breadth.cfcp.time[,2] = breadth.cfcp.time[,2]/100
-
 niche.width(breadth.cfcp.time, method="levins")
 niche.width(breadth.cfcp.time, method="shannon")
 
@@ -1093,7 +1090,6 @@ niche.width(breadth.cfcp.time, method="shannon")
 # C.pseudogracilis Oct
 (niche.width(breadth.cfcp.time, method="levins")[4]-1)/(nrow(breadth.cfcp.time)-1)
 
-niche.overlap(breadth.cfcp.time, method="levins")
 niche.overlap(breadth.cfcp.time, method="pianka")
 ```
 
@@ -1114,7 +1110,6 @@ niche.width(breadth.cfcp, method="shannon")
 (niche.width(breadth.cfcp, method="levins")[1]-1)/(nrow(breadth.cfcp)-1)
 (niche.width(breadth.cfcp, method="levins")[2]-1)/(nrow(breadth.cfcp)-1)
 
-niche.overlap(breadth.cfcp, method="levins")
 niche.overlap(breadth.cfcp, method="pianka")
 ```
 
