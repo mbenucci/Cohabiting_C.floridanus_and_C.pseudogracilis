@@ -24,16 +24,15 @@ other attached packages:
 [37] ape_5.3              aod_1.3.1           
 
 loaded via a namespace (and not attached):
- [1] bitops_1.0-6       fs_1.3.1           rprojroot_1.3-2    tools_3.5.1        backports_1.1.4    R6_2.4.0          
- [7] KernSmooth_2.23-15 lazyeval_0.2.2     colorspace_1.4-1   withr_2.1.2        tidyselect_0.2.5   prettyunits_1.0.2 
-[13] processx_3.3.1     compiler_3.5.1     cli_1.1.0          desc_1.2.0         labeling_0.3       caTools_1.17.1.2  
-[19] scales_1.0.0       callr_3.2.0        stringr_1.4.0      digest_0.6.18      minqa_1.2.4        pkgconfig_2.0.2   
-[25] sessioninfo_1.1.1  maps_3.3.0         rlang_0.3.4        rstudioapi_0.10    gtools_3.8.1       magrittr_1.5      
-[31] dotCall64_1.0-0    Rcpp_1.0.1         munsell_0.5.0      yaml_2.2.0         zlibbioc_1.28.0    pkgbuild_1.0.3    
-[37] gdata_2.18.0       crayon_1.3.4       splines_3.5.1      knitr_1.22         ps_1.3.0           pillar_1.4.0      
-[43] igraph_1.2.4.1     pkgload_1.0.2      glue_1.3.1         remotes_2.0.4      spam_2.2-2         nloptr_1.2.1      
-[49] gtable_0.3.0       purrr_0.3.2        assertthat_0.2.1   xfun_0.5           coda_0.19-2        tibble_2.1.1      
-[55] memoise_1.1.0      fields_9.8-1       cluster_2.0.9     
+ [1] bitops_1.0-6       fs_1.3.1           rprojroot_1.3-2    tools_3.5.1        backports_1.1.4    R6_2.4.0           KernSmooth_2.23-15
+ [8] lazyeval_0.2.2     colorspace_1.4-1   withr_2.1.2        tidyselect_0.2.5   prettyunits_1.0.2  processx_3.3.1     compiler_3.5.1    
+[15] cli_1.1.0          desc_1.2.0         labeling_0.3       caTools_1.17.1.2   scales_1.0.0       callr_3.2.0        stringr_1.4.0     
+[22] digest_0.6.18      minqa_1.2.4        pkgconfig_2.0.2    sessioninfo_1.1.1  maps_3.3.0         rlang_0.3.4        rstudioapi_0.10   
+[29] gtools_3.8.1       magrittr_1.5       dotCall64_1.0-0    Rcpp_1.0.1         munsell_0.5.0      yaml_2.2.0         zlibbioc_1.28.0   
+[36] pkgbuild_1.0.3     gdata_2.18.0       crayon_1.3.4       splines_3.5.1      knitr_1.22         ps_1.3.0           pillar_1.4.0      
+[43] igraph_1.2.4.1     pkgload_1.0.2      glue_1.3.1         remotes_2.0.4      spam_2.2-2         nloptr_1.2.1       gtable_0.3.0      
+[50] purrr_0.3.2        assertthat_0.2.1   xfun_0.5           coda_0.19-2        tibble_2.1.1       memoise_1.1.0      fields_9.8-1      
+[57] cluster_2.0.9     
 
 To cite R in publications use:
 

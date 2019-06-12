@@ -1,7 +1,7 @@
 tube_id	time	location	site	order	family	species	abundance
 CH101	16/05/2017	CH	1	Crustacea	Crangonyctiidae	Crangonyx_sp.	59
-CH112	16/05/2017	CH	1	Crustacea	Crangonyctiidae	Crangonyx_floridanus	58
-CH113	16/05/2017	CH	1	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	15
+CH112	16/05/2017	CH	1	Crustacea	Crangonyctiidae	Crangonyx_floridanus	65
+CH113	16/05/2017	CH	1	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	18
 CH102	16/05/2017	CH	1	Crustacea	Crangonyctiidae	Crangonyx_sp.	67
 CH103	16/05/2017	CH	1	Coleoptera	Dytiscidae	Platambus_sp.	14
 CH114	16/05/2017	CH	1	Coleoptera	Haliplidae	Haliplus_sp.	1
@@ -19,12 +19,14 @@ CH201	16/05/2017	CH	2	Diptera	Chironomidae	Chironomidae	2
 CH209	16/05/2017	CH	2	Diptera	Ceratopogonidae	Ceratopogonidae	3
 CH202	16/05/2017	CH	2	Oligochaeta	Oligochaeta	Oligochaeta	16
 CH203	16/05/2017	CH	2	Crustacea	Crangonyctiidae	Crangonyx_sp.	3
+CH209	16/05/2017	CH	2	Crustacea	Crangonyctiidae	Crangonyx_floridanus	6
+CH210	16/05/2017	CH	2	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	5
 CH204	16/05/2017	CH	2	Coleoptera	Dytiscidae	Platambus_sp.	3
 CH206	16/05/2017	CH	2	Diptera	Chironomidae	Chironomidae	1
 CH207	16/05/2017	CH	2	Diptera	Tabanidae	Tabanidae	1
 CH208	16/05/2017	CH	2	Mollusca	Bithyniidae	Bithynia_tentaculata	2
 CH301	16/05/2017	CH	3	Crustacea	Crangonyctiidae	Crangonyx_sp.	4
-CH307	16/05/2017	CH	3	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	1
+CH307	16/05/2017	CH	3	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	11
 CH302	16/05/2017	CH	3	Coleoptera	Dytiscidae	Platambus_sp.	1
 CH303	16/05/2017	CH	3	Coleoptera	Haliplidae	Haliplus_sp.	2
 CH304	16/05/2017	CH	3	Mollusca	Bithyniidae	Bithynia_tentaculata	1
@@ -40,8 +42,8 @@ CH409	16/05/2017	CH	4	Odonata	Coenagrionidae	Coenagrionidae	1
 CH410	16/05/2017	CH	4	Coleoptera	Haliplidae	Haliplus_sp.	1
 CH411	16/05/2017	CH	4	Trichoptera	Psychomyiidae	Psychomyia_sp.	2
 CH412	16/05/2017	CH	4	Crustacea	Crangonyctiidae	Crangonyx_sp.	30
-CH414	16/05/2017	CH	4	Crustacea	Crangonyctiidae	Crangonyx_floridanus	3
-CH415	16/05/2017	CH	4	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	7
+CH414	16/05/2017	CH	4	Crustacea	Crangonyctiidae	Crangonyx_floridanus	4
+CH415	16/05/2017	CH	4	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	21
 CH413	16/05/2017	CH	4	Crustacea	Corophidae	Corophium_sp.	1
 CH501	16/05/2017	CH	5	Odonata	Coenagrionidae	Coenagrionidae	4
 CH502	16/05/2017	CH	5	Mollusca	Planorbidae	Planorbis_carinatus	4
@@ -49,6 +51,8 @@ CH515	16/05/2017	CH	5	Mollusca	Planorbidae	Planorbis_vortex	4
 CH503	16/05/2017	CH	5	Crustacea	Asellidae	Asellus_aquaticus	67
 CH504	16/05/2017	CH	5	Mollusca	Dreissenidae	Dreissena_polymorpha	4
 CH505	16/05/2017	CH	5	Crustacea	Crangonyctiidae	Crangonyx_sp.	149
+CH515	16/05/2017	CH	5	Crustacea	Crangonyctiidae	Crangonyx_floridanus	4
+CH516	16/05/2017	CH	5	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	5
 CH506	16/05/2017	CH	5	Coleoptera	Dytiscidae	Haliplus_sp.	6
 CH516	16/05/2017	CH	5	Coleoptera	Haliplidae	Platambus_sp.	5
 CH517	16/05/2017	CH	5	Coleoptera	Dytiscidae	Agabus_sp.	1
@@ -61,6 +65,7 @@ CH512	16/05/2017	CH	5	Mollusca	Sphaeridae	Sphaerium_sp.	11
 CH513	16/05/2017	CH	5	Ephemeroptera	Baetidae	Procleon_pennulatum	1
 CH514	16/05/2017	CH	5	Mollusca	Hydrobiidae	Potamopyrgus_antipodarum	2
 CH601	16/05/2017	CH	6	Crustacea	Crangonyctiidae	Crangonyx_sp.	110
+CH619	16/05/2017	CH	6	Crustacea	Crangonyctiidae	Crangonyx_pseudogracilis	1
 CH602	16/05/2017	CH	6	Crustacea	Asellidae	Asellus_aquaticus	100
 CH603	16/05/2017	CH	6	Mollusca	Planorbidae	Planorbis_sp.	8
 CH619	16/05/2017	CH	6	Mollusca	Valvatidae	Valvata_piscinalis	1

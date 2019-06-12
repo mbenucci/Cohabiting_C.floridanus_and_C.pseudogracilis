@@ -42,7 +42,7 @@ lapply(pack.list, require, character.only=T)
 ```{r session}
 sessionInfo()
 ```
-
+# 1. Initial Quality Control
 The data used in this analysis were generated across 2 separate sequencing runs; one containing gut contentns and eDNA samples collected in May 2017, the second with samples collected in October 2017. Despite the date of the sequencing, all data frames and variable will be named after the month of collection for practicality.
 
 ```{r input_files}
@@ -51,6 +51,7 @@ infile_oct17 = read.csv("data/CO1DvAug18-merged-forwonly_nonchimera-c97-cov2-id9
 ```
 
 Removing the taxonomy column from each input files and saving them into separate files.
+
 
 ```{r removing_taxonomy}
 ## Custom function to format the taxonomy column
@@ -96,7 +97,7 @@ oct17.reads = as.data.frame(infile_oct17 %>% group_by(X.OTU.ID) %>% summarise_al
 
 Considering the sequencing runs included different experiments, we extract the columns containing headers belonging to the site in which both Crangonyx species were collected. In this case `CH` for the gut contents, and `eCH` for the kick-samples.
 
-```{r extracting_Dv-samples}
+```{r extracting Chasewater samples}
 rownames(may17.reads) = may17.reads$X.OTU.ID
 rownames(oct17.reads) = oct17.reads$X.OTU.ID
 
@@ -109,8 +110,6 @@ may17.reads = may17.reads[,c(to_keep.may)]
 to_remove.oct = grep("WB|RB|GW|pl2|pl4", colnames(oct17.reads))
 oct17.reads = oct17.reads[,-to_remove.oct]
 ```
-
-# 1. Initial Quality Control
 
 To calculate sample read depth for both input files, in order to quality check the overall sequencing, first all samples that didn't sequence at all (sample N read equal to 0) need to be removed. Then the mean and standard deviation for each data set can be calculated, and quality check of the samples read depth applied. 
 
@@ -144,7 +143,6 @@ ggplot(full.depth, aes(time, value)) +
   geom_jitter(color=c("gray30"), alpha=0.5) +
   theme_bw() + labs(x="Data sets", y="Sample read depth (N reads)")
 ```
-
 
 ```{r mean read depth, include=F}
 may17.reads = subset(may17.reads, select=colSums(may17.reads) > 0)
@@ -708,7 +706,7 @@ colnames(abund.kick)
 ## NOTE! To sort NMDS of kick samples, try in case using occupancy but keeping individual samples separated and collapsing by time only.
 
 ```{r rarefaction curves on kick-samples}
-# removing high order taxa
+# removing high order taxa                                                                                                                         
 abund.kick = abund.kick[,!c(colnames(abund.kick) %in% c("Trichoptera","Diptera","Oligochaeta","Ostracoda","Araneae","Coleoptera","Mollusca","Zygoptera","Nematoda"))]
 
 raref.kick = as.data.frame(abund.kick %>% group_by(site, sample_id, sample_type, time, location) %>% summarise_all(list(sum)))
@@ -780,7 +778,7 @@ adonis.kick = vegdist(as.matrix(adonis.kick[,!c(colnames(adonis.kick) %in% c("sa
 adonis(adonis.kick~fact_site.kick*fact_time.kick, permutations = 9999, method="jaccard")
 ```
 
-```{r}
+```{r PERMANOVA of kick-samples}
 meta.kick = metaMDS(adonis.kick, trymax=200, distance="jaccard")
 ```
 

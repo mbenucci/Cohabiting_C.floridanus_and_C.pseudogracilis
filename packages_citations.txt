@@ -35,8 +35,8 @@ As ape is evolving quickly, you may want to cite also its version number (found 
 'packageVersion("ape")').
 
 
-To cite bipartite in publications please use Dormann et al. (2008 R News); for network-level analyses Dormann et al.
-(2009 Open Ecol J) and for species-level analyses Dormann (2011 Network Biology):
+To cite bipartite in publications please use Dormann et al. (2008 R News); for network-level analyses Dormann et al. (2009
+Open Ecol J) and for species-level analyses Dormann (2011 Network Biology):
 
   Dormann, C.F., Fruend, J., Bluethgen, N. & Gruber B. 2009. Indices, graphs and null models: analyzing bipartite
   ecological networks. The Open Ecology Journal, 2, 7-24.
@@ -44,8 +44,8 @@ To cite bipartite in publications please use Dormann et al. (2008 R News); for n
   Dormann, C.F., Gruber B. & Fruend, J. (2008). Introducing the bipartite Package: Analysing Ecological Networks. R news
   Vol 8/2, 8 - 11.
 
-  Dormann, C.F. (2011). How to be a specialist? Quantifying specialisation in pollination networks. Network Biology 1, 1
-  - 20.
+  Dormann, C.F. (2011). How to be a specialist? Quantifying specialisation in pollination networks. Network Biology 1, 1 -
+  20.
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -80,8 +80,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘dplyr’ in publications use:
 
-  Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2019). dplyr: A Grammar of Data Manipulation. R
-  package version 0.8.1. https://CRAN.R-project.org/package=dplyr
+  Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2019). dplyr: A Grammar of Data Manipulation. R package
+  version 0.8.1. https://CRAN.R-project.org/package=dplyr
 
 A BibTeX entry for LaTeX users is
 
@@ -229,8 +229,8 @@ A BibTeX entry for LaTeX users is
 
 To cite lme4 in publications use:
 
-  Douglas Bates, Martin Maechler, Ben Bolker, Steve Walker (2015). Fitting Linear Mixed-Effects Models Using lme4.
-  Journal of Statistical Software, 67(1), 1-48. doi:10.18637/jss.v067.i01.
+  Douglas Bates, Martin Maechler, Ben Bolker, Steve Walker (2015). Fitting Linear Mixed-Effects Models Using lme4. Journal
+  of Statistical Software, 67(1), 1-48. doi:10.18637/jss.v067.i01.
 
 A BibTeX entry for LaTeX users is
 
@@ -284,8 +284,8 @@ A BibTeX entry for LaTeX users is
   }
 
 
-2011 for generalized additive model method; 2016 for beyond exponential family; 2004 for strictly additive GCV based
-model method and basics of gamm; 2017 for overview; 2003 for thin plate regression splines.
+2011 for generalized additive model method; 2016 for beyond exponential family; 2004 for strictly additive GCV based model
+method and basics of gamm; 2017 for overview; 2003 for thin plate regression splines.
 
   Wood, S.N. (2011) Fast stable restricted maximum likelihood and marginal likelihood estimation of semiparametric
   generalized linear models. Journal of the Royal Statistical Society (B) 73(1):3-36
@@ -347,8 +347,8 @@ To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'to
 
 To cite plyr in publications use:
 
-  Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data Analysis. Journal of Statistical Software, 40(1),
-  1-29. URL http://www.jstatsoft.org/v40/i01/.
+  Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data Analysis. Journal of Statistical Software, 40(1), 1-29.
+  URL http://www.jstatsoft.org/v40/i01/.
 
 A BibTeX entry for LaTeX users is
 
@@ -449,8 +449,8 @@ Visualizing Intersecting Sets},
 
 To cite package ‘vegan’ in publications use:
 
-  Jari Oksanen, F. Guillaume Blanchet, Michael Friendly, Roeland Kindt, Pierre Legendre, Dan McGlinn, Peter R. Minchin,
-  R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, Eduard Szoecs and Helene Wagner (2019). vegan:
+  Jari Oksanen, F. Guillaume Blanchet, Michael Friendly, Roeland Kindt, Pierre Legendre, Dan McGlinn, Peter R. Minchin, R.
+  B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, Eduard Szoecs and Helene Wagner (2019). vegan:
   Community Ecology Package. R package version 2.5-5. https://CRAN.R-project.org/package=vegan
 
 A BibTeX entry for LaTeX users is
