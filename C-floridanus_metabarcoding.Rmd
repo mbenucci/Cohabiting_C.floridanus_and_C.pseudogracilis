@@ -644,6 +644,36 @@ ggiNEXT(incid.edna) +
   ggtitle("Species level rarefaction curves of eDNA samples")
 dev.off()
 ```
+```{r community composition eDNA}
+unique(melt.occup.edna$variable)
+
+melt.occup.edna$order = "NA"
+melt.occup.edna[grep("Hydracarina|Limnesia|Platynothrus", melt.occup.edna$variable),"order"] = "Arachnida"
+melt.occup.edna[grep("Chydorus|Daphnia|Diaphanosoma|Eurycercus|Polyphemus|Sida", melt.occup.edna$variable),"order"] = "Cladocera"
+melt.occup.edna[grep("Cyclops|Eucyclops|Eudiaptomus|Maxillopoda|Mesocyclops", melt.occup.edna$variable), "order"] = "Cyclopoida"
+melt.occup.edna[grep("Agabus|Dryopidae|Haliplus|Hyphydrus|Limnius|Platambus", melt.occup.edna$variable), "order"] = "Coleoptera"
+melt.occup.edna[grep("Asellus", melt.occup.edna$variable), "order"] = "Isopoda"
+melt.occup.edna[grep("Corophium|Crangonyx", melt.occup.edna$variable), "order"] = "Amphipoda"
+melt.occup.edna[grep("Ceratopogonidae|Chironomidae|Cricotopus|Endochironomus|Limoniidae|Polypedilum|Stratiomys|Tabanidae|Tipulidae", melt.occup.edna$variable), "order"]= "Diptera"
+melt.occup.edna[grep("Caenis|Procleon", melt.occup.edna$variable), "order"] = "Ephemeroptera"
+melt.occup.edna[grep("Corixidae", melt.occup.edna$variable), "order"] = "Hemiptera"
+melt.occup.edna[grep("Bereobdella|Erpobdella|Glossiphonia|Haemopis|Helobdella", melt.occup.edna$variable), "order"] = "Hirudinea"
+melt.occup.edna[grep("Hydra", melt.occup.edna$variable), "order"] = "Hydrozoa"
+melt.occup.edna[grep("Bithynia|Dreissena|Lymnaea|Pisidium|Planorbis|Potamopyrgus|Segmentina|Sphaerium|Valvata", melt.occup.edna$variable), "order"] = "Mollusca"
+melt.occup.edna[grep("Limnodrilus|Lumbriculus|Tubifex", melt.occup.edna$variable), "order"] = "Oligochaeta"
+melt.occup.edna[grep("Cypridopsis|Eucypris", melt.occup.edna$variable), "order"] = "Ostracoda"
+melt.occup.edna[grep("Ascomorpha|Euchlanis|Kellicottia|Keratella|Ploima|Polyarthra|Synchaeta", melt.occup.edna$variable), "order"] = "Rotifera"
+melt.occup.edna[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", melt.occup.edna$variable), "order"] = "Trichoptera"
+melt.occup.edna[grep("Coenagrionidae", melt.occup.edna$variable), "order"] = "Zygoptera"
+
+png("R_images/eDNA_community.png", width = 3000, height = 3000, units = "px", res=300)
+ggplot(melt.occup.edna, aes(sample_id, value)) +
+  geom_bar(stat="identity", position="stack", aes(fill=order)) +
+  facet_grid(.~time)
+dev.off()
+```
+
+
 
 ```{r shannon diversity in eDNA}
 divers.edna = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_type","site","predator_id"))] %>% group_by(time,sample_id) %>% summarise_all(list(sum)))
@@ -664,34 +694,33 @@ sd(oct_rich)/sqrt(length(oct_rich))
 
 ```{r PERMANOVA eDNA}
 # eDNA PERMANOVA
-rownames(occup.edna)=paste(occup.edna$sample_id, occup.edna$time, sep="_")
+#rownames(occup.edna)=paste(occup.edna$sample_id, occup.edna$time, sep="_")
+#adonis.edna = occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))]
 
-adonis.edna = occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))]
+#fact_site.edna = matrix(c(occup.edna$site), ncol=1)
+#fact_time.edna = matrix(c(occup.edna$time), ncol=1)
 
-fact_site.edna = matrix(c(occup.edna$site), ncol=1)
-fact_time.edna = matrix(c(occup.edna$time), ncol=1)
+#adonis.edna = vegdist(as.matrix(adonis.edna))
 
-adonis.edna = vegdist(as.matrix(adonis.edna))
-
-adonis(adonis.edna~fact_site.edna*fact_time.edna, permutations = 9999, method="jaccard")
+#adonis(adonis.edna~fact_site.edna*fact_time.edna, permutations = 9999, method="jaccard")
 ```
 
 ```{r nmds based on distances and on abundance data}
 # NMDS based on the abundance data (will give the species scores as well)
-meta.edna = metaMDS(adonis.edna, distance="jaccard")
+#meta.edna = metaMDS(adonis.edna, distance="jaccard")
 ```
 
 
 ```{r plotting eDNA nmds}
 # full symbols for May, hollow symbols for October
-png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
-plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
-points(meta.edna, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
-points(meta.edna, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
-ordispider(meta.edna, group=fact_time.edna[,1],col=c("blue","orange"),label=T)
-ordiellipse(meta.edna, group=fact_time.edna[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
-text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
-dev.off()
+#png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
+#plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
+#points(meta.edna, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
+#points(meta.edna, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
+#ordispider(meta.edna, group=fact_time.edna[,1],col=c("blue","orange"),label=T)
+#ordiellipse(meta.edna, group=fact_time.edna[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
+#text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
+#dev.off()
 ```
 
 Microscopy data from the community collected with the kick-samples are available in 6 separate files belonging to each lake from either sampling season.
@@ -954,10 +983,6 @@ dev.off()
 
 ```{r}
 colnames(occup.gut.edna.kick)
-
-#which(occup.gut.edna.kick$Chrysophyceae_sp. > 0)
-
-#occup.gut.edna.kick[which(occup.gut.edna.kick$Chrysophyceae_sp. > 0),c("sample_type","time")]
 ```
 
 
@@ -966,23 +991,26 @@ occup.melt = melt(occup.gut.edna.kick)
 
 # Adding order groups to the data frame
 occup.melt$order = "NA"
+occup.melt[grep("Corophium|Crangonyx", occup.melt$variable), "order"] = "Amphipoda"
 occup.melt[grep("Hydracarina|Limnesia|Platynothrus", occup.melt$variable),"order"] = "Arachnida"
 occup.melt[grep("Chydorus|Daphnia|Diaphanosoma|Eurycercus|Polyphemus|Sida", occup.melt$variable),"order"] = "Cladocera"
 occup.melt[grep("Cyclops|Eucyclops|Eudiaptomus|Maxillopoda|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
 occup.melt[grep("Agabus|Dryopidae|Haliplus|Hyphydrus|Limnius|Platambus", occup.melt$variable), "order"] = "Coleoptera"
-occup.melt[grep("Asellus", occup.melt$variable), "order"] = "Isopoda"
-occup.melt[grep("Corophium|Crangonyx", occup.melt$variable), "order"] = "Amphipoda"
 occup.melt[grep("Ceratopogonidae|Chironomidae|Cricotopus|Endochironomus|Limoniidae|Polypedilum|Stratiomys|Tabanidae|Tipulidae", occup.melt$variable), "order"]= "Diptera"
 occup.melt[grep("Caenis|Procleon", occup.melt$variable), "order"] = "Ephemeroptera"
 occup.melt[grep("Corixidae", occup.melt$variable), "order"] = "Hemiptera"
 occup.melt[grep("Bereobdella|Erpobdella|Glossiphonia|Haemopis|Helobdella", occup.melt$variable), "order"] = "Hirudinea"
 occup.melt[grep("Hydra", occup.melt$variable), "order"] = "Hydrozoa"
+occup.melt[grep("Asellus", occup.melt$variable), "order"] = "Isopoda"
 occup.melt[grep("Bithynia|Dreissena|Lymnaea|Pisidium|Planorbis|Potamopyrgus|Segmentina|Sphaerium|Valvata", occup.melt$variable), "order"] = "Mollusca"
 occup.melt[grep("Limnodrilus|Lumbriculus|Tubifex", occup.melt$variable), "order"] = "Oligochaeta"
 occup.melt[grep("Cypridopsis|Eucypris", occup.melt$variable), "order"] = "Ostracoda"
 occup.melt[grep("Ascomorpha|Euchlanis|Kellicottia|Keratella|Ploima|Polyarthra|Synchaeta", occup.melt$variable), "order"] = "Rotifera"
 occup.melt[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", occup.melt$variable), "order"] = "Trichoptera"
+occup.melt[grep("Schmidtea", occup.melt$variable), "order"] = "Tricladida"
 occup.melt[grep("Coenagrionidae", occup.melt$variable), "order"] = "Zygoptera"
+
+occup.melt[occup.melt$order == "NA","variable"]
 
 cols_barplot = c("red","darkorange", "cyan3", "greenyellow", "plum2", "deeppink", "yellow", "grey50",  "green","blue","palevioletred","aquamarine","goldenrod","khaki4","darkorchid3","gainsboro","tan4")
 #, "brown","","black","darkgreen","khaki3",)
@@ -1022,9 +1050,6 @@ melt.kick[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", melt.kick$vari
 melt.kick[grep("Coenagrionidae", melt.kick$variable), "order"] = "Zygoptera"
 
 col_crustacea = c("olivedrab","springgreen","darkblue","steelblue1","skyblue1","darkorchid2","plum","orchid1","tomato","tan1")
-
-melt.kick[grep("Crangonyx_pseudogracilis", melt.kick$variable),"value"]
-
 
 png("R_images/barplot_summary_amphipod.png", width = 3000, height = 3000, units = "px", res = 300)
 melt.kick[melt.kick$order == "Amphipoda",] %>% 
