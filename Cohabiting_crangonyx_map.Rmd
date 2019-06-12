@@ -96,8 +96,8 @@ ggplot(ch_map) +
   geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=-0.001, nudge_y=0.001, cex=4) +
   xlim(-1.963,-1.937) + ylim(52.660,52.679) +
   coord_fixed(1.5) +
-  theme_void() +
-  theme(panel.background = element_rect(color="black", fill="NA", size=1))
+  theme_void()
+#theme(panel.background = element_rect(color="black", fill="NA", size=1))
 ```
 ```{r}
 a = ggplot(uk_map) +
@@ -105,8 +105,7 @@ a = ggplot(uk_map) +
   geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=3) +
   geom_text(data=lake.coords, aes(Longitude,Latitude, label=ID), nudge_x=0.6, nudge_y=-0.2, cex=4) +
   coord_fixed(2) +
-  theme_void() #+
-  #theme(panel.background = element_rect(color="black", fill="NA", size=1))
+  theme_void()
 
 b = ggplot(ch_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
@@ -114,8 +113,7 @@ b = ggplot(ch_map) +
   geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=-0.0013, nudge_y=0, cex=4) +
   xlim(-1.963,-1.937) + ylim(52.660,52.679) +
   coord_fixed(1.5) +
-  theme_void() #+
-  #theme(panel.background = element_rect(color="black", fill="NA", size=1))
+  theme_void()
 
 png("map/sampling_map.png", width=3000, height=3000, units="px", res=300)
 grid.arrange(a,b, ncol=2)

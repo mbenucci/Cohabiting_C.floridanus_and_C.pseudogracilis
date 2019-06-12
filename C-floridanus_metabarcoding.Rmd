@@ -753,16 +753,28 @@ raref.sp.kick = raref.kick[,!c(colnames(raref.kick) %in% kick.fam)]
 
 raref.sp.kick = t(raref.sp.kick[,!c(colnames(raref.sp.kick) %in% c("site","time"))])
 
-inext.kick = iNEXT(raref.sp.kick, q=c(0,1), datatype = "abundance", se=T, nboot=50, endpoint=1400)
+raref.may = raref.sp.kick[,grep("May", colnames(raref.sp.kick))]
+raref.oct = raref.sp.kick[,grep("Oct", colnames(raref.sp.kick))]
+
+#inext.kick = iNEXT(raref.sp.kick, q=c(0,1), datatype = "abundance", se=T, nboot=50, endpoint=1400)
+inext.may = iNEXT(raref.may, q=c(0,1), datatype = "abundance", se=T, nboot=50, endpoint=1400)
+inext.oct = iNEXT(raref.oct, q=c(0,1), datatype = "abundance", se=T, nboot=50, endpoint=1400)
 
 strip_labels=c("0"="Species Richness","1"="Shannon Diversity")
-#png("R_images/kick-samples_rarefactions.png", width = 1000, height = 800, units = "px")
-ggiNEXT(inext.kick) +
+m = ggiNEXT(inext.may) +
   labs(y = "", x="Number of individuals") +
   theme(legend.position="right") +
   facet_grid(order~., labeller=as_labeller(strip_labels), scales="free") +
-  ggtitle("Rarefaction curves of communities in kick samples")
-#dev.off()
+  ggtitle("Rarefaction curves of communities in May kick samples")
+o = ggiNEXT(inext.oct) +
+  labs(y = "", x="Number of individuals") +
+  theme(legend.position="right") +
+  facet_grid(order~., labeller=as_labeller(strip_labels), scales="free") +
+  ggtitle("Rarefaction curves of communities in Oct kick samples")
+
+png("R_images/kick-samples_raref.png", width = 4000, height = 3000, units = "px", res = 300)
+grid.arrange(m, o)
+dev.off()
 ```
 
 ```{r species richness kick-samples}
@@ -1106,7 +1118,7 @@ col.network=c("red","red","red","red","khaki3","khaki3","cyan3","yellow","tan4",
 ```
 
 ```{r legend order}
-name.legend=c("C.multisetosum","Crangonyx","C.floridanus","C.pseudogracilis","C.brevilabris","D.brachyurum","S.crystallina","Cyclops","C.abyssorum","E.albipennis","P.antipodarum","L.hoffmeisteri","L.variegatus","T.tubifex","S.polychroa")
+name.legend=c("C.multisetosum (Amphipoda)", "Crangonyx  (Amphipoda)", "C.floridanus  (Amphipoda)", "C.pseudogracilis (Amphipoda)", "C.brevilabris (Cladocera)", "D.brachyurum (Cladocera)", "S.crystallina (Cladocera)", "Cyclops (Copepoda)", "C.abyssorum  (Copepoda)", "E.albipennis (Diptera)", "P.antipodarum (Gastropoda)", "L.hoffmeisteri (Oligochaeta)", "L.variegatus (Oligochaeta)", "T.tubifex (Oligochaeta)", "S.polychroa (Tricladida)")
 
 col.legend=c("red","red","red","red","cyan3","cyan3","cyan3","khaki3","khaki3","yellow","darkorchid3","tan4","tan4","tan4","darkgreen")
 ```

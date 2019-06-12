@@ -20,9 +20,9 @@ other attached packages:
 [13] mgcv_1.8-28          nlme_3.1-140         lmtest_0.9-37        zoo_1.8-5            lme4_1.1-21          Matrix_1.2-17       
 [19] iNEXT_2.0.19         gplots_3.0.1.1       ggsignif_0.5.0       EcoSimR_0.1.0        MASS_7.3-51.4        boot_1.3-22         
 [25] bipartite_2.11       sna_2.4              network_1.15         statnet.common_4.2.0 vegan_2.5-5          lattice_0.20-38     
-[31] permute_0.9-5        ape_5.3              aod_1.3.1            gridExtra_2.3        tmap_2.2             rworldmap_1.3-6     
-[37] rgeos_0.4-3          rgdal_1.4-4          RColorBrewer_1.1-2   raster_2.9-5         mapview_2.7.0        maptools_0.9-5      
-[43] sp_1.3-1             maps_3.3.0           leaflet_2.0.2        ggsn_0.5.0           ggplot2_3.1.1        dplyr_0.8.1         
+[31] permute_0.9-5        ape_5.3              aod_1.3.1            tmap_2.2             rworldmap_1.3-6      rgeos_0.4-3         
+[37] rgdal_1.4-4          RColorBrewer_1.1-2   raster_2.9-5         mapview_2.7.0        maptools_0.9-5       sp_1.3-1            
+[43] maps_3.3.0           leaflet_2.0.2        gridExtra_2.3        ggsn_0.5.0           ggplot2_3.1.1        dplyr_0.8.1         
 [49] usethis_1.5.0        devtools_2.0.2       broom_0.5.2         
 
 loaded via a namespace (and not attached):
