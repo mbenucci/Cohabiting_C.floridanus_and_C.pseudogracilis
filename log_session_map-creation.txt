@@ -15,8 +15,8 @@ attached base packages:
 [1] grid      stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] gridExtra_2.3      tmap_2.2           rworldmap_1.3-6    rgeos_0.4-3        rgdal_1.4-4        RColorBrewer_1.1-2 raster_2.9-5      
- [8] mapview_2.7.0      maptools_0.9-5     sp_1.3-1           maps_3.3.0         leaflet_2.0.2      ggsn_0.5.0         ggplot2_3.1.1     
+ [1] tmap_2.2           rworldmap_1.3-6    rgeos_0.4-3        rgdal_1.4-4        RColorBrewer_1.1-2 raster_2.9-5       mapview_2.7.0     
+ [8] maptools_0.9-5     sp_1.3-1           maps_3.3.0         leaflet_2.0.2      gridExtra_2.3      ggsn_0.5.0         ggplot2_3.1.1     
 [15] dplyr_0.8.1        usethis_1.5.0      devtools_2.0.2     broom_0.5.2       
 
 loaded via a namespace (and not attached):
