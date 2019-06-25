@@ -33,7 +33,7 @@ ls()
 Setting up the environment for R using the following packages.
 
 ```{r packages loading, include=F}
-pack.list = c("aod","ape","bipartite","boot","devtools","dplyr","EcoSimR","ggplot2","ggsignif","gplots","grid","gridExtra","iNEXT","lattice","lme4","lmtest","MASS","mgcv","msa","network","plyr","reshape2","spaa","stringi","tidyr","UpSetR","vegan","zoo")
+pack.list = c("aod","bipartite","boot","cowplot","devtools","dplyr","EcoSimR","ggplot2","ggsignif","gplots","grid","gridExtra","iNEXT","lattice","lme4","lmtest","MASS","mgcv","msa","network","plyr","reshape2","spaa","stringi","tidyr","UpSetR","vegan","zoo")
 new.packages = pack.list[!(pack.list %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos="https://cran.rstudio.com")
 lapply(pack.list, require, character.only=T)
@@ -629,38 +629,6 @@ mean(oct_rich)
 sd(oct_rich)/sqrt(length(oct_rich))
 ```
 
-```{r PERMANOVA eDNA}
-# eDNA PERMANOVA
-#rownames(occup.edna)=paste(occup.edna$sample_id, occup.edna$time, sep="_")
-#adonis.edna = occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))]
-
-#fact_site.edna = matrix(c(occup.edna$site), ncol=1)
-#fact_time.edna = matrix(c(occup.edna$time), ncol=1)
-
-#adonis.edna = vegdist(as.matrix(adonis.edna))
-
-#adonis(adonis.edna~fact_site.edna*fact_time.edna, permutations = 9999, method="jaccard")
-```
-
-```{r nmds based on distances and on abundance data}
-# NMDS based on the abundance data (will give the species scores as well)
-#meta.edna = metaMDS(adonis.edna, distance="jaccard")
-```
-
-
-```{r plotting eDNA nmds}
-# full symbols for May, hollow symbols for October
-#png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
-#plot(meta.edna, type="n", main="eDNA NMDS", xlim=c(-1,1.5), ylim=c(-1,1))
-#points(meta.edna, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
-#points(meta.edna, select=which(fact_time.edna[,1]=="Oct"),col="blue",pch=1)
-#ordispider(meta.edna, group=fact_time.edna[,1],col=c("blue","orange"),label=T)
-#ordiellipse(meta.edna, group=fact_time.edna[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
-#text(0,-1, label=paste0("Stress: ", round(meta.edna$stress, 4)))
-#dev.off()
-```
-
-
 # 4. Diversity analysis in kick-samples
 Microscopy data from the community collected with the kick-samples are available in 6 separate files belonging to each lake from either sampling season.
 
@@ -769,13 +737,12 @@ sd(choct_kickrich)/sqrt(length(choct_kickrich))
 ```{r PERMANOVA of kick-samples}
 adonis.kick = as.data.frame(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("site","sample_type"))] %>% group_by(sample_id, time) %>% summarise_all(list(sum)))
 
-fact_site.kick = matrix(c(adonis.kick$sample_id), ncol=1)
 fact_time.kick = matrix(c(adonis.kick$time), ncol=1)
 
 rownames(adonis.kick) = paste(adonis.kick$sample_id, adonis.kick$time, sep="_")
 adonis.kick = vegdist(as.matrix(adonis.kick[,!c(colnames(adonis.kick) %in% c("sample_id","time"))]))
 
-adonis(adonis.kick~fact_site.kick*fact_time.kick, permutations = 9999, method="jaccard")
+adonis(adonis.kick~fact_time.kick, permutations = 9999, method="jaccard")
 ```
 
 ```{r PERMANOVA of kick-samples}
@@ -808,11 +775,10 @@ occup.kick.edna = as.data.frame(occup.kick.edna %>% group_by(sample_id, sample_t
 
 adonis.kick.edna = occup.kick.edna[,!c(colnames(occup.kick.edna) %in% c("site","sample_id","sample_type","time"))]
 
-fact_site.edki = matrix(c(occup.kick.edna$site), ncol=1)
 fact_time.edki = matrix(c(occup.kick.edna$time), ncol=1)
 fact_type.edki = matrix(c(occup.kick.edna$sample_type), ncol=1)
 
-adonis(adonis.kick.edna~fact_site.edki*fact_time.edki*fact_type.edki, permutations = 9999, method = "jaccard")
+adonis(adonis.kick.edna~fact_time.edki*fact_type.edki, permutations = 9999, method = "jaccard")
 ```
 
 ```{r}
@@ -831,7 +797,7 @@ for (s in grep("_", rownames(meta.kick.edna$species))){
     }
 }
 
-png("R_images/kick-eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
+png("R_images/kick-eDNA_NMDS_jaccard.png", width=3000, height=3000, units="px", res=300)
 plot(meta.kick.edna, type="n", main="Community NMDS\neDNA and kick-samples by sample type")#, xlim=c(-1.5,1.5), ylim=c(-1,1.1))
 points(meta.kick.edna, select=which(fact_time.edki[,1]=="May"),col="black",pch=20)
 points(meta.kick.edna, select=which(fact_time.edki[,1]=="Oct"),col="black",pch=1)
@@ -842,48 +808,7 @@ text(0, -1, label=paste0("Stress: ",round(meta.kick.edna$stress, 6)))
 dev.off()
 ```
 
-```{r envfit of communities from October}
-# loading the file
-water.measure = read.csv("data/env_measures/Chasewater_measures.csv", sep=",", header=T, row.names = 1)
-occup.oct = occup.kick.edna[occup.kick.edna$time == "Oct",]
-
-rownames(occup.oct) = occup.oct$sample_id
-
-occup.oct = occup.oct[,!c(colnames(occup.oct) %in% c("time","sample_id","site","sample_type"))]
-
-test = as.data.frame(water.measure %>% transmute(temp_mean = (temp1+temp2+temp3)/3,
-                            pH_mean = (pH1+pH2+pH3)/3,
-                            cond_mean = (cond1+cond2+cond3)/3))
-
-rownames(test) = rownames(water.measure)
-test.comm = as.data.frame(t(occup.oct))
-
-sum.comm = as.data.frame(test.comm %>% transmute(CH1 = CH1,
-                        CH2 = CH2+eCH2,
-                        CH3 = CH3+eCH3,
-                        CH4 = CH4+eCH4,
-                        CH5 = CH5+eCH5,
-                        CH6 = CH6))
-
-sum.comm = as.data.frame(t(sum.comm))
-colnames(sum.comm) = colnames(occup.oct)
-
-ord = metaMDS(sum.comm, distance = "jaccard", trymax = 200)
-fit.oct = envfit(ord, test, permu = 9999, na.rm=T, labels=T)
-```
-
-```{r envfit plot}
-png("R_images/envift_on_October_communities.png", width = 3000, height = 3000, units = "px", res = 300)
-plot(ord, type="n")
-points(ord, select=which(rownames(ord$points) == c("CH1","CH2","CH3","CH4","CH5","CH6")), col="blue", pch=22)
-orditorp(ord, display="sites", cex=1, col=c("blue","blue","blue","blue","blue","blue"))
-orditorp(ord, display="species", type="n")
-plot(fit.oct, col="red", cex=1)
-dev.off()
-```
-
 # 6. Detection of prey DNA in gut contents
-
 
 ```{r cleaning gut contents data frame}
 # converting reads into ratio

@@ -15,26 +15,6 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite ape in a publication use:
-
-  Paradis E. & Schliep K. 2018. ape 5.0: an environment for modern phylogenetics and evolutionary analyses in R.
-  Bioinformatics 35: 526-528.
-
-A BibTeX entry for LaTeX users is
-
-  @Article{,
-    title = {ape 5.0: an environment for modern phylogenetics and evolutionary analyses in {R}},
-    author = {E. Paradis and K. Schliep},
-    journal = {Bioinformatics},
-    year = {2018},
-    volume = {35},
-    pages = {526-528},
-  }
-
-As ape is evolving quickly, you may want to cite also its version number (found with 'library(help = ape)' or
-'packageVersion("ape")').
-
-
 To cite bipartite in publications please use Dormann et al. (2008 R News); for network-level analyses Dormann et al. (2009
 Open Ecol J) and for species-level analyses Dormann (2011 Network Biology):
 
@@ -60,6 +40,22 @@ To cite the 'boot' package in publications use:
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
+
+
+To cite package ‘cowplot’ in publications use:
+
+  Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package version 0.9.4.
+  https://CRAN.R-project.org/package=cowplot
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'},
+    author = {Claus O. Wilke},
+    year = {2019},
+    note = {R package version 0.9.4},
+    url = {https://CRAN.R-project.org/package=cowplot},
+  }
 
 
 To cite package ‘devtools’ in publications use:
