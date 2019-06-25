@@ -33,7 +33,7 @@ ls()
 Setting up the environment for R using the following packages.
 
 ```{r packages loading, include=F}
-pack.list = c("broom","devtools","dplyr","ggplot2","ggsn","gridExtra","leaflet","maps","maptools","mapview","raster","RColorBrewer","rgdal","rgeos","rworldmap","tmap")
+pack.list = c("broom","cowplot","devtools","dplyr","ggplot2","ggsn","gridExtra","leaflet","maps","maptools","mapview","raster","RColorBrewer","rgdal","rgeos","rworldmap","tmap")
 new.packages = pack.list[!(pack.list %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos="https://cran.rstudio.com")
 lapply(pack.list, require, character.only=T)
@@ -59,64 +59,75 @@ head(lake.coords)
 
 Adding the labels short name
 
-```{r}
+```{r label}
 lake.coords$short.name = "CH"
 ```
 
-```{r map plot}
+```{r shapefiles}
 uk_shape = readOGR("map/shapefiles/GB_IRworld.shp")
 
 # Because we have coordinates in National Grid, we convert into WGS84
 wgs84 = '+proj=longlat +datum=WGS84'
 uk_shape_wgs = spTransform(uk_shape, CRS(wgs84))
-
 uk_map = fortify(uk_shape_wgs)
 
-# Saving map to file directly
-ggplot(uk_map) +
-  geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
-  geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=3) +
-  geom_text(data=lake.coords, aes(Longitude,Latitude, label=short.name), nudge_x=-0.4, cex=4) +
-  coord_fixed(2) +
-  theme_void()
-```
-
-Importing the lakes shapefiles to plot the sampling points
-
-```{r grafham shapefile}
 chasewater_shape = readOGR("map/shapefiles/SK_SurfaceWater_Area.shp")
 ch.sites
 # Because we have coordinates in National Grid, we convert into WGS84
 chasewater_wgs = spTransform(chasewater_shape, CRS(wgs84))
 ch_map = fortify(chasewater_wgs)
-
-ggplot(ch_map) +
-  geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
-  geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=3) +
-  geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=-0.001, nudge_y=0.001, cex=4) +
-  xlim(-1.963,-1.937) + ylim(52.660,52.679) +
-  coord_fixed(1.5) +
-  theme_void()
-#theme(panel.background = element_rect(color="black", fill="NA", size=1))
 ```
-```{r}
-a = ggplot(uk_map) +
+
+```{r uk map}
+png("map/UK_map.png", width=3000, height=3000, units="px", res=300)
+ggplot(uk_map) +
   geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
   geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=3) +
   geom_text(data=lake.coords, aes(Longitude,Latitude, label=ID), nudge_x=0.6, nudge_y=-0.2, cex=4) +
   coord_fixed(2) +
-  theme_void()
+  theme_void() +
+  north(uk_map, symbol=12, location="bottomleft")
+dev.off()
+```
+
+Importing the lakes shapefiles to plot the sampling points
+
+```{r chasewater map}
+png("map/Chasewater_map.png", width=3000, height=3000, units="px", res=300)
+ggplot(ch_map) +
+  geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=3) +
+  geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=0.0007, nudge_y=-0.0001, cex=4) +
+  xlim(-1.963,-1.937) + ylim(52.660,52.679) +
+  coord_fixed(1.5) +
+  theme_void() +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=-1.962, x.max=-1.958, y.min=52.6625, y.max=52.665, dist=300, dist_unit="m", st.dist=0.2, height=0.15, transform=T)
+dev.off()
+```
+```{r complete map}
+png("map/sampling_map.png", width=6000, height=6000, units="px", res=300)
+a = ggplot(uk_map) +
+  geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
+  geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=6) +
+  geom_text(data=lake.coords, aes(Longitude,Latitude, label=ID), nudge_x=0.6, nudge_y=-0.2, cex=7) +
+  coord_fixed(2) +
+  theme_void() +
+  north(uk_map, symbol=12, location="bottomleft") +
+  theme(plot.margin=unit(c(0,0.25,0,0.25), "cm"))
 
 b = ggplot(ch_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
-  geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=3) +
-  geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=-0.0013, nudge_y=0, cex=4) +
+  geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=6) +
+  geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=0.0015, nudge_y=-0.0001, cex=7) +
   xlim(-1.963,-1.937) + ylim(52.660,52.679) +
   coord_fixed(1.5) +
-  theme_void()
+  theme_void() +
+    blank() +
+  ggsn::scalebar(location="bottomleft", x.min=-1.962, x.max=-1.958, y.min=52.6625, y.max=52.665, dist=300, dist_unit="m", st.dist=0.2, height=0.15, transform=T)
+  
 
-png("map/sampling_map.png", width=3000, height=3000, units="px", res=300)
-grid.arrange(a,b, ncol=2)
+plot_grid(a,b, ncol=2)
 dev.off()
 ```
 

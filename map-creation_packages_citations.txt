@@ -15,6 +15,22 @@ A BibTeX entry for LaTeX users is
   }
 
 
+To cite package ‘cowplot’ in publications use:
+
+  Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package version 0.9.4.
+  https://CRAN.R-project.org/package=cowplot
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'},
+    author = {Claus O. Wilke},
+    year = {2019},
+    note = {R package version 0.9.4},
+    url = {https://CRAN.R-project.org/package=cowplot},
+  }
+
+
 To cite package ‘devtools’ in publications use:
 
   Hadley Wickham, Jim Hester and Winston Chang (2019). devtools: Tools to Make Developing R Packages Easier. R package
@@ -66,7 +82,7 @@ A BibTeX entry for LaTeX users is
 To cite package ‘ggsn’ in publications use:
 
   Oswaldo Santos Baquero (2019). ggsn: North Symbols and Scale Bars for Maps Created with 'ggplot2' or 'ggmap'. R package
-  version 0.5.0. https://CRAN.R-project.org/package=ggsn
+  version 0.5.2. https://github.com/oswaldosantos/ggsn
 
 A BibTeX entry for LaTeX users is
 
@@ -75,8 +91,8 @@ A BibTeX entry for LaTeX users is
 'ggmap'},
     author = {Oswaldo {Santos Baquero}},
     year = {2019},
-    note = {R package version 0.5.0},
-    url = {https://CRAN.R-project.org/package=ggsn},
+    note = {R package version 0.5.2},
+    url = {https://github.com/oswaldosantos/ggsn},
   }
 
 
@@ -115,8 +131,8 @@ Library},
 
 To cite package ‘maps’ in publications use:
 
-  Original S code by Richard A. Becker, Allan R. Wilks. R version by Ray Brownrigg. Enhancements by Thomas P Minka and
-  Alex Deckmyn. (2018). maps: Draw Geographical Maps. R package version 3.3.0. https://CRAN.R-project.org/package=maps
+  Original S code by Richard A. Becker, Allan R. Wilks. R version by Ray Brownrigg. Enhancements by Thomas P Minka and Alex
+  Deckmyn. (2018). maps: Draw Geographical Maps. R package version 3.3.0. https://CRAN.R-project.org/package=maps
 
 A BibTeX entry for LaTeX users is
 
@@ -128,8 +144,8 @@ A BibTeX entry for LaTeX users is
     url = {https://CRAN.R-project.org/package=maps},
   }
 
-ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may need manual
-editing, see ‘help("citation")’.
+ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may need manual editing,
+see ‘help("citation")’.
 
 
 To cite package ‘maptools’ in publications use:
@@ -250,8 +266,8 @@ A BibTeX entry for LaTeX users is
 
 To cite tmap/tmaptools in publications use:
 
-Tennekes M (2018). “tmap: Thematic Maps in R.” _Journal of Statistical Software_, *84*(6), 1-39. doi:
-10.18637/jss.v084.i06 (URL: http://doi.org/10.18637/jss.v084.i06).
+Tennekes M (2018). “tmap: Thematic Maps in R.” _Journal of Statistical Software_, *84*(6), 1-39. doi: 10.18637/jss.v084.i06
+(URL: http://doi.org/10.18637/jss.v084.i06).
 
 A BibTeX entry for LaTeX users is
 
