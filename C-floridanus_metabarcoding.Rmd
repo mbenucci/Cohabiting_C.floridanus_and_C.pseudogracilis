@@ -1121,3 +1121,78 @@ print("end")
 * PERMANOVA
 * seasonality!
 * web parameters!
+
+```{r}
+#### PRINTING ALIGNMENT OF SANGER SEQUENCES ####
+seq=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.flor-c.pse_full_SANGER.fasta")
+
+msaCheckNames(seq, ".")
+
+print(seq, show="alignment", showNames=T)
+rownames(seq)
+
+msaPrettyPrint(seq, output="tex", #shadingMode="diverse", showNames="left", 
+#               showConsensus="none", consensusColors = "ColdHot",
+#               consensusThreshold = 40,
+#               showLogo="top", showLegend=T, logoColors="rasmol", 
+               paperWidth = 15, paperHeight = 13,
+               askForOverwrite=FALSE)
+
+### ALIGNMENT OF SEQUENCES FOR THE RAXML TREE ###
+
+dir()
+
+## Presenting the alignment from the Sanger sequences
+sanger_seq=readDNAMultipleAlignment("c.flor-c.pse_full_SANGER.fasta")
+
+rownames(sanger_seq)
+
+## Modifying alignment names so that they can be reordered ###
+#rownames(tree_seq) = gsub("^.{4,9}[0-9]{1,2}_", "", rownames(tree_seq), ignore.case=T)
+
+summary(sanger_seq)
+
+print(sanger_seq, show="alignment", showNames=T, order="align")
+
+#ordered = order(rownames(tree_seq))
+#test_order = msa(tree_seq, order="aligned")
+?msaPrettyPrint
+
+msaPrettyPrint(sanger_seq, output="tex",# shadingMode = "identical", showNames="left",
+               #shadingColors = "greens", 
+               #showConsensus="none", consensusThreshold = 40,
+               #showLogo="top", showLegend=T, logoColors="rasmol", 
+               paperWidth = 17, paperHeight = 12,
+               askForOverwrite=FALSE)
+
+## Presenting the alignment from the tree
+tree_seq=readDNAMultipleAlignment("MT-CO1@ALL@gt90_trimmed_aln_forR.fasta")
+
+rownames(tree_seq)
+
+## Modifying alignment names so that they can be reordered ###
+rownames(tree_seq) = gsub("^.{6,9}[0-9]{1,2}_", "", rownames(tree_seq), ignore.case=T)
+rownames(tree_seq)
+
+summary(tree_seq)
+
+print(tree_seq, show="alignment", showNames=T, order="align")
+
+#ordered = order(rownames(tree_seq))
+#test_order = msa(tree_seq, order="aligned")
+
+msaPrettyPrint(tree_seq, output="pdf", shadingMode="identical", showNames="left", 
+               showConsensus="none", consensusColors = "ColdHot",
+               #consensusThreshold = 40,
+               showLogo="top", showLegend=T, logoColors="rasmol", 
+               paperWidth = 17, paperHeight = 12,
+               askForOverwrite=FALSE)
+```
+
+```{r}
+Sys.getenv("R_ENVIRON")
+Sys.getenv("R_HOME")
+Sys.which("pdflatex")
+Sys.getenv("PATH")
+```
+
