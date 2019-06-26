@@ -718,9 +718,10 @@ occupancy.kick = abund.kick[,!c(colnames(abund.kick) %in% c("location"))]
 
 occupancy.kick[,!c(colnames(occupancy.kick) %in% c("time","sample_id","site","sample_type"))][occupancy.kick[,!c(colnames(occupancy.kick) %in% c("time","sample_id","site","sample_type"))] > 0] <- 1
 
-#grep("CH.May", paste0(occupancy.kick$sample_id, occupancy.kick$time))
+rich.kick = as.data.frame(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("sample_type","site"))] %>% group_by(time, sample_id) %>% summarise_all(list(sum)))
+rownames(rich.kick) = paste(rich.kick$sample_id, rich.kick$time, sep="_")
 
-rich.kick = rowSums(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("sample_id","site","time","sample_type"))])
+rich.kick = rowSums(rich.kick[,!c(colnames(rich.kick) %in% c("sample_id","time"))])
 
 # CH May
 chmay_kickrich = rich.kick[grep("CH._May", names(rich.kick))]
@@ -833,18 +834,18 @@ abund.guts = as.data.frame(ratio.guts)
 abund.guts.site = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id","sample_type"))] %>% group_by(time, site, predator_id) %>% summarise_all(list(sum)))
 
 # replacing predator id with initials
-abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "C.flor"
-abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "C.pseu"
+abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "C.floridanus"
+abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "C.pseudogracilis"
 
-abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "C.flor"
-abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "C.pseu"
+abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "C.floridanus"
+abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "C.pseudogracilis"
 
 # setting rownames and removing extra variables
 rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$site, abund.guts.site$time, sep="_")
 ```
 
 ```{r PERMANOVA gut contents}
-# comparing D.vil and G.zad
+
 adonis.guts = abund.guts[,!c(colnames(abund.guts) %in% c("time","site","sample_type","predator_id","sample_id"))]
 
 fact_time.guts = matrix(c(abund.guts$time), ncol=1)
@@ -855,13 +856,19 @@ adonis.guts = vegdist(as.matrix(adonis.guts), method = "euclidean")
 adonis(adonis.guts~fact_predator.guts*fact_site.guts*fact_time.guts, permutations = 9999, method="euclidean")
 ```
 
+```{r}
+nrow(abund.guts[grep("C.pseudogracilis", abund.guts$predator_id),])
+nrow(abund.guts[grep("C.floridanus", abund.guts$predator_id),])
+
+```
+
 ```{r NMDS of gut contents}
 meta.guts = metaMDS(adonis.guts, trymax=200, distance="euclidean")
 ```
 
 ```{r NMDS plot of gut contents}
 # full symbols for May, hollow symbols for October
-png("R_images/guts_predator_NMDS_euclidean.png", width = 3000, height = 3000, units = "px", res = 300)
+png("R_images/guts_predator_NMDS_euclidean.png", width = 4000, height = 4000, units = "px", res = 300)
 plot(meta.guts, type="n", main="Crangonyx spp. gut contents NMDS", xlim=c(-1,1.5), ylim=c(-1.5,2))
 points(meta.guts, select=which(fact_time.guts[,1]=="May"),col="black",pch=20)
 points(meta.guts, select=which(fact_time.guts[,1]=="Oct"),col="blue",pch=1)
@@ -950,7 +957,8 @@ ggplot(occup.melt, aes(sample_type, value)) +
   scale_fill_manual(values = cols_barplot, name = "") +
   scale_x_discrete(limits=c("kick","eDNA","guts")) +
   theme_bw() +
-  facet_grid(time~site) +
+  coord_flip() +
+  facet_grid(time~.) +
   labs(x="", y="Community composition (%)", title = "Community composition (individual taxa grouped by high rank taxonomy)") +
   theme(legend.position = "right")
 dev.off()
