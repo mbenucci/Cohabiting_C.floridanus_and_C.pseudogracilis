@@ -152,6 +152,8 @@ oct17.reads = subset(oct17.reads, select=colSums(oct17.reads) > 0)
 mean(colSums(may17.reads))
 mean(colSums(oct17.reads))
 
+# to calculate SE for the read depths
+
 hist(colSums(may17.reads), breaks=15)
 hist(colSums(oct17.reads), breaks=15)
 ```
@@ -1095,6 +1097,35 @@ legend("center", xpd=T, legend=name.legend, fill=col.legend, bty="n", border="bl
 dev.off()
 ```
 
+# 10. Generating data summary table
+
+This last chunk is only to create the base for the summary table presented in supplementary informaton. This uses the presence/absence data for the gut contents and the eDNA samples, while it uses the actual abundance for the kick-samples. The table was then expanded externally to R to include more summarising informations.
+
+FROM HERE! TO BE SORTED!
+
+```{r generating data summary table}
+guts.summary = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id"))] %>% group_by(site,time,predator_id,sample_type) %>% summarise_all(funs(sum)))
+edna.summary = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_id","predator_id"))] %>% group_by(site,time, sample_type) %>% summarise_all(funs(sum)))
+kick.summary = as.data.frame(abund.kick[,!c(colnames(abund.kick) %in% c("site","REPLICATE"))] %>% group_by(sample_id, time,sample_type) %>% summarise_all(funs(sum)))
+
+full.data = full_join(guts.summary, edna.summary)
+full.data = full_join(full.data, kick.summary)
+
+# Splitting the metadata from data, so that we can remove the NAs into the data set.
+full.info = full.data[,c(colnames(full.data) %in% c("sample_type","predator_id","site","time"))]
+full.data = full.data[,!c(colnames(full.data) %in% c("sample_type","predator_id","site","time"))]
+full.data[is.na(full.data)] <- 0
+
+# Binding the frame together using specific order of the metadata
+final.data = bind_cols(full.info[,c(4,3,1,2)], full.data)
+
+# Transposing and saving the data frame, we will rearrange the order of the metadata later
+final.data = t(final.data)
+
+#Saving final output
+write.csv(final.data, "R_outputs/Crangonyx_summary_table.csv")
+```
+
 ```{r log session info}
 sink("log_session_analysis.txt")
 sessionInfo()
@@ -1188,11 +1219,3 @@ msaPrettyPrint(tree_seq, output="pdf", shadingMode="identical", showNames="left"
                paperWidth = 17, paperHeight = 12,
                askForOverwrite=FALSE)
 ```
-
-```{r}
-Sys.getenv("R_ENVIRON")
-Sys.getenv("R_HOME")
-Sys.which("pdflatex")
-Sys.getenv("PATH")
-```
-
