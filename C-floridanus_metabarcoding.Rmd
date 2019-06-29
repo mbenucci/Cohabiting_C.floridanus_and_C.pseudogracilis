@@ -148,9 +148,13 @@ ggplot(full.depth, aes(time, value)) +
 may17.reads = subset(may17.reads, select=colSums(may17.reads) > 0)
 oct17.reads = subset(oct17.reads, select=colSums(oct17.reads) > 0)
 
-## Mean values
-mean(colSums(may17.reads))
-mean(colSums(oct17.reads))
+## Mean values + standard error May
+mean(may.depth$value)
+sd(may.depth$value)/sqrt(length(may.depth$value))
+
+## Mean values + standard error October
+mean(oct.depth$value)
+sd(oct.depth$value)/sqrt(length(oct.depth$value))
 
 # to calculate SE for the read depths
 
@@ -286,7 +290,6 @@ may.post.filter[][may.post.filter <= thres.may] <- 0
 
 may.clean = as.data.frame(t(may.clean))
 may.clean[][may.clean[,]/rowSums(may.clean) <= thres.may] <- 0
-#may.clean[][may.clean[,] <= 5] <- 0
 ```
 
 We still detected some contamination in the Negative sample from May containing 2889 reads from _Dikerogammarus villosus_, and 71 reads from _Gammarus tigrinus_; however that threshold would be too high to be applied and still retain valid information.
@@ -315,7 +318,6 @@ oct.post.filter[][oct.post.filter <= thres.oct] <- 0
 
 oct.clean = as.data.frame(t(oct.clean))
 oct.clean[][oct.clean[,]/rowSums(oct.clean) <= thres.oct] <- 0
-#oct.clean[][oct.clean[,] <= 5] <- 0
 ```
 
 ```{r saving October outputs}
@@ -819,6 +821,9 @@ ratio.guts = guts.full[,]/rowSums(guts.full)
 ratio.guts[is.na(ratio.guts)] <- 0
 ratio.guts = cbind(ratio.guts, info.guts)
 
+ratio.guts[ratio.guts$time == "May", "sample_id"]
+ratio.guts[ratio.guts$time == "Oct", "sample_id"]
+
 melt.guts = melt(ratio.guts)
 
 ggplot(melt.guts, aes(site, value)) +
@@ -847,7 +852,6 @@ rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$s
 ```
 
 ```{r PERMANOVA gut contents}
-
 adonis.guts = abund.guts[,!c(colnames(abund.guts) %in% c("time","site","sample_type","predator_id","sample_id"))]
 
 fact_time.guts = matrix(c(abund.guts$time), ncol=1)
@@ -855,7 +859,7 @@ fact_site.guts = matrix(c(abund.guts$site), ncol=1)
 fact_predator.guts = matrix(c(abund.guts$predator_id), ncol=1)
 
 adonis.guts = vegdist(as.matrix(adonis.guts), method = "euclidean")
-adonis(adonis.guts~fact_predator.guts*fact_site.guts*fact_time.guts, permutations = 9999, method="euclidean")
+adonis(adonis.guts~fact_predator.guts*fact_time.guts, permutations = 9999, method="euclidean")
 ```
 
 ```{r}
@@ -899,7 +903,7 @@ fact_type.full = matrix(c(occup.gut.edna.kick$sample_type), ncol=1)
 
 adonis.guts.edna.kick = vegdist(as.matrix(adonis.guts.edna.kick))
 
-adonis(adonis.guts.edna.kick~fact_type.full*fact_site.full*fact_time.full, permutations = 9999, method = "jaccard")
+adonis(adonis.guts.edna.kick~fact_type.full*fact_time.full, permutations = 9999, method = "jaccard")
 ```
 
 ```{r permanova of guts, eDNA and kick-samples}
