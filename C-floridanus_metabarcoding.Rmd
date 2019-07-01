@@ -1108,9 +1108,9 @@ This last chunk is only to create the base for the summary table presented in su
 FROM HERE! TO BE SORTED!
 
 ```{r generating data summary table}
-guts.summary = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id"))] %>% group_by(site,time,predator_id,sample_type) %>% summarise_all(funs(sum)))
-edna.summary = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_id","predator_id"))] %>% group_by(site,time, sample_type) %>% summarise_all(funs(sum)))
-kick.summary = as.data.frame(abund.kick[,!c(colnames(abund.kick) %in% c("site","REPLICATE"))] %>% group_by(sample_id, time,sample_type) %>% summarise_all(funs(sum)))
+guts.summary = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id"))] %>% group_by(site,time,predator_id,sample_type) %>% summarise_all(list(sum)))
+edna.summary = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_id","predator_id"))] %>% group_by(site,time, sample_type) %>% summarise_all(list(sum)))
+kick.summary = as.data.frame(abund.kick[,!c(colnames(abund.kick) %in% c("site","REPLICATE","location"))] %>% group_by(sample_id, time,sample_type) %>% summarise_all(list(sum)))
 
 full.data = full_join(guts.summary, edna.summary)
 full.data = full_join(full.data, kick.summary)
@@ -1157,69 +1157,44 @@ print("end")
 * seasonality!
 * web parameters!
 
-```{r}
+```{r sanger alignment}
 #### PRINTING ALIGNMENT OF SANGER SEQUENCES ####
 seq=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.flor-c.pse_full_SANGER.fasta")
 
 msaCheckNames(seq, ".")
 
-print(seq, show="alignment", showNames=T)
+print(seq, show="alignment", showNames=T, order="align")
 rownames(seq)
 
-msaPrettyPrint(seq, output="tex", #shadingMode="diverse", showNames="left", 
-#               showConsensus="none", consensusColors = "ColdHot",
-#               consensusThreshold = 40,
-#               showLogo="top", showLegend=T, logoColors="rasmol", 
-               paperWidth = 15, paperHeight = 13,
+msaPrettyPrint(seq, output="tex", shadingMode="identical", showNames="left", 
+               showConsensus="none", consensusColors = "ColdHot",
+               consensusThreshold = 40,
+               showLogo="top", showLegend=T, logoColors="rasmol", 
+               paperWidth = 17, paperHeight = 13,
                askForOverwrite=FALSE)
+texi2pdf("seq.tex", clean=T)
+```
 
+```{r test align}
 ### ALIGNMENT OF SEQUENCES FOR THE RAXML TREE ###
-
-dir()
-
 ## Presenting the alignment from the Sanger sequences
-sanger_seq=readDNAMultipleAlignment("c.flor-c.pse_full_SANGER.fasta")
+#sanger_seq=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.flor-c.pse_full_SANGER.fasta")
 
-rownames(sanger_seq)
+#rownames(sanger_seq)
 
 ## Modifying alignment names so that they can be reordered ###
 #rownames(tree_seq) = gsub("^.{4,9}[0-9]{1,2}_", "", rownames(tree_seq), ignore.case=T)
 
-summary(sanger_seq)
+#summary(sanger_seq)
 
-print(sanger_seq, show="alignment", showNames=T, order="align")
+#print(sanger_seq, show="alignment", showNames=T, order="align")
 
 #ordered = order(rownames(tree_seq))
 #test_order = msa(tree_seq, order="aligned")
-?msaPrettyPrint
-
-msaPrettyPrint(sanger_seq, output="tex",# shadingMode = "identical", showNames="left",
+#msaPrettyPrint(sanger_seq, output="tex",# shadingMode = "identical", showNames="left",
                #shadingColors = "greens", 
                #showConsensus="none", consensusThreshold = 40,
                #showLogo="top", showLegend=T, logoColors="rasmol", 
-               paperWidth = 17, paperHeight = 12,
-               askForOverwrite=FALSE)
-
-## Presenting the alignment from the tree
-tree_seq=readDNAMultipleAlignment("MT-CO1@ALL@gt90_trimmed_aln_forR.fasta")
-
-rownames(tree_seq)
-
-## Modifying alignment names so that they can be reordered ###
-rownames(tree_seq) = gsub("^.{6,9}[0-9]{1,2}_", "", rownames(tree_seq), ignore.case=T)
-rownames(tree_seq)
-
-summary(tree_seq)
-
-print(tree_seq, show="alignment", showNames=T, order="align")
-
-#ordered = order(rownames(tree_seq))
-#test_order = msa(tree_seq, order="aligned")
-
-msaPrettyPrint(tree_seq, output="pdf", shadingMode="identical", showNames="left", 
-               showConsensus="none", consensusColors = "ColdHot",
-               #consensusThreshold = 40,
-               showLogo="top", showLegend=T, logoColors="rasmol", 
-               paperWidth = 17, paperHeight = 12,
-               askForOverwrite=FALSE)
+#               paperWidth = 17, paperHeight = 12,
+#               askForOverwrite=FALSE)
 ```
