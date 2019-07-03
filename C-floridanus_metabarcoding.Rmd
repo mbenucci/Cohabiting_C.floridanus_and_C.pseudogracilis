@@ -385,7 +385,7 @@ oct.post.filter = oct.post.filter[,!c(colnames(oct.post.filter) %in% c("Dikeroga
 
 # 2. Setting eDNA and gut contents data
 
-Before continuing with data analysis we add the needed variables, and we split the data sets into gut contentns and eDNA.
+Before continuing with data analysis we add the metadata for sample type, sample id and time. We then split the data sets into gut contentns and eDNA.
 
 ```{r adding variables}
 # May data set
@@ -510,8 +510,6 @@ write.csv(oct.clean, "R_outputs/Oct_reads_filtered.csv")
 write.csv(oct.post.filter, "R_outputs/Oct_ratio_filtered.csv")
 ```
 
-
-
 Dividing gut contents and eDNA samples.
 
 ```{r separating guts and eDNA water}
@@ -545,7 +543,168 @@ guts.full = subset(guts.full[,!c(colnames(guts.full) %in% colnames(info.guts))],
 edna.full = subset(edna.full[,!c(colnames(edna.full) %in% colnames(info.edna))], select=colSums(edna.full[,!c(colnames(edna.full) %in% colnames(info.edna))]) > 0)
 ```
 
-# 3. Diversity analysis of eDNA samples
+# 3. Detection of prey DNA in gut contents
+
+```{r cleaning gut contents data frame}
+# converting reads into ratio
+ratio.guts = guts.full[,]/rowSums(guts.full)
+ratio.guts[is.na(ratio.guts)] <- 0
+ratio.guts = cbind(ratio.guts, info.guts)
+
+ratio.guts[ratio.guts$time == "May", "sample_id"]
+ratio.guts[ratio.guts$time == "Oct", "sample_id"]
+
+melt.guts = melt(ratio.guts)
+
+ggplot(melt.guts, aes(site, value)) +
+  geom_jitter(aes(color=predator_id)) +
+  facet_grid(.~time) + theme_bw() +
+  ylab("prey DNA ratio") + xlab("sampling month")
+```
+
+
+```{r transforming into abundances}
+# removing `sample_type` and `sample_id` variables and transforming detections into abundances
+ratio.guts[,!c(colnames(ratio.guts) %in% c("time","site","predator_id","sample_id","sample_type"))][ratio.guts[,!c(colnames(ratio.guts) %in% c("time","site","predator_id","sample_id","sample_type"))] > 0] <- 1
+
+abund.guts = as.data.frame(ratio.guts)
+abund.guts.site = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id","sample_type"))] %>% group_by(time, site, predator_id) %>% summarise_all(list(sum)))
+
+# replacing predator id with initials
+abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "C.floridanus"
+abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "C.pseudogracilis"
+
+abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "C.floridanus"
+abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "C.pseudogracilis"
+
+# setting rownames and removing extra variables
+rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$site, abund.guts.site$time, sep="_")
+```
+
+```{r PERMANOVA gut contents}
+adonis.guts = abund.guts[,!c(colnames(abund.guts) %in% c("time","site","sample_type","predator_id","sample_id"))]
+
+fact_time.guts = matrix(c(abund.guts$time), ncol=1)
+fact_site.guts = matrix(c(abund.guts$site), ncol=1)
+fact_predator.guts = matrix(c(abund.guts$predator_id), ncol=1)
+
+adonis.guts = vegdist(as.matrix(adonis.guts), method = "euclidean")
+adonis(adonis.guts~fact_predator.guts*fact_time.guts, permutations = 9999, method="euclidean")
+```
+
+```{r NMDS of gut contents}
+meta.guts = metaMDS(adonis.guts, trymax=200, distance="euclidean")
+```
+
+```{r NMDS plot of gut contents}
+# full symbols for May, hollow symbols for October
+png("R_images/guts_predator_NMDS_euclidean.png", width = 4000, height = 4000, units = "px", res = 300)
+plot(meta.guts, type="n", main="Crangonyx spp. gut contents NMDS", xlim=c(-1,1.5), ylim=c(-1.5,2))
+points(meta.guts, select=which(fact_time.guts[,1]=="May"),col="black",pch=20)
+points(meta.guts, select=which(fact_time.guts[,1]=="Oct"),col="blue",pch=1)
+ordispider(meta.guts, group=fact_predator.guts[,1],col=c("blue","orange"),label=T)
+ordiellipse(meta.guts, group=fact_predator.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
+text(1,-1,label=paste0("Stress: ",round(meta.guts$stress, 6)))
+dev.off()
+```
+
+
+
+# 4. Niche/Diet breadth
+
+After analysisng the detection of prey species in the gut contents, and after having analysed the communities compositions from eDNA and kick samples. The niche breadth of _D. villosus_ across the 2 invaded sites can be analysed. Further, the comparison of niche overlap between _D. villosus_ and _G. zaddachi_ can be calculated.
+
+```{r niche breadth of amphipods across sites}
+# Summing
+breadth.cfcp.time = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site"))] %>% group_by(predator_id, time) %>% summarise_all(list(sum)))
+
+rownames(breadth.cfcp.time) = paste(breadth.cfcp.time$predator_id, breadth.cfcp.time$time, sep="_")
+
+breadth.cfcp.time = t(breadth.cfcp.time[,!c(colnames(breadth.cfcp.time) %in% c("predator_id","time"))])
+
+niche.dvgz = breadth.cfcp.time
+
+niche.width(breadth.cfcp.time, method="levins")
+niche.width(breadth.cfcp.time, method="shannon")
+
+# C.floridanus May
+(niche.width(breadth.cfcp.time, method="levins")[1]-1)/(nrow(breadth.cfcp.time)-1)
+# C.floridanus Oct
+(niche.width(breadth.cfcp.time, method="levins")[2]-1)/(nrow(breadth.cfcp.time)-1)
+# C.pseudogracilis May
+(niche.width(breadth.cfcp.time, method="levins")[3]-1)/(nrow(breadth.cfcp.time)-1)
+# C.pseudogracilis Oct
+(niche.width(breadth.cfcp.time, method="levins")[4]-1)/(nrow(breadth.cfcp.time)-1)
+
+niche.overlap(breadth.cfcp.time, method="pianka")
+```
+
+```{r niche breadth of amphipods species (no sites)}
+# summing prey DNA reads by predator ID
+breadth.cfcp = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site","time"))] %>% group_by(predator_id) %>% summarise_all(list(sum)))
+
+rownames(breadth.cfcp) = breadth.cfcp$predator_id
+
+breadth.cfcp = t(breadth.cfcp[,!c(colnames(breadth.cfcp) %in% c("predator_id"))])
+
+#breadth.cfcp[,1] = breadth.cfcp[,1]/216
+#breadth.cfcp[,2] = breadth.cfcp[,2]/107
+
+niche.width(breadth.cfcp, method="levins")
+niche.width(breadth.cfcp, method="shannon")
+
+(niche.width(breadth.cfcp, method="levins")[1]-1)/(nrow(breadth.cfcp)-1)
+(niche.width(breadth.cfcp, method="levins")[2]-1)/(nrow(breadth.cfcp)-1)
+
+niche.overlap(breadth.cfcp, method="pianka")
+```
+
+# 5. Food web bipartite network
+
+For the bipartite network the gut contents data frame with the detections of preys can now be used. The gut contents data first needs to be summarised by site and season, then the data frame can be transposed to have a matrix with the prey along the rows and the predators along the columns. The prey taxa names (bottom level) will also be simplified from the extended binomial names only to allow a better reading in the bipartite plot.
+
+```{r food web network plus bipartite}
+# Summing prey DNA reads by predator ID, site and time.
+food.web = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site"))] %>% group_by(predator_id, time) %>% summarise_all(list(sum)))
+rownames(food.web) = paste(food.web$predator_id, food.web$time, sep="_")
+
+# Removing metadata column and transposing to have predators in columns and prey in rows.
+food.web = food.web[,!c(colnames(food.web) %in% c("predator_id","time"))]
+food.web = as.data.frame(t(food.web))
+#food.web = subset(food.web, subset=rowSums(food.web) > 0)
+
+# Renaming the preys taxa in a more legible format for the plot (e.g. from extended binomial "Asellus aquaticus" to "A.aquaticus")
+rownames(food.web) = gsub("[a-z]{3,13}_",".", rownames(food.web))
+```
+
+Setting up the order of the top and bottom levels in the bipartite plot, this will allow to colour code the taxa. The taxa in this plot were organised by higher rank (e.g. Diptera, Amphipoda, Oligochaeta, etc.). While the order of the taxa in the plot is organised according to the interactions, in the legend the order was organised by high rank to make it more accessible and easy to read.
+
+```{r plot order}
+col.network=c("red","red","red","red","khaki3","khaki3","cyan3","yellow","tan4","tan4","darkorchid3","darkgreen","cyan3","tan4","cyan3")
+```
+
+```{r legend order}
+name.legend=c("C.multisetosum (Amphipoda)", "Crangonyx  (Amphipoda)", "C.floridanus  (Amphipoda)", "C.pseudogracilis (Amphipoda)", "C.brevilabris (Cladocera)", "D.brachyurum (Cladocera)", "S.crystallina (Cladocera)", "Cyclops (Copepoda)", "C.abyssorum  (Copepoda)", "E.albipennis (Diptera)", "P.antipodarum (Gastropoda)", "L.hoffmeisteri (Oligochaeta)", "L.variegatus (Oligochaeta)", "T.tubifex (Oligochaeta)", "S.polychroa (Tricladida)")
+
+col.legend=c("red","red","red","red","cyan3","cyan3","cyan3","khaki3","khaki3","yellow","darkorchid3","tan4","tan4","tan4","darkgreen")
+```
+
+After having set up the orders of taxa in top and bottom levels with their corresponding colours, the bipartite plot and the legend can be generated. The legend was generated separately due to limits in the plot dimensions, which if reduced would have made either the plot, or the legend non readable. The legend and the plot were merged externally to R.
+
+```{r plotting the networks}
+# Producing the bipartite network
+png("R_images/bipartite_network.png", width=4000, height=2500, units="px", res=300)
+plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lablength=5, low.lab.dis=0.1, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network)
+dev.off()
+
+# Producing the legend
+png("R_images/bipartite_network_legend.png", width=4000, height=2500, units="px", res=300)
+plotweb(food.web,high.plot=F, low.plot=F, col.interaction = "white", bor.col.interaction = "white")
+legend("center", xpd=T, legend=name.legend, fill=col.legend, bty="n", border="black")
+dev.off()
+```
+
+# 6. Diversity analysis of eDNA samples
 To avoid over-estimating the diversity present in the eDNA samples, the data set need to be cleaned a bit further. For this purpose assignment at higher taxonomic rank (mainly Order), were removed from the dataset, while assignments to Family, were spearated from the assignments to Genus and Species level. 
 
 ```{r eDNA samples rarefaction curves}
@@ -633,7 +792,7 @@ mean(oct_rich)
 sd(oct_rich)/sqrt(length(oct_rich))
 ```
 
-# 4. Diversity analysis in kick-samples
+# 7. Diversity analysis in kick-samples
 Microscopy data from the community collected with the kick-samples are available in 6 separate files belonging to each lake from either sampling season.
 
 ```{r input files microscopy}
@@ -766,7 +925,7 @@ text(-0.5,-0.4, label=paste0("Stress: ", round(meta.kick$stress,6)))
 dev.off()
 ```
 
-# 5. Community composition of eDNA and kick-samples
+# 8. Community composition of eDNA and kick-samples
 
 ```{r merging kick-samples and eDNA frames}
 occupancy.kick$site = occupancy.kick$sample_id
@@ -813,79 +972,7 @@ text(0, -1, label=paste0("Stress: ",round(meta.kick.edna$stress, 6)))
 dev.off()
 ```
 
-# 6. Detection of prey DNA in gut contents
-
-```{r cleaning gut contents data frame}
-# converting reads into ratio
-ratio.guts = guts.full[,]/rowSums(guts.full)
-ratio.guts[is.na(ratio.guts)] <- 0
-ratio.guts = cbind(ratio.guts, info.guts)
-
-ratio.guts[ratio.guts$time == "May", "sample_id"]
-ratio.guts[ratio.guts$time == "Oct", "sample_id"]
-
-melt.guts = melt(ratio.guts)
-
-ggplot(melt.guts, aes(site, value)) +
-  geom_jitter(aes(color=predator_id)) +
-  facet_grid(.~time) + theme_bw() +
-  ylab("prey DNA ratio") + xlab("sampling month")
-```
-
-
-```{r transforming into abundances}
-# removing `sample_type` and `sample_id` variables and transforming detections into abundances
-ratio.guts[,!c(colnames(ratio.guts) %in% c("time","site","predator_id","sample_id","sample_type"))][ratio.guts[,!c(colnames(ratio.guts) %in% c("time","site","predator_id","sample_id","sample_type"))] > 0] <- 1
-
-abund.guts = as.data.frame(ratio.guts)
-abund.guts.site = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id","sample_type"))] %>% group_by(time, site, predator_id) %>% summarise_all(list(sum)))
-
-# replacing predator id with initials
-abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "C.floridanus"
-abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "C.pseudogracilis"
-
-abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "C.floridanus"
-abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "C.pseudogracilis"
-
-# setting rownames and removing extra variables
-rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$site, abund.guts.site$time, sep="_")
-```
-
-```{r PERMANOVA gut contents}
-adonis.guts = abund.guts[,!c(colnames(abund.guts) %in% c("time","site","sample_type","predator_id","sample_id"))]
-
-fact_time.guts = matrix(c(abund.guts$time), ncol=1)
-fact_site.guts = matrix(c(abund.guts$site), ncol=1)
-fact_predator.guts = matrix(c(abund.guts$predator_id), ncol=1)
-
-adonis.guts = vegdist(as.matrix(adonis.guts), method = "euclidean")
-adonis(adonis.guts~fact_predator.guts*fact_time.guts, permutations = 9999, method="euclidean")
-```
-
-```{r}
-nrow(abund.guts[grep("C.pseudogracilis", abund.guts$predator_id),])
-nrow(abund.guts[grep("C.floridanus", abund.guts$predator_id),])
-
-```
-
-```{r NMDS of gut contents}
-meta.guts = metaMDS(adonis.guts, trymax=200, distance="euclidean")
-```
-
-```{r NMDS plot of gut contents}
-# full symbols for May, hollow symbols for October
-png("R_images/guts_predator_NMDS_euclidean.png", width = 4000, height = 4000, units = "px", res = 300)
-plot(meta.guts, type="n", main="Crangonyx spp. gut contents NMDS", xlim=c(-1,1.5), ylim=c(-1.5,2))
-points(meta.guts, select=which(fact_time.guts[,1]=="May"),col="black",pch=20)
-points(meta.guts, select=which(fact_time.guts[,1]=="Oct"),col="blue",pch=1)
-ordispider(meta.guts, group=fact_predator.guts[,1],col=c("blue","orange"),label=T)
-ordiellipse(meta.guts, group=fact_predator.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
-text(1,-1,label=paste0("Stress: ",round(meta.guts$stress, 6)))
-dev.off()
-```
-
-
-# 7. Comparison of gut contents detection against community composition
+# 9. Comparison of gut contents detection against community composition
 
 ```{r merging guts, and community data sets}
 # Previously the sample type for the gut contents data frame was removed, so we first add it again.
@@ -1007,105 +1094,9 @@ melt.kick[melt.kick$order == "Amphipoda",] %>%
 dev.off()
 ```
 
-# 8. Niche/Diet breadth
-
-After analysisng the detection of prey species in the gut contents, and after having analysed the communities compositions from eDNA and kick samples. The niche breadth of _D. villosus_ across the 2 invaded sites can be analysed. Further, the comparison of niche overlap between _D. villosus_ and _G. zaddachi_ can be calculated.
-
-```{r niche breadth of amphipods across sites}
-# Summing
-breadth.cfcp.time = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site"))] %>% group_by(predator_id, time) %>% summarise_all(list(sum)))
-
-rownames(breadth.cfcp.time) = paste(breadth.cfcp.time$predator_id, breadth.cfcp.time$time, sep="_")
-
-breadth.cfcp.time = t(breadth.cfcp.time[,!c(colnames(breadth.cfcp.time) %in% c("predator_id","time"))])
-
-niche.dvgz = breadth.cfcp.time
-
-niche.width(breadth.cfcp.time, method="levins")
-niche.width(breadth.cfcp.time, method="shannon")
-
-# C.floridanus May
-(niche.width(breadth.cfcp.time, method="levins")[1]-1)/(nrow(breadth.cfcp.time)-1)
-# C.floridanus Oct
-(niche.width(breadth.cfcp.time, method="levins")[2]-1)/(nrow(breadth.cfcp.time)-1)
-# C.pseudogracilis May
-(niche.width(breadth.cfcp.time, method="levins")[3]-1)/(nrow(breadth.cfcp.time)-1)
-# C.pseudogracilis Oct
-(niche.width(breadth.cfcp.time, method="levins")[4]-1)/(nrow(breadth.cfcp.time)-1)
-
-niche.overlap(breadth.cfcp.time, method="pianka")
-```
-
-```{r niche breadth of amphipods species (no sites)}
-# summing prey DNA reads by predator ID
-breadth.cfcp = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site","time"))] %>% group_by(predator_id) %>% summarise_all(list(sum)))
-
-rownames(breadth.cfcp) = breadth.cfcp$predator_id
-
-breadth.cfcp = t(breadth.cfcp[,!c(colnames(breadth.cfcp) %in% c("predator_id"))])
-
-#breadth.cfcp[,1] = breadth.cfcp[,1]/216
-#breadth.cfcp[,2] = breadth.cfcp[,2]/107
-
-niche.width(breadth.cfcp, method="levins")
-niche.width(breadth.cfcp, method="shannon")
-
-(niche.width(breadth.cfcp, method="levins")[1]-1)/(nrow(breadth.cfcp)-1)
-(niche.width(breadth.cfcp, method="levins")[2]-1)/(nrow(breadth.cfcp)-1)
-
-niche.overlap(breadth.cfcp, method="pianka")
-```
-
-# 9. Food web bipartite network
-
-For the bipartite network the gut contents data frame with the detections of preys can now be used. The gut contents data first needs to be summarised by site and season, then the data frame can be transposed to have a matrix with the prey along the rows and the predators along the columns. The prey taxa names (bottom level) will also be simplified from the extended binomial names only to allow a better reading in the bipartite plot.
-
-```{r food web network plus bipartite}
-# Summing prey DNA reads by predator ID, site and time.
-food.web = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site"))] %>% group_by(predator_id, time) %>% summarise_all(list(sum)))
-rownames(food.web) = paste(food.web$predator_id, food.web$time, sep="_")
-
-# Removing metadata column and transposing to have predators in columns and prey in rows.
-food.web = food.web[,!c(colnames(food.web) %in% c("predator_id","time"))]
-food.web = as.data.frame(t(food.web))
-#food.web = subset(food.web, subset=rowSums(food.web) > 0)
-
-# Renaming the preys taxa in a more legible format for the plot (e.g. from extended binomial "Asellus aquaticus" to "A.aquaticus")
-rownames(food.web) = gsub("[a-z]{3,13}_",".", rownames(food.web))
-```
-
-Setting up the order of the top and bottom levels in the bipartite plot, this will allow to colour code the taxa. The taxa in this plot were organised by higher rank (e.g. Diptera, Amphipoda, Oligochaeta, etc.). While the order of the taxa in the plot is organised according to the interactions, in the legend the order was organised by high rank to make it more accessible and easy to read.
-
-```{r plot order}
-col.network=c("red","red","red","red","khaki3","khaki3","cyan3","yellow","tan4","tan4","darkorchid3","darkgreen","cyan3","tan4","cyan3")
-```
-
-```{r legend order}
-name.legend=c("C.multisetosum (Amphipoda)", "Crangonyx  (Amphipoda)", "C.floridanus  (Amphipoda)", "C.pseudogracilis (Amphipoda)", "C.brevilabris (Cladocera)", "D.brachyurum (Cladocera)", "S.crystallina (Cladocera)", "Cyclops (Copepoda)", "C.abyssorum  (Copepoda)", "E.albipennis (Diptera)", "P.antipodarum (Gastropoda)", "L.hoffmeisteri (Oligochaeta)", "L.variegatus (Oligochaeta)", "T.tubifex (Oligochaeta)", "S.polychroa (Tricladida)")
-
-col.legend=c("red","red","red","red","cyan3","cyan3","cyan3","khaki3","khaki3","yellow","darkorchid3","tan4","tan4","tan4","darkgreen")
-```
-
-After having set up the orders of taxa in top and bottom levels with their corresponding colours, the bipartite plot and the legend can be generated. The legend was generated separately due to limits in the plot dimensions, which if reduced would have made either the plot, or the legend non readable. The legend and the plot were merged externally to R.
-
-```{r plotting the networks}
-# Producing the bipartite network
-png("R_images/bipartite_network.png", width=4000, height=2500, units="px", res=300)
-plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lablength=5, low.lab.dis=0.1, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network)
-dev.off()
-
-# Producing the legend
-png("R_images/bipartite_network_legend.png", width=4000, height=2500, units="px", res=300)
-plotweb(food.web,high.plot=F, low.plot=F, col.interaction = "white", bor.col.interaction = "white")
-legend("center", xpd=T, legend=name.legend, fill=col.legend, bty="n", border="black")
-dev.off()
-```
-
 # 10. Generating data summary table
 
 This last chunk is only to create the base for the summary table presented in supplementary informaton. This uses the presence/absence data for the gut contents and the eDNA samples, while it uses the actual abundance for the kick-samples. The table was then expanded externally to R to include more summarising informations.
-
-FROM HERE! TO BE SORTED!
 
 ```{r generating data summary table}
 guts.summary = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id"))] %>% group_by(site,time,predator_id,sample_type) %>% summarise_all(list(sum)))
@@ -1130,6 +1121,37 @@ final.data = t(final.data)
 write.csv(final.data, "R_outputs/Crangonyx_summary_table.csv")
 ```
 
+This last chunk requires msa (R-package) and LaTex Live to be installed.
+To install LaTex Live on Ubuntu 16.04 from terminal:
+
+`$ sudo apt-get install texlive-full`
+
+```{r sanger alignment}
+# Import of sanger sequences
+seq=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.flor-c.pse_full_SANGER.fasta")
+
+msaCheckNames(seq, ".")
+
+print(seq, show="alignment", showNames=T, order="align")
+rownames(seq)
+
+msaPrettyPrint(seq, output="pdf",
+               showConsensus="none",
+               consensusThreshold = 40,
+               showNames="left",
+               showLogo="top",
+               showLegend=T,
+               paperWidth = 21, paperHeight = 11,
+               furtherCode=c("\\nomatchresidues{Black}{Gray}{upper}{}",
+                             "\\conservedresidues{Black}{White}{upper}{}",
+                             "\\logocolor{G}{Black}",
+                             "\\logocolor{A}{Green}",
+                             "\\logocolor{T}{Red}",
+                             "\\logocolor{C}{Blue}",
+                             "\\shownumbering[Black]{leftright}"),
+               askForOverwrite=FALSE)
+```
+
 ```{r log session info}
 sink("log_session_analysis.txt")
 sessionInfo()
@@ -1147,54 +1169,4 @@ sink()
 
 ```{r}
 print("end")
-```
-
-## TO DO
-
-* eDNA for the community estimate
-* improve the plots and the stats
-* PERMANOVA
-* seasonality!
-* web parameters!
-
-```{r sanger alignment}
-#### PRINTING ALIGNMENT OF SANGER SEQUENCES ####
-seq=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.flor-c.pse_full_SANGER.fasta")
-
-msaCheckNames(seq, ".")
-
-print(seq, show="alignment", showNames=T, order="align")
-rownames(seq)
-
-msaPrettyPrint(seq, output="tex", shadingMode="identical", showNames="left", 
-               showConsensus="none", consensusColors = "ColdHot",
-               consensusThreshold = 40,
-               showLogo="top", showLegend=T, logoColors="rasmol", 
-               paperWidth = 17, paperHeight = 13,
-               askForOverwrite=FALSE)
-texi2pdf("seq.tex", clean=T)
-```
-
-```{r test align}
-### ALIGNMENT OF SEQUENCES FOR THE RAXML TREE ###
-## Presenting the alignment from the Sanger sequences
-#sanger_seq=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.flor-c.pse_full_SANGER.fasta")
-
-#rownames(sanger_seq)
-
-## Modifying alignment names so that they can be reordered ###
-#rownames(tree_seq) = gsub("^.{4,9}[0-9]{1,2}_", "", rownames(tree_seq), ignore.case=T)
-
-#summary(sanger_seq)
-
-#print(sanger_seq, show="alignment", showNames=T, order="align")
-
-#ordered = order(rownames(tree_seq))
-#test_order = msa(tree_seq, order="aligned")
-#msaPrettyPrint(sanger_seq, output="tex",# shadingMode = "identical", showNames="left",
-               #shadingColors = "greens", 
-               #showConsensus="none", consensusThreshold = 40,
-               #showLogo="top", showLegend=T, logoColors="rasmol", 
-#               paperWidth = 17, paperHeight = 12,
-#               askForOverwrite=FALSE)
 ```
