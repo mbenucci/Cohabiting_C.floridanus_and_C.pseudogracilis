@@ -1126,6 +1126,8 @@ To install LaTex Live on Ubuntu 16.04 from terminal:
 
 `$ sudo apt-get install texlive-full`
 
+Note: having multiple LaTex version installed on the same machine can give errors.
+
 ```{r sanger alignment}
 # Import of sanger sequences
 seq=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.flor-c.pse_full_SANGER.fasta")
@@ -1133,7 +1135,7 @@ seq=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.fl
 msaCheckNames(seq, ".")
 
 print(seq, show="alignment", showNames=T, order="align")
-rownames(seq)
+rownames(seq) = gsub("_C_", "_C.", rownames(seq))
 
 msaPrettyPrint(seq, output="pdf",
                showConsensus="none",
@@ -1141,14 +1143,16 @@ msaPrettyPrint(seq, output="pdf",
                showNames="left",
                showLogo="top",
                showLegend=T,
-               paperWidth = 21, paperHeight = 11,
-               furtherCode=c("\\nomatchresidues{Black}{Gray}{upper}{}",
+               paperWidth = 21, paperHeight = 12,
+               furtherCode=c("\\nomatchresidues{White}{Gray80}{upper}{}",
                              "\\conservedresidues{Black}{White}{upper}{}",
+                             "\\allmatchresidues{Black}{White}{upper}{}",
                              "\\logocolor{G}{Black}",
                              "\\logocolor{A}{Green}",
                              "\\logocolor{T}{Red}",
                              "\\logocolor{C}{Blue}",
-                             "\\shownumbering[Black]{leftright}"),
+                             "\\shownumbering[Black]{right}",
+                             "\\showruler{bottom}{THWA03_C_pseudogracilis_SANGER}"),
                askForOverwrite=FALSE)
 ```
 
