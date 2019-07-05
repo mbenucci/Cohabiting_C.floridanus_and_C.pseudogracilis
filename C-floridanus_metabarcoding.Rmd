@@ -673,7 +673,8 @@ After having set up the orders of taxa in top and bottom levels with their corre
 ```{r plotting the networks}
 # Producing the bipartite network
 png("R_images/bipartite_network.png", width=4000, height=2500, units="px", res=300)
-plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lablength=5, low.lab.dis=0.1, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network)
+plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lablength=5, low.lab.dis=0.1, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network, high.y=2, low.y=1)
+legend("bottom", legend=name.legend, fill=col.legend, bty="n", border="black",ncol=3, xpd=T)
 dev.off()
 
 # Producing the legend
@@ -752,8 +753,6 @@ ggplot(melt.occup.edna, aes(sample_id, value)) +
 dev.off()
 ```
 
-
-
 ```{r shannon diversity in eDNA}
 divers.edna = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_type","site","predator_id"))] %>% group_by(time,sample_id) %>% summarise_all(list(sum)))
 
@@ -813,7 +812,7 @@ abund.kick = ch.kick[,!c(colnames(ch.kick) %in% "tube_id")]
 colnames(abund.kick)
 ```
 
-## NOTE! To sort NMDS of kick samples, try in case using occupancy but keeping individual samples separated and collapsing by time only.
+NMDS of kick samples.
 
 ```{r rarefaction curves on kick-samples}
 # removing high order taxa                                                                                                                         
