@@ -602,47 +602,22 @@ meta.guts = metaMDS(adonis.guts, trymax=200, distance="euclidean")
 ```{r NMDS plot of gut contents}
 # full symbols for May, hollow symbols for October
 png("R_images/guts_predator_NMDS_euclidean.png", width = 4000, height = 4000, units = "px", res = 300)
-plot(meta.guts, type="n", main="Crangonyx spp. gut contents NMDS", xlim=c(-1,1.5), ylim=c(-1.5,2))
-points(meta.guts, select=which(fact_time.guts[,1]=="May"),col="black",pch=20)
-points(meta.guts, select=which(fact_time.guts[,1]=="Oct"),col="blue",pch=1)
+plot(meta.guts, type="n", xlim=c(-1,1.5), ylim=c(-1.5,2))
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseudogracilis" & fact_time.guts[,1]=="May"),col="black", pch=17)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseudogracilis" & fact_time.guts[,1]=="Oct"),col="black", pch=24)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.floridanus" & fact_time.guts[,1]=="May"),col="blue", pch=15)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.floridanus" & fact_time.guts[,1]=="Oct"),col="blue", pch=22)
 ordispider(meta.guts, group=fact_predator.guts[,1],col=c("blue","orange"),label=T)
 ordiellipse(meta.guts, group=fact_predator.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
 text(1,-1,label=paste0("Stress: ",round(meta.guts$stress, 6)))
 dev.off()
 ```
 
-
-
 # 4. Niche/Diet breadth
 
-After analysisng the detection of prey species in the gut contents, and after having analysed the communities compositions from eDNA and kick samples. The niche breadth of _D. villosus_ across the 2 invaded sites can be analysed. Further, the comparison of niche overlap between _D. villosus_ and _G. zaddachi_ can be calculated.
+We now analyse the niche breadth of _C. pseudogracilis_ and _C. floridanus_ across the lake and the two seasons. Furthermore we calculate the niche overlap between the two amphipods.
 
-```{r niche breadth of amphipods across sites}
-# Summing
-breadth.cfcp.time = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site"))] %>% group_by(predator_id, time) %>% summarise_all(list(sum)))
-
-rownames(breadth.cfcp.time) = paste(breadth.cfcp.time$predator_id, breadth.cfcp.time$time, sep="_")
-
-breadth.cfcp.time = t(breadth.cfcp.time[,!c(colnames(breadth.cfcp.time) %in% c("predator_id","time"))])
-
-niche.dvgz = breadth.cfcp.time
-
-niche.width(breadth.cfcp.time, method="levins")
-niche.width(breadth.cfcp.time, method="shannon")
-
-# C.floridanus May
-(niche.width(breadth.cfcp.time, method="levins")[1]-1)/(nrow(breadth.cfcp.time)-1)
-# C.floridanus Oct
-(niche.width(breadth.cfcp.time, method="levins")[2]-1)/(nrow(breadth.cfcp.time)-1)
-# C.pseudogracilis May
-(niche.width(breadth.cfcp.time, method="levins")[3]-1)/(nrow(breadth.cfcp.time)-1)
-# C.pseudogracilis Oct
-(niche.width(breadth.cfcp.time, method="levins")[4]-1)/(nrow(breadth.cfcp.time)-1)
-
-niche.overlap(breadth.cfcp.time, method="pianka")
-```
-
-```{r niche breadth of amphipods species (no sites)}
+```{r niche breadth of amphipods species}
 # summing prey DNA reads by predator ID
 breadth.cfcp = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site","time"))] %>% group_by(predator_id) %>% summarise_all(list(sum)))
 
@@ -920,7 +895,7 @@ meta.kick = metaMDS(adonis.kick, trymax=200, distance="jaccard")
 ```{r NMDS plot of kick-samples}
 # full symbols for May, hollow symbols for October
 png("R_images/kick-samples_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
-plot(meta.kick, type="n", main="kick-samples NMDS", xlim=c(-0.6,0.6), ylim=c(-0.6,0.6))
+plot(meta.kick, type="n", xlim=c(-0.6,0.6), ylim=c(-0.6,0.6))
 points(meta.kick, select=which(fact_time.kick[,1]=="May"),col="black",pch=20)
 points(meta.kick, select=which(fact_time.kick[,1]=="Oct"),col="black",pch=1)
 ordispider(meta.kick, group=fact_time.kick[,1],col=c("blue","orange"),label=T)
@@ -966,7 +941,7 @@ for (s in grep("_", rownames(meta.kick.edna$species))){
 }
 
 png("R_images/kick-eDNA_NMDS_jaccard.png", width=3000, height=3000, units="px", res=300)
-plot(meta.kick.edna, type="n", main="Community NMDS\neDNA and kick-samples by sample type")#, xlim=c(-1.5,1.5), ylim=c(-1,1.1))
+plot(meta.kick.edna, type="n")#, xlim=c(-1.5,1.5), ylim=c(-1,1.1))
 points(meta.kick.edna, select=which(fact_time.edki[,1]=="May"),col="black",pch=20)
 points(meta.kick.edna, select=which(fact_time.edki[,1]=="Oct"),col="black",pch=1)
 orditorp(meta.kick.edna, display="species")
@@ -1005,7 +980,7 @@ meta.full = metaMDS(adonis.guts.edna.kick, trymax = 200, methods = "jaccard")
 ```{r NMDS plot of guts against kick-samples and eDNA}
 # full symbols for May, hollow symbols for October
 png("R_images/guts_community_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
-plot(meta.full, type="n", main="Gut contents and Community NMDS", xlim=c(-0.5,0.5), ylim=c(-0.6,0.7))
+plot(meta.full, type="n", xlim=c(-0.5,0.5), ylim=c(-0.6,0.7))
 points(meta.full, select=which(fact_time.full[,1]=="May"),col="black",pch=20)
 points(meta.full, select=which(fact_time.full[,1]=="Oct"),col="black",pch=1)
 ordispider(meta.full, group=fact_type.full[,1],col=c("blue","orange","green"),label=T)
@@ -1056,7 +1031,7 @@ ggplot(occup.melt[occup.melt$sample_type == "guts",], aes(predator_id, value)) +
   theme_bw() +
   coord_flip() +
   facet_grid(site~.) +
-  labs(x="", y="Community composition (%)", title = "Community composition (individual taxa grouped by high rank taxonomy)") +
+  labs(x="", y="Community composition (%)") +
   theme(legend.position = "right")
 dev.off()
 ```
@@ -1093,7 +1068,7 @@ melt.kick[melt.kick$order == "Amphipoda",] %>%
   scale_fill_manual(values = col_crustacea, name = "") +
   theme_bw() +
   facet_grid(time~., scales="free_x") +
-  labs(x="", y="Abundance (count)", title = "Amphipoda kick-samples composition") +
+  labs(x="", y="Abundance (count)") +
   theme(legend.position = "right")
 dev.off()
 ```
