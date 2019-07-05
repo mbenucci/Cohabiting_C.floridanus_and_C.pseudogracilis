@@ -1023,10 +1023,10 @@ cols_barplot = c("red","darkorange", "cyan3", "greenyellow", "plum2", "deeppink"
 #, "brown","","black","darkgreen","khaki3",)
 
 png("R_images/barplot_summary_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
-ggplot(occup.melt[occup.melt$sample_type == "guts",], aes(predator_id, value)) +
+ggplot(occup.melt, aes(sample_type, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
-  scale_fill_manual(values = cols_barplot, name = "") +
-#  scale_x_discrete(limits=c("kick","eDNA","guts")) +
+  scale_fill_manual(values=cols_barplot, name = "") +
+  scale_x_discrete(limits=c("kick","eDNA","guts")) +
   theme_bw() +
   coord_flip() +
   facet_grid(site~.) +
@@ -1034,6 +1034,31 @@ ggplot(occup.melt[occup.melt$sample_type == "guts",], aes(predator_id, value)) +
   theme(legend.position = "right")
 dev.off()
 ```
+
+```{r barplot of gut contents}
+guts.melt=occup.melt[occup.melt$sample_type=="guts",]
+
+# Remove sample with value = 0
+guts.melt = guts.melt[,][guts.melt$value > 0,]
+
+# We split Amphipoda in Crangonyx and Corophium
+guts.melt[grep("Corophium", guts.melt$variable), "order"] <- "Corophiida"
+guts.melt[grep("Crangonyx", guts.melt$variable), "order"] <- "Crangonyctidae"
+
+unique(guts.melt$order)
+
+png("R_images/barplot_summary_guts_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
+guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(predator_id, value)) +
+  geom_bar(stat="identity", position="fill", aes(fill=order)) +
+  scale_fill_manual(values=cols_barplot, name = "") +
+  theme_bw() +
+  coord_flip() +
+  facet_grid(time~.) +
+  labs(x="", y="Community composition (%)") +
+  theme(legend.position = "right")
+dev.off()
+```
+
 
 ```{r summary barplot of amphipod}
 melt.kick = melt(abund.kick)
