@@ -638,6 +638,27 @@ niche.width(breadth.cfcp, method="shannon")
 niche.overlap(breadth.cfcp, method="pianka")
 ```
 
+```{r niche breadth of amphipods species with IGP}
+# summing prey DNA reads by predator ID
+breadth.cfcp.2 = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_type","sample_id","site","time"))] %>% group_by(predator_id) %>% summarise_all(list(sum)))
+
+rownames(breadth.cfcp.2) = breadth.cfcp.2$predator_id
+
+breadth.cfcp.2 = t(breadth.cfcp.2[,!c(colnames(breadth.cfcp.2) %in% c("predator_id"))])
+#breadth.cfcp[grep("Crangonyx", rownames(breadth.cfcp)),] <- 0
+
+breadth.cfcp.2[,1] = breadth.cfcp.2[,1]/107
+breadth.cfcp.2[,2] = breadth.cfcp.2[,2]/107
+
+niche.width(breadth.cfcp.2, method="levins")
+niche.width(breadth.cfcp.2, method="shannon")
+
+(niche.width(breadth.cfcp.2, method="levins")[1]-1)/(nrow(breadth.cfcp.2)-1)
+(niche.width(breadth.cfcp.2, method="levins")[2]-1)/(nrow(breadth.cfcp.2)-1)
+
+niche.overlap(breadth.cfcp.2, method="pianka")
+```
+
 # 5. Food web bipartite network
 
 For the bipartite network the gut contents data frame with the detections of preys can now be used. The gut contents data first needs to be summarised by site and season, then the data frame can be transposed to have a matrix with the prey along the rows and the predators along the columns. The prey taxa names (bottom level) will also be simplified from the extended binomial names only to allow a better reading in the bipartite plot.
@@ -674,7 +695,7 @@ After having set up the orders of taxa in top and bottom levels with their corre
 # Producing the bipartite network
 png("R_images/bipartite_network.png", width=4000, height=2500, units="px", res=300)
 plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lablength=5, low.lab.dis=0.1, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network, high.y=2, low.y=1)
-legend("bottom", legend=name.legend, fill=col.legend, bty="n", border="black",ncol=3, xpd=T)
+#legend("bottom", legend=name.legend, fill=col.legend, bty="n", border="black",ncol=3, xpd=T)
 dev.off()
 
 # Producing the legend
@@ -1091,7 +1112,8 @@ melt.kick[melt.kick$order == "Amphipoda",] %>%
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
   scale_fill_manual(values = col_crustacea, name = "") +
   theme_bw() +
-  facet_grid(time~., scales="free_x") +
+  facet_grid(time~., scales="free_x") +lay.matrix = matrix(c(1,2,3,3), ncol=2, nrow=2, byrow=T)
+layout(lay.matrix, heights=c(2,1), widths=c(2,2))
   labs(x="", y="Abundance (count)") +
   theme(legend.position = "right")
 dev.off()
@@ -1123,6 +1145,74 @@ final.data = t(final.data)
 #Saving final output
 write.csv(final.data, "R_outputs/Crangonyx_summary_table.csv")
 ```
+
+# 11. publication plots
+
+```{r guts NMDS publication}
+png("R_images/NMDS_guts_publication.png", width = 4000, height = 4000, units = "px", res = 310)
+lay.matrix = matrix(c(1,2,3,3), ncol=2, nrow=2, byrow=T)
+layout(lay.matrix, heights=c(2,1), widths=c(2,2))
+
+plot(meta.guts, type="n", xlim=c(-1,1.5), ylim=c(-1.5,2))
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseudogracilis" & fact_time.guts[,1]=="May"),col="black", pch=17)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseudogracilis" & fact_time.guts[,1]=="Oct"),col="black", pch=24)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.floridanus" & fact_time.guts[,1]=="May"),col="black", pch=15)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.floridanus" & fact_time.guts[,1]=="Oct"),col="black", pch=22)
+ordispider(meta.guts, group=fact_predator.guts[,1],col=c("red","orange"),label=T)
+ordiellipse(meta.guts, group=fact_predator.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
+text(1,-1,label=paste0("Stress: ",round(meta.guts$stress, 6)))
+
+plot(meta.full, type="n", xlim=c(-0.5,0.5), ylim=c(-0.6,0.7))
+points(meta.full, select=which(fact_time.full[,1]=="May"),col="black",pch=20)
+points(meta.full, select=which(fact_time.full[,1]=="Oct"),col="black",pch=1)
+ordispider(meta.full, group=fact_type.full[,1],col=c("blue","orange","green"),label=T)
+ordiellipse(meta.full, group=fact_type.full[,1],kind="ehull",lty=c(1,5,3),label=F,lwd=1)
+text(0, -0.5, label=paste0("Stress: ",round(meta.full$stress, 6)))
+
+# Common legend
+plot.new()
+legend("top", legend=c("Crangonyx pseudogracilis - May","Crangonyx pseudogracilis - Oct","Crangonyx floridanus - May","Crangonyx floridanus - Oct"), col=c("black","black","red","red"), pch=c(17,24,15,22), cex=2, ncol=2)
+dev.off()
+```
+
+
+```{r bipartite publication}
+name.multi=c("Amphipoda","Cladocera","Copepoda","Diptera","Gastropoda","Oligochaeta","Tricladida")
+col.multi=c("red","cyan3","khaki3","yellow","darkorchid3","tan4","darkgreen")
+
+png("R_images/bipartite_network_publication.png", width=4000, height=2500, units="px", res=300)
+plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lab.dis=0.05, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network, high.y=2, low.y=1)
+legend("bottom", legend=name.multi, fill=col.multi, bty="n", border="black",ncol=4, xpd=T)
+dev.off()
+```
+
+
+```{r community NMDS publication}
+png("R_images/NMDS_community_pubblication.png", width = 6000, height = 6000, units = "px", res = 310)
+lay.matrix = matrix(c(1,2,3,3), ncol=2, nrow=2, byrow=T)
+layout(lay.matrix, heights=c(2,1), widths=c(2,2))
+
+plot(meta.kick, type="n", xlim=c(-0.6,0.6), ylim=c(-0.6,0.6))
+points(meta.kick, select=which(fact_time.kick[,1]=="May"),col="black",pch=20)
+points(meta.kick, select=which(fact_time.kick[,1]=="Oct"),col="black",pch=1)
+ordispider(meta.kick, group=fact_time.kick[,1],col=c("green","darkgreen"),label=T)
+ordiellipse(meta.kick, group=fact_time.kick[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
+text(-0.5,-0.4, label=paste0("Stress: ", round(meta.kick$stress,6)))
+
+plot(meta.kick.edna, type="n")#, xlim=c(-1.5,1.5), ylim=c(-1,1.1))
+points(meta.kick.edna, select=which(fact_time.edki[,1]=="May"),col="black",pch=20)
+points(meta.kick.edna, select=which(fact_time.edki[,1]=="Oct"),col="black",pch=1)
+orditorp(meta.kick.edna, display="species")
+ordispider(meta.kick.edna, group=fact_type.edki[,1],col=c("blue","green"),label=T)
+ordiellipse(meta.kick.edna, group=fact_type.edki[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
+text(0, -1, label=paste0("Stress: ",round(meta.kick.edna$stress, 6)))
+
+# Common legend
+plot.new()
+legend("top", legend=c("May","Oct"), col=c("black","black","blue","blue"), pch=c(19,1), cex=2, ncol=1)
+dev.off()
+```
+
 
 This last chunk requires msa (R-package) and LaTex Live to be installed.
 To install LaTex Live on Ubuntu 16.04 from terminal:
