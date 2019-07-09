@@ -824,8 +824,9 @@ ch.kick = full_join(ch.may.kick, ch.oct.kick)
 ch.kick[is.na(ch.kick)] <- 0
 ```
 
-```{r}
-ch.kick$sample_id = paste0(ch.kick$location, ch.kick$site)
+```{r sorting variables}
+ch.kick$sample_id = ch.kick$tube_id
+ch.kick$site = paste0(ch.kick$location, ch.kick$site)
 ```
 
 ```{r joining frames}
@@ -836,14 +837,14 @@ colnames(abund.kick)
 NMDS of kick samples.
 
 ```{r rarefaction curves on kick-samples}
-# removing high order taxa                                                                                                                         
+# removing high order taxa
 abund.kick = abund.kick[,!c(colnames(abund.kick) %in% c("Trichoptera","Diptera","Oligochaeta","Ostracoda","Araneae","Coleoptera","Mollusca","Zygoptera","Nematoda"))]
 
-raref.kick = as.data.frame(abund.kick %>% group_by(site, sample_id, sample_type, time, location) %>% summarise_all(list(sum)))
+raref.kick = as.data.frame(abund.kick[,!c(colnames(abund.kick) %in% c("sample_id"))] %>% group_by(site, sample_type, time, location) %>% summarise_all(list(sum)))
 
 # setting rownames and removing extra variables
-rownames(raref.kick) = paste(raref.kick$sample_id, raref.kick$time, sep="_")
-raref.kick = raref.kick[,!c(colnames(raref.kick) %in% c("site","sample_id","sample_type","time","location"))]
+rownames(raref.kick) = paste(raref.kick$site, raref.kick$time, sep="_")
+raref.kick = raref.kick[,!c(colnames(raref.kick) %in% c("site","sample_type","time","location"))]
 
 # list of families in data set to be removed
 kick.fam = colnames(raref.kick[,grepl("idae", colnames(raref.kick)) == T])
@@ -898,12 +899,12 @@ sd(choct_kickrich)/sqrt(length(choct_kickrich))
 
 
 ```{r PERMANOVA of kick-samples}
-adonis.kick = as.data.frame(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("site","sample_type"))] %>% group_by(sample_id, time) %>% summarise_all(list(sum)))
+adonis.kick = as.data.frame(occupancy.kick[,!c(colnames(occupancy.kick) %in% c("sample_id","sample_type"))] %>% group_by(site, time) %>% summarise_all(list(sum)))
 
 fact_time.kick = matrix(c(adonis.kick$time), ncol=1)
 
-rownames(adonis.kick) = paste(adonis.kick$sample_id, adonis.kick$time, sep="_")
-adonis.kick = vegdist(as.matrix(adonis.kick[,!c(colnames(adonis.kick) %in% c("sample_id","time"))]))
+rownames(adonis.kick) = paste(adonis.kick$site, adonis.kick$time, sep="_")
+adonis.kick = vegdist(as.matrix(adonis.kick[,!c(colnames(adonis.kick) %in% c("site","time"))]))
 
 adonis(adonis.kick~fact_time.kick, permutations = 9999, method="jaccard")
 ```
@@ -927,16 +928,14 @@ dev.off()
 # 8. Community composition of eDNA and kick-samples
 
 ```{r merging kick-samples and eDNA frames}
-occupancy.kick$site = occupancy.kick$sample_id
 occup.edna$site = gsub("^e", "", occup.edna$site)
 
 occup.kick.edna = full_join(occup.edna[,!c(colnames(occup.edna) %in% "predator_id")], occupancy.kick)
 occup.kick.edna[is.na(occup.kick.edna)] <- 0
 
+occup.kick.edna = as.data.frame(occup.kick.edna[,!c(colnames(occup.kick.edna) %in% c("sample_id"))] %>% group_by(sample_type, site, time) %>% summarise_all(list(sum)))
 
-occup.kick.edna = as.data.frame(occup.kick.edna %>% group_by(sample_id, sample_type, site, time) %>% summarise_all(list(sum)))
-
-adonis.kick.edna = occup.kick.edna[,!c(colnames(occup.kick.edna) %in% c("site","sample_id","sample_type","time"))]
+adonis.kick.edna = occup.kick.edna[,!c(colnames(occup.kick.edna) %in% c("site","sample_type","time"))]
 
 fact_time.edki = matrix(c(occup.kick.edna$time), ncol=1)
 fact_type.edki = matrix(c(occup.kick.edna$sample_type), ncol=1)
@@ -961,7 +960,7 @@ for (s in grep("_", rownames(meta.kick.edna$species))){
 }
 
 png("R_images/kick-eDNA_NMDS_jaccard.png", width=3000, height=3000, units="px", res=300)
-plot(meta.kick.edna, type="n")#, xlim=c(-1.5,1.5), ylim=c(-1,1.1))
+plot(meta.kick.edna, type="n")
 points(meta.kick.edna, select=which(fact_time.edki[,1]=="May"),col="black",pch=20)
 points(meta.kick.edna, select=which(fact_time.edki[,1]=="Oct"),col="black",pch=1)
 orditorp(meta.kick.edna, display="species")
@@ -981,7 +980,7 @@ occup.kick.edna$sample_type
 occup.gut.edna.kick = full_join(abund.guts.site, occup.kick.edna)
 occup.gut.edna.kick[is.na(occup.gut.edna.kick)] <- 0
 
-adonis.guts.edna.kick = occup.gut.edna.kick[,!c(colnames(occup.gut.edna.kick) %in% c("site","sample_type","time","predator_id","sample_id"))]
+adonis.guts.edna.kick = occup.gut.edna.kick[,!c(colnames(occup.gut.edna.kick) %in% c("site","sample_type","time","predator_id"))]
 
 fact_site.full = matrix(c(occup.gut.edna.kick$site), ncol=1)
 fact_time.full = matrix(c(occup.gut.edna.kick$time), ncol=1)
@@ -1108,12 +1107,11 @@ col_crustacea = c("olivedrab","springgreen","darkblue","steelblue1","skyblue1","
 png("R_images/barplot_summary_amphipod.png", width = 3000, height = 3000, units = "px", res = 300)
 melt.kick[melt.kick$order == "Amphipoda",] %>% 
   mutate(variable = factor(variable, levels=c("Corophium_sp.","Crangonyx_sp.","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
-  ggplot(aes(sample_id, value, group=time)) +
+  ggplot(aes(site, value, group=time)) +
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
   scale_fill_manual(values = col_crustacea, name = "") +
   theme_bw() +
-  facet_grid(time~., scales="free_x") +lay.matrix = matrix(c(1,2,3,3), ncol=2, nrow=2, byrow=T)
-layout(lay.matrix, heights=c(2,1), widths=c(2,2))
+  facet_grid(time~., scales="free_x") +
   labs(x="", y="Abundance (count)") +
   theme(legend.position = "right")
 dev.off()
@@ -1124,9 +1122,10 @@ dev.off()
 This last chunk is only to create the base for the summary table presented in supplementary informaton. This uses the presence/absence data for the gut contents and the eDNA samples, while it uses the actual abundance for the kick-samples. The table was then expanded externally to R to include more summarising informations.
 
 ```{r generating data summary table}
-guts.summary = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id"))] %>% group_by(site,time,predator_id,sample_type) %>% summarise_all(list(sum)))
-edna.summary = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_id","predator_id"))] %>% group_by(site,time, sample_type) %>% summarise_all(list(sum)))
-kick.summary = as.data.frame(abund.kick[,!c(colnames(abund.kick) %in% c("site","REPLICATE","location"))] %>% group_by(sample_id, time,sample_type) %>% summarise_all(list(sum)))
+guts.summary = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id"))] %>% group_by(site, time, predator_id, sample_type) %>% summarise_all(list(sum)))
+edna.summary = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_id","predator_id"))] %>% group_by(site, time, sample_type) %>% summarise_all(list(sum)))
+kick.summary = as.data.frame(abund.kick[,!c(colnames(abund.kick) %in% c("REPLICATE","location","sample_id"))] %>% group_by(site, time, sample_type) %>% summarise_all(list(sum)))
+
 
 full.data = full_join(guts.summary, edna.summary)
 full.data = full_join(full.data, kick.summary)
