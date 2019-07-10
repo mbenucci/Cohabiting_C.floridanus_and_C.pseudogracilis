@@ -584,6 +584,7 @@ abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id
 rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$site, abund.guts.site$time, sep="_")
 ```
 
+
 ```{r PERMANOVA gut contents}
 adonis.guts = abund.guts[,!c(colnames(abund.guts) %in% c("time","site","sample_type","predator_id","sample_id"))]
 
@@ -645,7 +646,6 @@ breadth.cfcp.2 = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sampl
 rownames(breadth.cfcp.2) = breadth.cfcp.2$predator_id
 
 breadth.cfcp.2 = t(breadth.cfcp.2[,!c(colnames(breadth.cfcp.2) %in% c("predator_id"))])
-#breadth.cfcp[grep("Crangonyx", rownames(breadth.cfcp)),] <- 0
 
 breadth.cfcp.2[,1] = breadth.cfcp.2[,1]/107
 breadth.cfcp.2[,2] = breadth.cfcp.2[,2]/107
@@ -671,7 +671,6 @@ rownames(food.web) = paste(food.web$predator_id, food.web$time, sep="_")
 # Removing metadata column and transposing to have predators in columns and prey in rows.
 food.web = food.web[,!c(colnames(food.web) %in% c("predator_id","time"))]
 food.web = as.data.frame(t(food.web))
-#food.web = subset(food.web, subset=rowSums(food.web) > 0)
 
 # Renaming the preys taxa in a more legible format for the plot (e.g. from extended binomial "Asellus aquaticus" to "A.aquaticus")
 rownames(food.web) = gsub("[a-z]{3,13}_",".", rownames(food.web))
@@ -834,7 +833,10 @@ ch.kick$site = paste0(ch.kick$location, ch.kick$site)
 
 ```{r joining frames}
 abund.kick = ch.kick[,!c(colnames(ch.kick) %in% "tube_id")]
+
+# Sorting out genus names to be consistent with eDNA and gut contents data
 colnames(abund.kick)
+colnames(abund.kick) = gsub("_sp.", "", colnames(abund.kick))
 ```
 
 NMDS of kick samples.
@@ -1111,7 +1113,7 @@ col_crustacea = c("olivedrab","springgreen","darkblue","steelblue1","skyblue1","
 
 png("R_images/barplot_summary_amphipod.png", width = 3000, height = 3000, units = "px", res = 300)
 melt.kick[melt.kick$order == "Amphipoda",] %>% 
-  mutate(variable = factor(variable, levels=c("Corophium_sp.","Crangonyx_sp.","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
+  mutate(variable = factor(variable, levels=c("Corophium","Crangonyx","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
   ggplot(aes(site, value, group=time)) +
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
   scale_fill_manual(values = col_crustacea, name = "") +
@@ -1127,11 +1129,9 @@ dev.off()
 This last chunk is only to create the base for the summary table presented in supplementary informaton. This uses the presence/absence data for the gut contents and the eDNA samples, while it uses the actual abundance for the kick-samples. The table was then expanded externally to R to include more summarising informations.
 
 ```{r generating data summary table}
-abund.guts[abund.guts$predator_id == "C.pseudogracilis", "sample_id"]
 guts.summary = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id"))] %>% group_by(site, time, predator_id, sample_type) %>% summarise_all(list(sum)))
 edna.summary = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_id","predator_id"))] %>% group_by(site, time, sample_type) %>% summarise_all(list(sum)))
 kick.summary = as.data.frame(abund.kick[,!c(colnames(abund.kick) %in% c("REPLICATE","location","sample_id"))] %>% group_by(site, time, sample_type) %>% summarise_all(list(sum)))
-
 
 full.data = full_join(guts.summary, edna.summary)
 full.data = full_join(full.data, kick.summary)
