@@ -43,68 +43,148 @@ lapply(pack.list, require, character.only=T)
 sessionInfo()
 ```
 
-## Plotting the map for Chapter 3 on DNA metabarcoding and MATI of invasive _D. villosus_ against non-invasive _G. zaddachi_.
+## Plotting the map for Chapter 5 on DNA metabarcoding of trophic interactions of cohabiting _C. pseudogracilis_ and _C. floridanus_.
 
 ```{r input data}
+detect.sites = read.csv("map/Cf_detection_sites.csv")
 ch.sites = read.csv("map/Chasewater_sites.csv")
-lake.coords = read.csv("map/site_coords.csv")
+#lake.coords = read.csv("map/site_coords.csv")
 ```
 
 Lakes coordinates include also a fourth lake which is part of this study, so it needs to be excluded from our current analysis.
 
 ```{r checking files plus removing one lake}
+head(detect.sites)
 head(ch.sites)
-head(lake.coords)
+#head(lake.coords)
 ```
 
 Adding the labels short name
 
 ```{r label}
-lake.coords$short.name = "CH"
+detect.sites$Label = "NA"
+detect.sites[grep("Thwaite", detect.sites$Description),"Label"] = "Thwai"
+detect.sites[grep("Bourne", detect.sites$Description),"Label"] = "Bourn"
+detect.sites[grep("Kyngs", detect.sites$Description),"Label"] = "Kyngs"
+detect.sites[grep("Chasewater", detect.sites$Description),"Label"] = "Chase"
+detect.sites[grep("Upton", detect.sites$Description),"Label"] = "Upton"
+detect.sites[grep("Nar", detect.sites$Description),"Label"] = "Nar"
 ```
+
+We load all shapefiles for the lakes and rivers sampled. We change the coorinates system to be in `WGS84` and then we create the map frame for plotting.
+
+All shapefiles were downloaded from:
+
+`OS Open Map Local [Shape geospatial data], Scale 1:, Tile(s): TA, TF, TG, TL, SK, SZ, Updated: December 2017, Ordnance Survey, Using: EDINA Digimap Ordnance Survey Service, [http://digimap.edina.ac.uk/], Downloaded: July 2019`
+
 
 ```{r shapefiles}
 uk_shape = readOGR("map/shapefiles/GB_IRworld.shp")
-
-# Because we have coordinates in National Grid, we convert into WGS84
-wgs84 = '+proj=longlat +datum=WGS84'
-uk_shape_wgs = spTransform(uk_shape, CRS(wgs84))
-uk_map = fortify(uk_shape_wgs)
-
 chasewater_shape = readOGR("map/shapefiles/SK_SurfaceWater_Area.shp")
-ch.sites
+thwaite_shape = readOGR("map/shapefiles/TA_SurfaceWater_Area.shp")
+thwaite2_shape = readOGR("map/shapefiles/TA_Foreshore.shp")
+thwaite3_shape = readOGR("map/shapefiles/SE_SurfaceWater_Area.shp")
+bourne_shape = readOGR("map/shapefiles/SZ_SurfaceWater_Area.shp")
+bourne2_shape = readOGR("map/shapefiles/SZ_Foreshore.shp")
+kyngs_shape = readOGR("map/shapefiles/TL_SurfaceWater_Area.shp")
+upton_shape = readOGR("map/shapefiles/TG_SurfaceWater_Area.shp")
+nar_shape = readOGR("map/shapefiles/TF_SurfaceWater_Area.shp")
+
 # Because we have coordinates in National Grid, we convert into WGS84
-chasewater_wgs = spTransform(chasewater_shape, CRS(wgs84))
-ch_map = fortify(chasewater_wgs)
+#wgs84 = '+proj=longlat +datum=WGS84'
+
+#uk_shape_wgs = spTransform(uk_shape, CRS(wgs84))
+uk_map = fortify(uk_shape)
+
+#chasewater_wgs = spTransform(chasewater_shape, CRS(wgs84))
+ch_map = fortify(chasewater_shape)
+
+#thwaite_wgs = spTransform(thwaite_shape, CRS(wgs84))
+th_map = fortify(thwaite_shape)
+
+#thwaite2_wgs = spTransform(thwaite2_shape, CRS(wgs84))
+th2_map = fortify(thwaite2_shape)
+
+#thwaite3_wgs = spTransform(thwaite3_shape, CRS(wgs84))
+th3_map = fortify(thwaite3_shape)
+
+#bourne_wgs = spTransform(bourne_shape, CRS(wgs84))
+bo_map = fortify(bourne_shape)
+
+#bourne2_wgs = spTransform(bourne2_shape, CRS(wgs84))
+bo2_map = fortify(bourne2_shape)
+
+#kyngs_wgs = spTransform(kyngs_shape, CRS(wgs84))
+ky_map = fortify(kyngs_shape)
+
+#upton_wgs = spTransform(upton_shape, CRS(wgs84))
+up_map = fortify(upton_shape)
+
+#nar_wgs = spTransform(nar_shape, CRS(wgs84))
+na_map = fortify(nar_shape)
 ```
+
+We can now start plotting the sampling points and creates the maps, initially individually; then we plot them all together for publication.
 
 ```{r uk map}
 png("map/UK_map.png", width=3000, height=3000, units="px", res=300)
 ggplot(uk_map) +
   geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
-  geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=3) +
-  geom_text(data=lake.coords, aes(Longitude,Latitude, label=ID), nudge_x=0.6, nudge_y=-0.2, cex=4) +
-  coord_fixed(2) +
+  geom_point(data=detect.sites, aes(X,Y), color="black", cex=3) +
+  geom_text(data=detect.sites, aes(X,Y, label=Label), nudge_y=-20000, cex=4) +
+  coord_fixed(1) +
   theme_void() +
   north(uk_map, symbol=12, location="bottomleft")
 dev.off()
 ```
 
-Importing the lakes shapefiles to plot the sampling points
-
 ```{r chasewater map}
 png("map/Chasewater_map.png", width=3000, height=3000, units="px", res=300)
 ggplot(ch_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
-  geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=3) +
-  geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=0.0007, nudge_y=-0.0001, cex=4) +
-  xlim(-1.963,-1.937) + ylim(52.660,52.679) +
-  coord_fixed(1.5) +
+  geom_point(data=ch.sites, aes(X, Y), color="red", cex=3) +
+  geom_text(data=ch.sites, aes(X, Y, label=Title), nudge_x=0.0007, nudge_y=-0.0001, cex=4) +
+  coord_fixed(ratio=1, xlim=c(402500,404100), ylim=c(307000,308900)) +
   theme_void() +
   blank() +
-  ggsn::scalebar(location="bottomleft", x.min=-1.962, x.max=-1.958, y.min=52.6625, y.max=52.665, dist=300, dist_unit="m", st.dist=0.2, height=0.15, transform=T)
+  ggsn::scalebar(location="bottomleft", x.min=402500, x.max=402600, y.min=307000, y.max=307050, dist=300, dist_unit="m", st.dist=0.2, height=5, transform=T)
 dev.off()
 ```
+
+```{r thwaite map}
+png("map/Thwaite_map.png", width=3000, height=3000, units="px", res=300)
+ggplot(th_map) +
+  geom_polygon(data=th_map, aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_polygon(data=th2_map, aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_polygon(data=th3_map, aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y, label=Description), nudge_y=0.05, cex=4) +
+  coord_fixed(ratio=1.5, xlim=c(-0.65,0.25), ylim=c(53.5,53.9))
+#  theme_void() +
+#  blank() #+
+  #ggsn::scalebar(location="bottomleft", x.min=-1.962, x.max=-1.958, y.min=52.6625, y.max=52.665, dist=300, dist_unit="m", st.dist=0.2, height=0.15, transform=T)
+dev.off()
+```
+```{r}
+png("map/Kyngs_map.png", width=3000, height=3000, units="px", res=300)
+ggplot(ky_map) +
+  geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=detect.sites[detect.sites$Label == "Kyngs",], aes(Longitude, Latitude), color="red", cex=3) +
+  geom_text(data=detect.sites[detect.sites$Label == "Kyngs",], aes(Longitude, Latitude, label=Description), nudge_x=0.0007, nudge_y=-0.0001, cex=4) +
+  #xlim(-0.45,-0.37) + ylim(53.7,53.8) +
+  coord_fixed(1.5) +
+  theme_void() +
+  blank() #+
+  #ggsn::scalebar(location="bottomleft", x.min=-1.962, x.max=-1.958, y.min=52.6625, y.max=52.665, dist=300, dist_unit="m", st.dist=0.2, height=0.15, transform=T)
+dev.off()
+```
+```{r}
+
+```
+
+
+
+
 ```{r complete map}
 png("map/sampling_map.png", width=6000, height=6000, units="px", res=300)
 a = ggplot(uk_map) +
