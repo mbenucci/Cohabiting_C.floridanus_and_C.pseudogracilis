@@ -1,0 +1,121 @@
+LOCUS       KX374768                 599 bp    DNA     linear   INV 25-JUL-2016
+DEFINITION  Osmia bicornis isolate PLO-7-2 cytochrome c oxidase subunit I (COI)
+            gene, partial cds; mitochondrial.
+ACCESSION   KX374768
+VERSION     KX374768.1
+KEYWORDS    .
+SOURCE      mitochondrion Osmia bicornis (red mason bee)
+  ORGANISM  Osmia bicornis
+            Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Hexapoda; Insecta;
+            Pterygota; Neoptera; Holometabola; Hymenoptera; Apocrita; Aculeata;
+            Apoidea; Megachilidae; Megachilinae; Osmia.
+REFERENCE   1  (bases 1 to 599)
+  AUTHORS   Radzeviciute,R., Theodorou,P., Schlegel,M. and Paxton,R.J.
+  TITLE     Local resources limit benefits of biodiversity for pollination
+            services in apple
+  JOURNAL   Unpublished
+REFERENCE   2  (bases 1 to 599)
+  AUTHORS   Radzeviciute,R., Theodorou,P., Schlegel,M. and Paxton,R.J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (05-JUN-2016) Molecular Evolution and Animal Systematics,
+            Leipzig University, Talstr.33, Leipzig, Saxony 04103, Germany
+COMMENT     ##Assembly-Data-START##
+            Sequencing Technology :: Sanger dideoxy sequencing
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..599
+                     /organism="Osmia bicornis"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /isolate="PLO-7-2"
+                     /db_xref="taxon:1437190"
+                     /country="Germany"
+     gene            <1..>599
+                     /gene="COI"
+     CDS             <1..>599
+                     /gene="COI"
+                     /codon_start=2
+                     /transl_table=5
+                     /product="cytochrome c oxidase subunit I"
+                     /protein_id="ANU04883.1"
+                     /translation="SAMSIIIRMELSIPGSWITNDQIYNSLVTAHAFLMIFFLVMPFL
+                     IGGFGNWLIPLMLGIPDMAFPRMNNISFWLLPPSLMLLLLSNFLNPSPGTGWTVYPPL
+                     SSNLFHSSPSVDLAIFSLHISGLSSIMGSLNFIVTIIMMKNISLKYIQLPLFPWSVFI
+                     TTILLLFSLPVLAGAITMLLFDRNFNTSFFDPTGGGDPI"
+ORIGIN      
+        1 gtcagcaata agaattatta ttcgaataga attaagtatc ccaggttcat gaattactaa
+       61 tgatcaaatt tataattctt tagtaactgc acatgctttt ttaataattt tttttcttgt
+      121 gataccattt ttaattggag gatttggaaa ttgattaatt cctttaatat taggaattcc
+      181 agatatagct ttcccacgaa taaacaatat tagattttga ttattaccgc catctttaat
+      241 attattactt ttaagaaatt ttttaaatcc aagtcctgga acaggatgaa cagtttatcc
+      301 ccctttatca tcaaatttat ttcattcttc tccttcagtt gatttagcaa ttttttcttt
+      361 acatatttca ggtttatctt ctattatagg ttcattaaat tttattgtta caattattat
+      421 aataaaaaat atttctttaa aatatattca attgccttta tttccttgat ctgtatttat
+      481 tactactatt cttttattat tttctttacc tgtgttagct ggagctatta ctatattatt
+      541 atttgatcga aattttaata catctttttt tgatcctacn ggaggaggag atccaattc
+//
+
+LOCUS       KX957868                 631 bp    DNA     linear   INV 18-MAR-2017
+DEFINITION  Osmia bicornis isolate Kyr1-40w cytochrome c oxidase subunit I
+            (COI) gene, partial cds; mitochondrial.
+ACCESSION   KX957868
+VERSION     KX957868.1
+KEYWORDS    .
+SOURCE      mitochondrion Osmia bicornis (red mason bee)
+  ORGANISM  Osmia bicornis
+            Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Hexapoda; Insecta;
+            Pterygota; Neoptera; Holometabola; Hymenoptera; Apocrita; Aculeata;
+            Apoidea; Megachilidae; Megachilinae; Osmia.
+REFERENCE   1  (bases 1 to 631)
+  AUTHORS   Radzeviciute,R., Theodorou,P., Husemann,M., Japoshvili,G.,
+            Kirkitadze,G., Zhusbaeva,A. and Paxton,R.J.
+  TITLE     Prevalence of RNA viruses in apple pollinator communities in
+            Germany, Georgia and Kyrgyzstan
+  JOURNAL   Unpublished
+REFERENCE   2  (bases 1 to 631)
+  AUTHORS   Radzeviciute,R., Theodorou,P., Husemann,M., Japoshvili,G.,
+            Kirkitadze,G., Zhusbaeva,A. and Paxton,R.J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (05-OCT-2016) General Zoology, Martin Luther University
+            Halle-Wittenberg, Hoher Weg 8, Halle (Saale), Saxony-Anhalt 06120,
+            Germany
+COMMENT     ##Assembly-Data-START##
+            Sequencing Technology :: Sanger dideoxy sequencing
+            ##Assembly-Data-END##
+FEATURES             Location/Qualifiers
+     source          1..631
+                     /organism="Osmia bicornis"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /isolate="Kyr1-40w"
+                     /db_xref="taxon:1437190"
+                     /country="Kyrgyzstan"
+                     /PCR_primers="fwd_name: LCO-1490, fwd_seq:
+                     ggtcaacaaatcataaagatattgg, rev_name: HCO-2198, rev_seq:
+                     taaacttcagggtgaccaaaaaatca"
+     gene            <1..>631
+                     /gene="COI"
+     CDS             <1..>631
+                     /gene="COI"
+                     /codon_start=1
+                     /transl_table=5
+                     /product="cytochrome c oxidase subunit I"
+                     /protein_id="AQY16067.1"
+                     /translation="GSAMSIIIRMELSIPGSWITNDQIYNSLVTAHAFLMIFFLVMPF
+                     LIGGFGNWLIPLMLGIPDMAFPRMNNISFWLLPPSLMLLLLSNFLNPSPGTGWTVYPP
+                     LSSNLFHSSPSVDLAIFSLHISGLSSIMGSLNFIVTIIMMKNISLKYIQLPLFPWSVF
+                     ITTILLLFSLPVLAGAITMLLFDRNFNTSFFDPTGGGDPILYQHLFWFFG"
+ORIGIN      
+        1 gggtcagcaa taagaattat tattcgaata gaattaagta tcccaggttc atgaattact
+       61 aatgatcaaa tttataattc tttagtaact gcacatgctt ttttaataat tttttttctt
+      121 gtgataccat ttttaattgg aggatttgga aattgattaa ttcctttaat attaggaatt
+      181 ccagatatag ctttcccacg aataaacaat attagatttt gattattacc gccatcttta
+      241 atattattac ttttaagaaa ttttttaaat ccaagtcctg gaacaggatg aacagtttat
+      301 ccccctttat catcaaattt atttcattct tctccttcag ttgatttagc aattttttct
+      361 ttacatattt caggtttatc ttctattata ggttcattaa attttattgt tacaattatt
+      421 ataataaaaa atatttcttt aaaatatatt caattgcctt tatttccttg atctgtattt
+      481 attactacta ttcttttatt attttcttta cctgtgttag ctggagctat tactatatta
+      541 ttatttgatc gaaattttaa tacatctttt tttgatccta caggaggagg agatccaatt
+      601 ctttatcaac atttattttg attttttggt c
+//
+

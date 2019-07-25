@@ -1,0 +1,4 @@
+../1-NCBI_references/C.islandicus_NCBI_2018.gb	gb
+../1-NCBI_references/Crangonyx_NCBI_2018.gb	gb
+../1-NCBI_references/O.bicornis_NCBI_2018.gb	gb
+../1-NCBI_references/Synurella_NCBI_2018.gb	gb

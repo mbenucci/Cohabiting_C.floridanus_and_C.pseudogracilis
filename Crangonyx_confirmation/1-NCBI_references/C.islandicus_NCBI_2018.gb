@@ -1,0 +1,224 @@
+LOCUS       HM015193                 658 bp    DNA     linear   INV 25-JUL-2016
+DEFINITION  Crangonyx islandicus isolate E4 cytochrome oxidase subunit I (COI)
+            gene, partial cds; mitochondrial.
+ACCESSION   HM015193
+VERSION     HM015193.1
+KEYWORDS    .
+SOURCE      mitochondrion Crangonyx islandicus
+  ORGANISM  Crangonyx islandicus
+            Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Crustacea; Malacostraca;
+            Eumalacostraca; Peracarida; Amphipoda; Senticaudata; Gammarida;
+            Crangonyctidira; Crangonyctoidea; Crangonyctidae; Crangonyx.
+REFERENCE   1  (bases 1 to 658)
+  AUTHORS   Kornobis,E., Palsson,S., Kristjansson,B.K. and Svavarsson,J.
+  TITLE     Molecular evidence of the survival of subterranean amphipods
+            (Arthropoda) during Ice Age underneath glaciers in Iceland
+  JOURNAL   Mol. Ecol. 19 (12), 2516-2530 (2010)
+   PUBMED   20465590
+REFERENCE   2  (bases 1 to 658)
+  AUTHORS   Kornobis,E., Palsson,S., Kristjansson,B.K. and Svavarsson,J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (19-MAR-2010) Department of Biology, University of
+            Iceland, Sturlugata 7, Reykjavik 105, Iceland
+FEATURES             Location/Qualifiers
+     source          1..658
+                     /organism="Crangonyx islandicus"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /isolate="E4"
+                     /db_xref="taxon:856801"
+     gene            <1..>658
+                     /gene="COI"
+     CDS             <1..>658
+                     /gene="COI"
+                     /codon_start=2
+                     /transl_table=5
+                     /product="cytochrome oxidase subunit I"
+                     /protein_id="ADJ36897.1"
+                     /translation="TLYFVLGAWASLLGTSLSMVIRAELSSPGSLIGDDQIYNVMVTA
+                     HAFVMIFFVVMPIMIGGFGNWLVPLMLGSPDMAFPRMNNMSFWLLPPSLSILLISGLV
+                     ESGVGTGWTVYPPLAAATAHSGAAVDLAIFSLHLAGASSILGAINFISTVINMRSPSM
+                     TMEQVPLFVWSVFITAILLLLSLPVLAGAITMLLTDRNLNTSFFDPSGGGDPILYQHL
+                     F"
+ORIGIN      
+        1 cactctttat tttgtccttg gtgcttgagc caggctttta ggcactaggc taagaatagt
+       61 tattcgagct gagctgtcct ccccagggag cctaattggt gatgaccaga tttataacgt
+      121 catagtcaca gctcatgcct ttgttataat tttttttgtt gtgataccta ttatgattgg
+      181 gggattcgga aactgattag tacccttaat actaggtagt ccggatatag cgtttccccg
+      241 aataaataac ataagattct gacttctgcc tccttctctc tctattctac taattagggg
+      301 gctagttgaa agcggagtag ggaccggctg aacagtctat ccccccctcg cggcagcaac
+      361 tgcccacaga ggcgcagctg tggatttagc tatcttttct cttcatctag caggagcctc
+      421 ttctatcctg ggagccatta attttatctc tactgtaatc aatatacgaa gcccttctat
+      481 aacaatagaa caagttcctt tatttgtttg gtcagtcttt attacagcaa ttttgctcct
+      541 gctatcgctc cccgtgctag caggagcaat tactatatta ttaactgacc gtaacttaaa
+      601 cacctccttc tttgacccta gaggaggcgg agatcctatc ttataccaac acctgttc
+//
+
+LOCUS       HM015194                 658 bp    DNA     linear   INV 25-JUL-2016
+DEFINITION  Crangonyx islandicus isolate F1 cytochrome oxidase subunit I (COI)
+            gene, partial cds; mitochondrial.
+ACCESSION   HM015194
+VERSION     HM015194.1
+KEYWORDS    .
+SOURCE      mitochondrion Crangonyx islandicus
+  ORGANISM  Crangonyx islandicus
+            Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Crustacea; Malacostraca;
+            Eumalacostraca; Peracarida; Amphipoda; Senticaudata; Gammarida;
+            Crangonyctidira; Crangonyctoidea; Crangonyctidae; Crangonyx.
+REFERENCE   1  (bases 1 to 658)
+  AUTHORS   Kornobis,E., Palsson,S., Kristjansson,B.K. and Svavarsson,J.
+  TITLE     Molecular evidence of the survival of subterranean amphipods
+            (Arthropoda) during Ice Age underneath glaciers in Iceland
+  JOURNAL   Mol. Ecol. 19 (12), 2516-2530 (2010)
+   PUBMED   20465590
+REFERENCE   2  (bases 1 to 658)
+  AUTHORS   Kornobis,E., Palsson,S., Kristjansson,B.K. and Svavarsson,J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (19-MAR-2010) Department of Biology, University of
+            Iceland, Sturlugata 7, Reykjavik 105, Iceland
+FEATURES             Location/Qualifiers
+     source          1..658
+                     /organism="Crangonyx islandicus"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /isolate="F1"
+                     /db_xref="taxon:856801"
+     gene            <1..>658
+                     /gene="COI"
+     CDS             <1..>658
+                     /gene="COI"
+                     /codon_start=2
+                     /transl_table=5
+                     /product="cytochrome oxidase subunit I"
+                     /protein_id="ADJ36898.1"
+                     /translation="TLYFVLGAWASLLGTSLSMVIRAELSSPGNLIGDDQIYNVMVTA
+                     HAFVMIFFVVMPIMIGGFGNWLVPLMLGSPDMAFPRMNNMSFWLLPPSLSILLISGLV
+                     ESGVGTGWTVYPPLAAATAHSGAAVDLAIFSLHLAGASSILGAINFISTVINMRSPSM
+                     TMEQIPLFVWSVFITAILLLLALPVLAGAITMLLTDRNLNTSFFDPSGGGDPILYQHL
+                     F"
+ORIGIN      
+        1 cactctttat tttgtccttg gtgcttgagc cagactttta ggcactaggc taagaatagt
+       61 tattcgagct gagctgtcct ccccaggtaa cttaattggt gacgaccaaa tttataatgt
+      121 catagtcaca gcacacgcct ttgtcataat tttttttgtt gtaataccta tcataattgg
+      181 agggttcgga aactgattag tacccttaat acttggtagt ccagacatag cctttccccg
+      241 aataaataat ataagattct gacttctgcc tccttctctc tctattctac tgattagggg
+      301 gctagttgaa agcggagtag ggaccggctg aacagtctac cctccccttg ccgcagcaac
+      361 tgcccacaga ggagcagctg tggatttagc tatcttctct cttcatttag caggagcctc
+      421 ttctatctta ggggccatta actttatctc tactgtaatc aatatacgaa gcccttctat
+      481 aacgatagaa caaattcctt tatttgtttg atcagtcttc attacagcaa ttttgctcct
+      541 gctagcactt ccagtgctag caggggcaat tactatacta ttaactgacc gtaacttaaa
+      601 cacctccttc tttgatccta ggggaggcgg agaccctatc ttgtatcaac acctattc
+//
+
+LOCUS       HM015195                 658 bp    DNA     linear   INV 25-JUL-2016
+DEFINITION  Crangonyx islandicus isolate F2 cytochrome oxidase subunit I (COI)
+            gene, partial cds; mitochondrial.
+ACCESSION   HM015195
+VERSION     HM015195.1
+KEYWORDS    .
+SOURCE      mitochondrion Crangonyx islandicus
+  ORGANISM  Crangonyx islandicus
+            Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Crustacea; Malacostraca;
+            Eumalacostraca; Peracarida; Amphipoda; Senticaudata; Gammarida;
+            Crangonyctidira; Crangonyctoidea; Crangonyctidae; Crangonyx.
+REFERENCE   1  (bases 1 to 658)
+  AUTHORS   Kornobis,E., Palsson,S., Kristjansson,B.K. and Svavarsson,J.
+  TITLE     Molecular evidence of the survival of subterranean amphipods
+            (Arthropoda) during Ice Age underneath glaciers in Iceland
+  JOURNAL   Mol. Ecol. 19 (12), 2516-2530 (2010)
+   PUBMED   20465590
+REFERENCE   2  (bases 1 to 658)
+  AUTHORS   Kornobis,E., Palsson,S., Kristjansson,B.K. and Svavarsson,J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (19-MAR-2010) Department of Biology, University of
+            Iceland, Sturlugata 7, Reykjavik 105, Iceland
+FEATURES             Location/Qualifiers
+     source          1..658
+                     /organism="Crangonyx islandicus"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /isolate="F2"
+                     /db_xref="taxon:856801"
+     gene            <1..>658
+                     /gene="COI"
+     CDS             <1..>658
+                     /gene="COI"
+                     /codon_start=2
+                     /transl_table=5
+                     /product="cytochrome oxidase subunit I"
+                     /protein_id="ADJ36899.1"
+                     /translation="TLYFVLGAWASLLGTSLSMVIRAELSSPGNLIGDDQIYNVMVTA
+                     HAFVMIFFVVMPIMIGGFGNWLVPLMLGSPDMAFPRMNNMSFWLLPPSLSILLISGLV
+                     ESGVGTGWTVYPPLAAATAHSGAAVDLAIFSLHLAGASSILGAINFISTVINMRSPSM
+                     TMEQIPLFVWSVFITAILLLLALPVLAGAITMLLTDRNLNTSFFDPSGGGDPILYQHL
+                     F"
+ORIGIN      
+        1 cactctttat tttgtccttg gtgcttgagc cagactttta ggcactaggc taagaatagt
+       61 tattcgagct gagctgtcct ccccaggtaa cttaattggt gacgaccaaa tttataatgt
+      121 catagtcaca gcacacgcct ttgtcataat tttttttgtt gtaataccta tcatgattgg
+      181 agggttcgga aactgattag tacccttaat acttggtagt ccagacatag cctttccccg
+      241 aataaataat ataagattct gacttctgcc tccttctctc tctattctac tgattagggg
+      301 gctagttgaa agcggagtag ggaccggctg aacagtctac cctccccttg ccgcagcaac
+      361 tgcccacaga ggagcagctg tggatttagc tatcttctct cttcatttag caggagcctc
+      421 ttctatctta ggggccatta actttatctc tactgtaatc aatatacgaa gcccttctat
+      481 aacgatagaa caaattcctt tatttgtttg atcagtcttc attacagcaa ttttgctcct
+      541 gctagcactt ccagtgctag caggggcaat tactatacta ttaactgacc gtaacttaaa
+      601 cacctccttc tttgatccta ggggaggcgg agaccctatc ttgtatcaac acctattc
+//
+
+LOCUS       HM015196                 658 bp    DNA     linear   INV 25-JUL-2016
+DEFINITION  Crangonyx islandicus isolate F3 cytochrome oxidase subunit I (COI)
+            gene, partial cds; mitochondrial.
+ACCESSION   HM015196
+VERSION     HM015196.1
+KEYWORDS    .
+SOURCE      mitochondrion Crangonyx islandicus
+  ORGANISM  Crangonyx islandicus
+            Eukaryota; Metazoa; Ecdysozoa; Arthropoda; Crustacea; Malacostraca;
+            Eumalacostraca; Peracarida; Amphipoda; Senticaudata; Gammarida;
+            Crangonyctidira; Crangonyctoidea; Crangonyctidae; Crangonyx.
+REFERENCE   1  (bases 1 to 658)
+  AUTHORS   Kornobis,E., Palsson,S., Kristjansson,B.K. and Svavarsson,J.
+  TITLE     Molecular evidence of the survival of subterranean amphipods
+            (Arthropoda) during Ice Age underneath glaciers in Iceland
+  JOURNAL   Mol. Ecol. 19 (12), 2516-2530 (2010)
+   PUBMED   20465590
+REFERENCE   2  (bases 1 to 658)
+  AUTHORS   Kornobis,E., Palsson,S., Kristjansson,B.K. and Svavarsson,J.
+  TITLE     Direct Submission
+  JOURNAL   Submitted (19-MAR-2010) Department of Biology, University of
+            Iceland, Sturlugata 7, Reykjavik 105, Iceland
+FEATURES             Location/Qualifiers
+     source          1..658
+                     /organism="Crangonyx islandicus"
+                     /organelle="mitochondrion"
+                     /mol_type="genomic DNA"
+                     /isolate="F3"
+                     /db_xref="taxon:856801"
+     gene            <1..>658
+                     /gene="COI"
+     CDS             <1..>658
+                     /gene="COI"
+                     /codon_start=2
+                     /transl_table=5
+                     /product="cytochrome oxidase subunit I"
+                     /protein_id="ADJ36900.1"
+                     /translation="TLYFVLGAWASLLGTSLSMVIRAELSSPGNLIGDDQIYNVMVTA
+                     HAFVMIFFVVMPIMIGGFGNWLVPLMLGSPDMAFPRMNNMSFWLLPPSLSILLISGLV
+                     ESGVGTGWTVYPPLAAATAHSGAAVDLAIFSLHLAGASSILGAINFISTVINMRSPSM
+                     TMEQIPLFVWSVFITAILLLLALPVLAGAITMLLTDRNLNTSFFDPSGGGDPILYQHL
+                     F"
+ORIGIN      
+        1 cactctttat tttgtccttg gtgcttgagc cagactttta ggcactaggc taagaatagt
+       61 tattcgagct gagctgtcct ccccaggtaa cttaattggc gacgaccaaa tttataatgt
+      121 catagtcaca gcacacgcct ttgtcataat tttttttgtt gtaataccta tcatgattgg
+      181 aggattcgga aactgattag tacccttaat acttggtagt ccagacatag cctttccccg
+      241 aataaataat ataagattct gacttctgcc tccttctctc tctattctac tgattagggg
+      301 gctagttgaa agcggagtag ggaccggctg aacagtctac cctccccttg ccgcagcaac
+      361 tgcccacaga ggagcagctg tggatttagc tatcttctct cttcatttag caggagcctc
+      421 ttctatctta ggggccatta actttatctc tactgtaatc aatatacgaa gcccttctat
+      481 aacgatagaa caaattcctt tatttgtttg atcagtcttc attacagcaa ttttgctcct
+      541 gctagcactt ccagtgctag caggggcaat tactatacta ttaactgacc gtaacttaaa
+      601 cacctccttc tttgatccta ggggaggcgg agaccctatc ttgtatcaac acctattc
+//
+
