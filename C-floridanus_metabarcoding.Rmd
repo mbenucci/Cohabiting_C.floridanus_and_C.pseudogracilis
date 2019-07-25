@@ -902,14 +902,6 @@ mean(choct_kickrich)
 sd(choct_kickrich)/sqrt(length(choct_kickrich))
 ```
 
-```{r}
-#occup.kick.info = occup.kick[,c(colnames(occup.kick) %in% c("time","site","sample_id","sample_type","predator_id"))]
-#occup.kick = occup.kick[,!c(colnames(occup.kick) %in% c("time","site","sample_id","sample_type","predator_id"))]/6
-
-#occup.kick = cbind(occup.kick.info, occup.kick)
-```
-
-
 ```{r PERMANOVA of kick-samples}
 adonis.kick = as.data.frame(occup.kick[,!c(colnames(occup.kick) %in% c("sample_id","sample_type"))] %>% group_by(site, time) %>% summarise_all(list(sum)))
 
@@ -1231,7 +1223,7 @@ Note: having multiple LaTex versions installed can give errors.
 
 ```{r sanger alignment}
 # Import of sanger sequences
-barcode_alignment=readDNAMultipleAlignment("C.floridanus_confirmation/Crangonyx_barcoding/c.flor-c.pse_full_SANGER.fasta")
+barcode_alignment=readDNAMultipleAlignment("c.flor_c.pse_SANGER_aligned.fasta")
 
 msaCheckNames(barcode_alignment, ".")
 
@@ -1272,6 +1264,6 @@ for (p in pack.list){
 sink()
 ```
 
-```{r}
+```{r end}
 print("end")
 ```
