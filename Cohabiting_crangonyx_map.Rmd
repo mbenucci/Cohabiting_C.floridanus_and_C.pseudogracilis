@@ -48,7 +48,6 @@ sessionInfo()
 ```{r input data}
 detect.sites = read.csv("map/Cf_detection_sites.csv")
 ch.sites = read.csv("map/Chasewater_sites.csv")
-#lake.coords = read.csv("map/site_coords.csv")
 ```
 
 Lakes coordinates include also a fourth lake which is part of this study, so it needs to be excluded from our current analysis.
@@ -56,7 +55,6 @@ Lakes coordinates include also a fourth lake which is part of this study, so it 
 ```{r checking files plus removing one lake}
 head(detect.sites)
 head(ch.sites)
-#head(lake.coords)
 ```
 
 Adding the labels short name
@@ -124,6 +122,7 @@ up_map = fortify(upton_shape)
 na_map = fortify(nar_shape)
 ```
 
+
 We can now start plotting the sampling points and creates the maps, initially individually; then we plot them all together for publication.
 
 ```{r uk map}
@@ -137,6 +136,8 @@ ggplot(uk_map) +
   north(uk_map, symbol=12, location="bottomleft")
 dev.off()
 ```
+
+
 
 ```{r chasewater map}
 png("map/Chasewater_map.png", width=3000, height=3000, units="px", res=300)
@@ -165,6 +166,8 @@ ggplot(th_map) +
   #ggsn::scalebar(location="bottomleft", x.min=-1.962, x.max=-1.958, y.min=52.6625, y.max=52.665, dist=300, dist_unit="m", st.dist=0.2, height=0.15, transform=T)
 dev.off()
 ```
+
+
 ```{r}
 png("map/Kyngs_map.png", width=3000, height=3000, units="px", res=300)
 ggplot(ky_map) +
@@ -178,36 +181,131 @@ ggplot(ky_map) +
   #ggsn::scalebar(location="bottomleft", x.min=-1.962, x.max=-1.958, y.min=52.6625, y.max=52.665, dist=300, dist_unit="m", st.dist=0.2, height=0.15, transform=T)
 dev.off()
 ```
-```{r}
 
+```{r nar river map}
+png("map/Nar_map.png", width=3000, height=3000, units="px", res=300)
+ggplot(na_map) +
+  geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
+  coord_fixed(ratio=1, xlim=c(560000,590000), ylim=c(300000,325000)) +
+  theme_void() +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=560000, x.max=565000, y.min=300100, y.max=301000, dist=5000, dist_unit="m", st.dist=1, height=1, transform=F)
+dev.off()
 ```
 
 
+```{r thwaite map}
+png("map/Thwaite_map.png", width=3000, height=3000, units="px", res=300)
+ggplot(th_map) +
+  geom_polygon(data=th_map, aes(long,lat,group = group), fill="gray90", color="gray10") +
+  geom_polygon(data=th2_map, aes(long,lat,group = group), fill="gray90", color="gray10") +
+  geom_polygon(data=th3_map, aes(long,lat,group = group), fill="gray90", color="gray10") +
+  geom_point(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y, label=Description), nudge_y=-3000, cex=4) +
+  coord_fixed(ratio=1, xlim=c(480000,540000), ylim=c(400000,450000)) +
+  theme_void() +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=480000, x.max=540000, y.min=400000, y.max=401000, dist=10000, dist_unit="m", st.dist=1.5, height=1, transform=F)
+dev.off()
+```
 
+
+```{r upton map}
+png("map/Upton_map.png", width=3000, height=3000, units="px", res=300)
+
+ggplot(up_map) +
+  geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=detect.sites[detect.sites$Label == "Upton",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Upton",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
+  coord_fixed(ratio=1, xlim=c(630000,650000), ylim=c(310000,320000)) +
+  theme_void() +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=630000, x.max=631000, y.min=310000, y.max=310100, dist=2500, dist_unit="m", st.dist=3, height=3, transform=F)
+dev.off()
+```
+
+Complete map for publication
 
 ```{r complete map}
-png("map/sampling_map.png", width=6000, height=6000, units="px", res=300)
-a = ggplot(uk_map) +
-  geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
-  geom_point(data=lake.coords, aes(Longitude,Latitude), color="black", cex=6) +
-  geom_text(data=lake.coords, aes(Longitude,Latitude, label=ID), nudge_x=0.6, nudge_y=-0.2, cex=7) +
-  coord_fixed(2) +
-  theme_void() +
-  north(uk_map, symbol=12, location="bottomleft") +
-  theme(plot.margin=unit(c(0,0.25,0,0.25), "cm"))
 
-b = ggplot(ch_map) +
+uk = ggplot(uk_map) +
+  geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
+  geom_point(data=detect.sites, aes(X,Y), color="black", cex=3) +
+  geom_text(data=detect.sites, aes(X,Y, label=Label), nudge_y=-20000, cex=4) +
+  coord_fixed(1) +
+  theme_void() +
+  north(uk_map, symbol=12, location="bottomleft")
+  
+ch = ggplot(ch_map) +
+  geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=ch.sites, aes(X, Y), color="red", cex=3) +
+  geom_label(data=ch.sites, aes(X, Y, label=Title), nudge_x=150, nudge_y=0, cex=4) +
+  coord_fixed(ratio=1, xlim=c(402500,404100), ylim=c(307000,308900)) +
+  theme_void() +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=402500, x.max=404100, y.min=307000, y.max=307050, dist=300, dist_unit="m", st.dist=1, height=1, transform=F)
+  
+bo = ggplot(bo_map) +
+  geom_polygon(data=bo_map, aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_polygon(data=bo2_map, aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
+  coord_fixed(ratio=1, xlim=c(390000,420000), ylim=c(80000,100000)) +
+  theme_void() +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=390000, x.max=400000, y.min=81000, y.max=85000, dist=5000, dist_unit="m", st.dist=0.2, height=0.2, transform=F)
+  
+ky = ggplot(ky_map) +
+  geom_polygon(data=ky_map, aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_polygon(data=na_map, aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X, Y, label=Description), nudge_x=0, nudge_y=-3000, cex=4) +
+  geom_rect(aes(xmin=490000, xmax=535000, ymin=277500, ymax=283000),color="white",fill="white") +
+  coord_fixed(ratio=1, xlim=c(500000,560000), ylim=c(280000,340000)) +
+  theme_void() +
+  theme(plot.margin=unit(c(0,0.25,0,0.25), "cm")) +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=500000, x.max=510000, y.min=281000, y.max=290000, dist=15000, dist_unit="m", st.dist=0.25, height=0.2, transform=F)
+
+na = ggplot(na_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
   geom_point(data=ch.sites, aes(Longitude, Latitude), color="red", cex=6) +
   geom_text(data=ch.sites, aes(Longitude, Latitude, label=Title), nudge_x=0.0015, nudge_y=-0.0001, cex=7) +
   xlim(-1.963,-1.937) + ylim(52.660,52.679) +
   coord_fixed(1.5) +
+  geom_point(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
+  coord_fixed(ratio=1, xlim=c(560000,590000), ylim=c(300000,325000)) +
   theme_void() +
-    blank() +
-  ggsn::scalebar(location="bottomleft", x.min=-1.962, x.max=-1.958, y.min=52.6625, y.max=52.665, dist=300, dist_unit="m", st.dist=0.2, height=0.15, transform=T)
-  
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=560000, x.max=565000, y.min=300100, y.max=301000, dist=5000, dist_unit="m", st.dist=1, height=1, transform=F)
 
-plot_grid(a,b, ncol=2)
+th = ggplot(th_map) +
+  geom_polygon(data=th_map, aes(long,lat,group = group), fill="gray90", color="gray10") +
+  geom_polygon(data=th2_map, aes(long,lat,group = group), fill="gray90", color="gray10") +
+  geom_polygon(data=th3_map, aes(long,lat,group = group), fill="gray90", color="gray10") +
+  geom_point(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y, label=Description), nudge_y=-3000, cex=4) +
+  coord_fixed(ratio=1, xlim=c(480000,540000), ylim=c(400000,450000)) +
+  theme_void() +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=480000, x.max=540000, y.min=400000, y.max=401000, dist=10000, dist_unit="m", st.dist=1.5, height=1, transform=F)
+
+up = ggplot(up_map) +
+  geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
+  geom_point(data=detect.sites[detect.sites$Label == "Upton",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Upton",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
+  coord_fixed(ratio=1, xlim=c(630000,650000), ylim=c(310000,320000)) +
+  theme_void() +
+  blank() +
+  ggsn::scalebar(location="bottomleft", x.min=630000, x.max=631000, y.min=310000, y.max=310100, dist=2500, dist_unit="m", st.dist=3, height=3, transform=F) 
+
+#plot_grid(a,b, ncol=2)
+ 
+png("map/sampling_map.png", width=9000, height=9000, units="px", res=200)
+plot_grid(uk, ch, bo, ky, na, th, up, ncol=3, nrow=2)
 dev.off()
 ```
 
