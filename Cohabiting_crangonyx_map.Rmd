@@ -15,13 +15,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r environment setup, include=F}
 ## R(v3.5.1 - Win)
-#.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win")))
+.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win")))
 
 ## R(v3.5.1 - OSX)
 #.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_osx", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_osx")))
 
 ## R(v3.5.1 - ubuntu)
-.libPaths(c("/home/mb/Dropbox/PhD Hull/PhD docs/Thesis/R_stats/rlib3.5_unix", .libPaths("/home/mb/Dropbox/PhD\ Hull/PhD\ docs/Thesis/R_stats/rlib3.5_unix")))
+#.libPaths(c("/home/mb/Dropbox/PhD Hull/PhD docs/Thesis/R_stats/rlib3.5_unix", .libPaths("/home/mb/Dropbox/PhD\ Hull/PhD\ docs/Thesis/R_stats/rlib3.5_unix")))
 ```
 
 ```{r directory, include=FALSE}
@@ -242,12 +242,12 @@ Complete map for publication
 ```{r complete map}
 uk = ggplot(uk_map) +
   geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
-  geom_rect(data=detect.sites[detect.sites$Label == "Bourn",], aes(xmin=390000, xmax=420000, ymin=80000, ymax=100000), color="red", fill="transparent", cex=5) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Chase",], aes(xmin=400000, xmax=410000, ymin=300000, ymax=310000), color="red", fill="transparent", cex=5) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Kyngs",], aes(xmin=500000, xmax=560000, ymin=270000, ymax=330000), color="red", fill="transparent", cex=5) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Nar",], aes(xmin=560000, xmax=590000, ymin=300000, ymax=325000), color="red", fill="transparent", cex=5) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Thwai",], aes(xmin=470000, xmax=540000, ymin=410000, ymax=450000), color="red", fill="transparent", cex=5) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Upton",], aes(xmin=630000, xmax=660000, ymin=300000, ymax=320000), color="red", fill="transparent", cex=5) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Bourn",], aes(xmin=390000, xmax=420000, ymin=80000, ymax=100000), color="red", fill="transparent", cex=3) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Chase",], aes(xmin=400000, xmax=410000, ymin=300000, ymax=310000), color="red", fill="transparent", cex=3) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Kyngs",], aes(xmin=500000, xmax=560000, ymin=270000, ymax=330000), color="red", fill="transparent", cex=3) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Nar",], aes(xmin=560000, xmax=590000, ymin=300000, ymax=325000), color="red", fill="transparent", cex=3) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Thwai",], aes(xmin=470000, xmax=540000, ymin=410000, ymax=450000), color="red", fill="transparent", cex=3) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Upton",], aes(xmin=630000, xmax=660000, ymin=300000, ymax=320000), color="red", fill="transparent", cex=3) +
   geom_text(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label="2"), nudge_y=-50000, cex=12) +
   geom_text(data=detect.sites[detect.sites$Label == "Chase",], aes(X,Y, label="1"), nudge_x=-30000, cex=12) +
   geom_text(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X,Y, label="3"), nudge_y=-60000, cex=12) +
@@ -256,6 +256,7 @@ uk = ggplot(uk_map) +
   geom_text(data=detect.sites[detect.sites$Label == "Upton",], aes(X,Y, label="6"), nudge_x=50000, cex=12) +
   coord_fixed(1) +
   theme_void() +
+  theme(plot.margin=unit(c(t=0, r=0.25, b=0.25, l=0), unit="cm")) +
   north(uk_map, symbol=12, location="bottomleft")
 
 bo = ggplot(bo_map) +
@@ -266,7 +267,7 @@ bo = ggplot(bo_map) +
   coord_fixed(ratio=1, xlim=c(390000,420000), ylim=c(80000,100000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0, r=0, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-  blank() +
+#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=390000, x.max=400000, y.min=81000, y.max=85000, dist=5000, dist_unit="m", st.dist=0.2, height=0.2, transform=F)
 
 ch = ggplot(ch_map) +
@@ -277,7 +278,7 @@ ch = ggplot(ch_map) +
   coord_fixed(ratio=1, xlim=c(402500,404100), ylim=c(307000,308900)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0, r=0.25, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-  blank() +
+#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=402500, x.max=403600, y.min=307010, y.max=307020, dist=300, dist_unit="m", st.dist=5, height=5, transform=F)
   
 ky = ggplot(ky_map) +
@@ -289,7 +290,7 @@ ky = ggplot(ky_map) +
   coord_fixed(ratio=1, xlim=c(500000,560000), ylim=c(270000,330000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0.25, b=0.25, l=0), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-  blank() +
+#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=500000, x.max=510000, y.min=270000, y.max=271000, dist=10000, dist_unit="m", st.dist=2, height=1, transform=F)
 
 na = ggplot(na_map) +
@@ -300,7 +301,7 @@ na = ggplot(na_map) +
   coord_fixed(ratio=1, xlim=c(560000,590000), ylim=c(300000,325000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0.25, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-  blank() +
+#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=560000, x.max=565000, y.min=300100, y.max=301000, dist=5000, dist_unit="m", st.dist=1, height=1, transform=F)
 
 th = ggplot(th_map) +
@@ -313,7 +314,7 @@ th = ggplot(th_map) +
   coord_fixed(ratio=1, xlim=c(470000,540000), ylim=c(410000,450000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-  blank() +
+#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=471000, x.max=480000, y.min=410000, y.max=415000, dist=10000, dist_unit="m", st.dist=0.2, height=0.3, transform=F)
 
 up = ggplot(up_map) +
@@ -325,7 +326,7 @@ up = ggplot(up_map) +
   coord_fixed(ratio=1, xlim=c(630000,660000), ylim=c(300000,320000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0, b=0, l=0), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-  blank() +
+#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=630000, x.max=631000, y.min=300000, y.max=300100, dist=3000, dist_unit="m", st.dist=5, height=4, transform=F)
  
 png("map/sampling_map.png", width=9000, height=9000, units="px", res=200)
