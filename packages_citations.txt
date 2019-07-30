@@ -15,8 +15,8 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite bipartite in publications please use Dormann et al. (2008 R News); for network-level analyses
-Dormann et al. (2009 Open Ecol J) and for species-level analyses Dormann (2011 Network Biology):
+To cite bipartite in publications please use Dormann et al. (2008 R News); for network-level analyses Dormann
+et al. (2009 Open Ecol J) and for species-level analyses Dormann (2011 Network Biology):
 
   Dormann, C.F., Fruend, J., Bluethgen, N. & Gruber B. 2009. Indices, graphs and null models: analyzing
   bipartite ecological networks. The Open Ecology Journal, 2, 7-24.
@@ -33,7 +33,7 @@ To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'to
 
 To cite the 'boot' package in publications use:
 
-  Angelo Canty and Brian Ripley (2019). boot: Bootstrap R (S-Plus) Functions. R package version 1.3-22.
+  Angelo Canty and Brian Ripley (2017). boot: Bootstrap R (S-Plus) Functions. R package version 1.3-20.
 
   Davison, A. C. & Hinkley, D. V. (1997) Bootstrap Methods and Their Applications. Cambridge University
   Press, Cambridge. ISBN 0-521-57391-2
@@ -42,10 +42,10 @@ To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'to
 'options(citation.bibtex.max=999)'.
 
 
-To cite package ‚Äòcowplot‚Äô in publications use:
+To cite package ëcowplotí in publications use:
 
   Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package
-  version 0.9.4. https://CRAN.R-project.org/package=cowplot
+  version 1.0.0. https://CRAN.R-project.org/package=cowplot
 
 A BibTeX entry for LaTeX users is
 
@@ -53,12 +53,12 @@ A BibTeX entry for LaTeX users is
     title = {cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'},
     author = {Claus O. Wilke},
     year = {2019},
-    note = {R package version 0.9.4},
+    note = {R package version 1.0.0},
     url = {https://CRAN.R-project.org/package=cowplot},
   }
 
 
-To cite package ‚Äòdevtools‚Äô in publications use:
+To cite package ëdevtoolsí in publications use:
 
   Hadley Wickham, Jim Hester and Winston Chang (2019). devtools: Tools to Make Developing R Packages Easier.
   R package version 2.0.2. https://CRAN.R-project.org/package=devtools
@@ -74,24 +74,24 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite package ‚Äòdplyr‚Äô in publications use:
+To cite package ëdplyrí in publications use:
 
-  Hadley Wickham, Romain Fran√ßois, Lionel Henry and Kirill M√ºller (2019). dplyr: A Grammar of Data
-  Manipulation. R package version 0.8.1. https://CRAN.R-project.org/package=dplyr
+  Hadley Wickham, Romain FranÁois, Lionel Henry and Kirill M¸ller (2019). dplyr: A Grammar of Data
+  Manipulation. R package version 0.8.0.1. https://CRAN.R-project.org/package=dplyr
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
     title = {dplyr: A Grammar of Data Manipulation},
-    author = {Hadley Wickham and Romain Fran√ßois and Lionel Henry and Kirill M√ºller},
+    author = {Hadley Wickham and Romain FranÁois and Lionel Henry and Kirill M¸ller},
     year = {2019},
-    note = {R package version 0.8.1},
+    note = {R package version 0.8.0.1},
     url = {https://CRAN.R-project.org/package=dplyr},
   }
 
 
-  Nicholas J. Gotelli, Edmund M. Hart and Aaron M. Ellison (2015) EcoSimR: Null model analysis for
-  ecological data. R package version 0.1.0. http://github.com/gotellilab/EcoSimR DOI: 10.5281/zenodo.16522
+  Nicholas J. Gotelli, Edmund M. Hart and Aaron M. Ellison (2015) EcoSimR: Null model analysis for ecological
+  data. R package version 0.1.0. http://github.com/gotellilab/EcoSimR DOI: 10.5281/zenodo.16522
 
 A BibTeX entry for LaTeX users is
 
@@ -121,7 +121,7 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite package ‚Äòggsignif‚Äô in publications use:
+To cite package ëggsignifí in publications use:
 
   Constantin Ahlmann-Eltze (2019). ggsignif: Significance Brackets for 'ggplot2'. R package version 0.5.0.
   https://CRAN.R-project.org/package=ggsignif
@@ -137,7 +137,7 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite package ‚Äògplots‚Äô in publications use:
+To cite package ëgplotsí in publications use:
 
   Gregory R. Warnes, Ben Bolker, Lodewijk Bonebakker, Robert Gentleman, Wolfgang Huber Andy Liaw, Thomas
   Lumley, Martin Maechler, Arni Magnusson, Steffen Moeller, Marc Schwartz and Bill Venables (2019). gplots:
@@ -155,10 +155,10 @@ A BibTeX entry for LaTeX users is
   }
 
 ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may need
-manual editing, see ‚Äòhelp("citation")‚Äô.
+manual editing, see ëhelp("citation")í.
 
 
-The ‚Äògrid‚Äô package is part of R.  To cite R in publications use:
+The ëgridí package is part of R.  To cite R in publications use:
 
   R Core Team (2018). R: A language and environment for statistical computing. R Foundation for Statistical
   Computing, Vienna, Austria. URL https://www.R-project.org/.
@@ -175,10 +175,10 @@ A BibTeX entry for LaTeX users is
   }
 
 We have invested a lot of time and effort in creating R, please cite it when using it for data analysis. See
-also ‚Äòcitation("pkgname")‚Äô for citing R packages.
+also ëcitation("pkgname")í for citing R packages.
 
 
-To cite package ‚ÄògridExtra‚Äô in publications use:
+To cite package ëgridExtraí in publications use:
 
   Baptiste Auguie (2017). gridExtra: Miscellaneous Functions for "Grid" Graphics. R package version 2.3.
   https://CRAN.R-project.org/package=gridExtra
@@ -199,9 +199,9 @@ To cite iNEXT in publications use:
   T. C. Hsieh, K. H. Ma and Anne Chao. 2019 iNEXT: iNterpolation and EXTrapolation for species diversity. R
   package version 2.0.19 URL: http://chao.stat.nthu.edu.tw/blog/software-download/.
 
-  Anne Chao, Nicholas J. Gotelli, T. C. Hsieh, Elizabeth L. Sander, K. H. Ma, Robert K. Colwell, and Aaron
-  M. Ellison 2014. Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation
-  in species diversity studies. Ecological Monographs 84:45-67.
+  Anne Chao, Nicholas J. Gotelli, T. C. Hsieh, Elizabeth L. Sander, K. H. Ma, Robert K. Colwell, and Aaron M.
+  Ellison 2014. Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in
+  species diversity studies. Ecological Monographs 84:45-67.
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -296,8 +296,7 @@ GCV based model method and basics of gamm; 2017 for overview; 2003 for thin plat
 
   Wood, S.N. (2017) Generalized Additive Models: An Introduction with R (2nd edition). Chapman and Hall/CRC.
 
-  Wood, S.N. (2003) Thin-plate regression splines. Journal of the Royal Statistical Society (B)
-  65(1):95-114.
+  Wood, S.N. (2003) Thin-plate regression splines. Journal of the Royal Statistical Society (B) 65(1):95-114.
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -326,20 +325,20 @@ If you use one of the three alignment algorithms, please cite the corresponding 
 To obtain the reference in BibTex format, enter 'toBibtex(citation("msa"))'
 
 
-‚Äònetwork‚Äô is part of the Statnet suite of packages. If you are using the ‚Äònetwork‚Äô package for research that
+ënetworkí is part of the Statnet suite of packages. If you are using the ënetworkí package for research that
 will be published, we request that you acknowledge this by citing the following. For BibTeX format, use
 toBibtex(citation("network")).
 
 Butts C (2015). _network: Classes for Relational Data_. The Statnet Project (<URL: http://www.statnet.org>).
 R package version 1.13.0.1, <URL: https://CRAN.R-project.org/package=network>.
 
-Butts C (2008). ‚Äúnetwork: a Package for Managing Relational Data in R.‚Äù _Journal of Statistical Software_,
+Butts C (2008). ìnetwork: a Package for Managing Relational Data in R.î _Journal of Statistical Software_,
 *24*(2). <URL: http://www.jstatsoft.org/v24/i02/paper>.
 
 Some additional information regarding the C-level network API can be found in the README file within the
 network.api subdirectory under the package "inst" directory -- check your installed library tree. We have
 invested a lot of time and effort in creating the Statnet suite of packages for use by other researchers.
-Please cite it in all papers where it is used. The package ‚Äònetwork‚Äô is distributed under the terms of the
+Please cite it in all papers where it is used. The package ënetworkí is distributed under the terms of the
 license GPL (>= 2).
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -347,8 +346,8 @@ To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'to
 
 To cite plyr in publications use:
 
-  Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data Analysis. Journal of Statistical
-  Software, 40(1), 1-29. URL http://www.jstatsoft.org/v40/i01/.
+  Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data Analysis. Journal of Statistical Software,
+  40(1), 1-29. URL http://www.jstatsoft.org/v40/i01/.
 
 A BibTeX entry for LaTeX users is
 
@@ -383,7 +382,7 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite package ‚Äòspaa‚Äô in publications use:
+To cite package ëspaaí in publications use:
 
   Jinlong Zhang (2016). spaa: SPecies Association Analysis. R package version 0.2.2.
   https://CRAN.R-project.org/package=spaa
@@ -414,10 +413,10 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite package ‚Äòtidyr‚Äô in publications use:
+To cite package ëtidyrí in publications use:
 
-  Hadley Wickham and Lionel Henry (2019). tidyr: Easily Tidy Data with 'spread()' and 'gather()' Functions.
-  R package version 0.8.3. https://CRAN.R-project.org/package=tidyr
+  Hadley Wickham and Lionel Henry (2019). tidyr: Easily Tidy Data with 'spread()' and 'gather()' Functions. R
+  package version 0.8.3. https://CRAN.R-project.org/package=tidyr
 
 A BibTeX entry for LaTeX users is
 
@@ -430,7 +429,7 @@ A BibTeX entry for LaTeX users is
   }
 
 
-To cite package ‚ÄòUpSetR‚Äô in publications use:
+To cite package ëUpSetRí in publications use:
 
   Nils Gehlenborg (2017). UpSetR: A More Scalable Alternative to Venn and Euler Diagrams for Visualizing
   Intersecting Sets. R package version 1.3.3. https://CRAN.R-project.org/package=UpSetR
@@ -447,11 +446,11 @@ Visualizing Intersecting Sets},
   }
 
 
-To cite package ‚Äòvegan‚Äô in publications use:
+To cite package ëveganí in publications use:
 
   Jari Oksanen, F. Guillaume Blanchet, Michael Friendly, Roeland Kindt, Pierre Legendre, Dan McGlinn, Peter
   R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, Eduard Szoecs and Helene
-  Wagner (2019). vegan: Community Ecology Package. R package version 2.5-5.
+  Wagner (2019). vegan: Community Ecology Package. R package version 2.5-4.
   https://CRAN.R-project.org/package=vegan
 
 A BibTeX entry for LaTeX users is
@@ -460,12 +459,12 @@ A BibTeX entry for LaTeX users is
     title = {vegan: Community Ecology Package},
     author = {Jari Oksanen and F. Guillaume Blanchet and Michael Friendly and Roeland Kindt and Pierre Legendre and Dan McGlinn and Peter R. Minchin and R. B. O'Hara and Gavin L. Simpson and Peter Solymos and M. Henry H. Stevens and Eduard Szoecs and Helene Wagner},
     year = {2019},
-    note = {R package version 2.5-5},
+    note = {R package version 2.5-4},
     url = {https://CRAN.R-project.org/package=vegan},
   }
 
 ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may need
-manual editing, see ‚Äòhelp("citation")‚Äô.
+manual editing, see ëhelp("citation")í.
 
 
 To cite zoo in publications use:
