@@ -121,6 +121,11 @@ up_map = fortify(upton_shape)
 up2_map = fortify(upton2_shape)
 ```
 
+```{r}
+rm(bo,ch,ky,na,th,up)
+```
+
+
 
 We can now start plotting the sampling points and creates the maps, initially individually; then we plot them all together for publication.
 
@@ -242,18 +247,18 @@ Complete map for publication
 ```{r complete map}
 uk = ggplot(uk_map) +
   geom_polygon(aes(long,lat,group = group), fill="white", color="black") +
-  geom_rect(data=detect.sites[detect.sites$Label == "Bourn",], aes(xmin=390000, xmax=420000, ymin=80000, ymax=100000), color="red", fill="transparent", cex=3) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Chase",], aes(xmin=400000, xmax=410000, ymin=300000, ymax=310000), color="red", fill="transparent", cex=3) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Kyngs",], aes(xmin=500000, xmax=560000, ymin=270000, ymax=330000), color="red", fill="transparent", cex=3) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Nar",], aes(xmin=560000, xmax=590000, ymin=300000, ymax=325000), color="red", fill="transparent", cex=3) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Thwai",], aes(xmin=470000, xmax=540000, ymin=410000, ymax=450000), color="red", fill="transparent", cex=3) +
-  geom_rect(data=detect.sites[detect.sites$Label == "Upton",], aes(xmin=630000, xmax=660000, ymin=300000, ymax=320000), color="red", fill="transparent", cex=3) +
-  geom_text(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label="2"), nudge_y=-50000, cex=12) +
-  geom_text(data=detect.sites[detect.sites$Label == "Chase",], aes(X,Y, label="1"), nudge_x=-30000, cex=12) +
-  geom_text(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X,Y, label="3"), nudge_y=-60000, cex=12) +
-  geom_text(data=detect.sites[detect.sites$Label == "Nar",], aes(X,Y, label="4"), nudge_x=10000, nudge_y=-40000, cex=12) +
-  geom_text(data=detect.sites[detect.sites$Label == "Thwai",], aes(X,Y, label="5"), nudge_x=70000, cex=12) +
-  geom_text(data=detect.sites[detect.sites$Label == "Upton",], aes(X,Y, label="6"), nudge_x=50000, cex=12) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Bourn",], aes(xmin=390000, xmax=420000, ymin=80000, ymax=100000), color="red", fill="transparent", cex=1) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Chase",], aes(xmin=400000, xmax=410000, ymin=300000, ymax=310000), color="red", fill="transparent", cex=1) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Kyngs",], aes(xmin=500000, xmax=560000, ymin=270000, ymax=330000), color="red", fill="transparent", cex=1) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Nar",], aes(xmin=560000, xmax=590000, ymin=300000, ymax=325000), color="red", fill="transparent", cex=1) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Thwai",], aes(xmin=470000, xmax=540000, ymin=410000, ymax=450000), color="red", fill="transparent", cex=1) +
+  geom_rect(data=detect.sites[detect.sites$Label == "Upton",], aes(xmin=630000, xmax=660000, ymin=300000, ymax=320000), color="red", fill="transparent", cex=1) +
+  geom_text(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label="2"), nudge_y=-50000, cex=4) +
+  geom_text(data=detect.sites[detect.sites$Label == "Chase",], aes(X,Y, label="1"), nudge_x=-30000, cex=4) +
+  geom_text(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X,Y, label="3"), nudge_y=-60000, cex=4) +
+  geom_text(data=detect.sites[detect.sites$Label == "Nar",], aes(X,Y, label="4"), nudge_x=10000, nudge_y=-40000, cex=4) +
+  geom_text(data=detect.sites[detect.sites$Label == "Thwai",], aes(X,Y, label="5"), nudge_x=70000, cex=4) +
+  geom_text(data=detect.sites[detect.sites$Label == "Upton",], aes(X,Y, label="6"), nudge_x=50000, cex=4) +
   coord_fixed(1) +
   theme_void() +
   theme(plot.margin=unit(c(t=0, r=0.25, b=0.25, l=0), unit="cm")) +
@@ -262,83 +267,78 @@ uk = ggplot(uk_map) +
 bo = ggplot(bo_map) +
   geom_polygon(data=bo_map, aes(long,lat,group = group), fill="grey90", color="black") +
   geom_polygon(data=bo2_map, aes(long,lat,group = group), fill="grey90", color="black") +
-  geom_point(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y), color="red", cex=10) +
-  geom_label(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=12) +
-  geom_label(data=detect.sites[detect.sites$Label == "Bourn",], aes(x=391000, y=419000, label="2."), cex=12) +
-  coord_fixed(ratio=1, xlim=c(390000,420000), ylim=c(80000,100000)) +
+  geom_point(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
+  geom_label(data=detect.sites[detect.sites$Label == "Bourn",], aes(x=390000, y=110000, label="2."), cex=6) +
+  coord_fixed(ratio=1, xlim=c(390000,420000), ylim=c(80000,110000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0, r=0, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=390000, x.max=400000, y.min=81000, y.max=85000, dist=5000, dist_unit="m", st.dist=0.2, height=0.2, transform=F)
 
 ch = ggplot(ch_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
-  geom_point(data=ch.sites, aes(X, Y), color="red", cex=10) +
-  geom_text(data=ch.sites, aes(X, Y, label=Title), nudge_x=25, nudge_y=-60, cex=12) +
-  geom_label(data=detect.sites[detect.sites$Label == "Chase",], aes(X, Y, label=Description), cex=10) +
-  geom_label(data=detect.sites[detect.sites$Label == "Chase",], aes(x=403000, y=308800, label="1."), cex=10) +
-  coord_fixed(ratio=1, xlim=c(402500,404100), ylim=c(307000,308900)) +
+  geom_point(data=ch.sites, aes(X, Y), color="red", cex=3) +
+  geom_text(data=ch.sites, aes(X, Y, label=Title), nudge_x=25, nudge_y=-60, cex=4) +
+  geom_label(data=detect.sites[detect.sites$Label == "Chase",], aes(X+100, Y, label=Description), cex=4) +
+  geom_label(data=detect.sites[detect.sites$Label == "Chase",], aes(x=402500, y=308900, label="1."), cex=6) +
+  coord_fixed(ratio=1, xlim=c(402500,404500), ylim=c(307000,309000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0, r=0.25, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=402500, x.max=403600, y.min=307010, y.max=307020, dist=300, dist_unit="m", st.dist=5, height=5, transform=F)
   
 ky = ggplot(ky_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
   geom_polygon(data=na_map, aes(long,lat, group=group), fill="grey90", color="black") +
-  geom_rect(aes(xmin=500000, xmax=525000, ymin=267000, ymax=273000), color="white", fill="white") +
-  geom_point(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X, Y), color="red", cex=10) +
-  geom_label(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X, Y, label=Description), nudge_y=-3000, cex=12) +
-  geom_label(data=detect.sites[detect.sites$Label == "Kyngs",], aes(x=501000, y=329000, label="3."), cex=12) +
+  geom_rect(aes(xmin=500000, xmax=525000, ymin=269000, ymax=275000), color="white", fill="white") +
+  geom_point(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X, Y, label=Description), nudge_y=-3000, cex=4) +
+  geom_label(data=detect.sites[detect.sites$Label == "Kyngs",], aes(x=500000, y=330000, label="3."), cex=6) +
   coord_fixed(ratio=1, xlim=c(500000,560000), ylim=c(270000,330000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0.25, b=0.25, l=0), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-#  blank() +
-  ggsn::scalebar(location="bottomleft", x.min=500000, x.max=510000, y.min=270000, y.max=271000, dist=10000, dist_unit="m", st.dist=2, height=1, transform=F)
+  ggsn::scalebar(location="bottomleft", x.min=500000, x.max=510000, y.min=271000, y.max=272000, dist=10000, dist_unit="m", st.dist=2, height=2, transform=F)
 
 na = ggplot(na_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
-  geom_point(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y), color="red", cex=10) +
-  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=12) +
-  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(x=561000, y=324000, label="4."), cex=12) +
-  geom_rect(aes(xmin=559500, xmax=572200, ymin=299000, ymax=301500), color="white", fill="white") +
-  coord_fixed(ratio=1, xlim=c(560000,590000), ylim=c(300000,325000)) +
+  geom_point(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
+  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(x=560000, y=330000, label="4."), cex=6) +
+  geom_rect(aes(xmin=559000, xmax=572000, ymin=299000, ymax=301500), color="white", fill="white") +
+  coord_fixed(ratio=1, xlim=c(560000,590000), ylim=c(300000,330000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0.25, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-#  blank() +
-  ggsn::scalebar(location="bottomleft", x.min=560000, x.max=565000, y.min=300100, y.max=301000, dist=5000, dist_unit="m", st.dist=1, height=1, transform=F)
+  ggsn::scalebar(location="bottomleft", x.min=560000, x.max=565000, y.min=300500, y.max=301000, dist=5000, dist_unit="m", st.dist=1, height=2, transform=F)
 
 th = ggplot(th_map) +
   geom_polygon(data=th_map, aes(long,lat,group = group), fill="grey90", color="black") +
   geom_polygon(data=th2_map, aes(long,lat,group = group), fill="grey90", color="black") +
   geom_polygon(data=th3_map, aes(long,lat,group = group), fill="grey90", color="black") +
   geom_rect(aes(xmin=470000, xmax=495000, ymin=405000, ymax=412000), fill="white", color="white") +
-  geom_point(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y), color="red", cex=10) +
-  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y, label=Description), nudge_y=-2500, cex=12) +
-  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(x=471000,y=449000, label="5."), cex=12) +
-  coord_fixed(ratio=1, xlim=c(470000,540000), ylim=c(410000,450000)) +
+  geom_point(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y, label=Description), nudge_y=-3000, cex=4) +
+  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(x=470000,y=470000, label="5."), cex=6) +
+  coord_fixed(ratio=1, xlim=c(470000,540000), ylim=c(410000,470000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=471000, x.max=480000, y.min=410000, y.max=415000, dist=10000, dist_unit="m", st.dist=0.2, height=0.3, transform=F)
 
 up = ggplot(up_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
   geom_polygon(data=up2_map, aes(long,lat,group = group), fill="grey90", color="black") +
   geom_rect(aes(xmin=629000, xmax=635000, ymin=290000, ymax=301000), color="white", fill="white") +
-  geom_point(data=detect.sites[detect.sites$Label == "Upton",], aes(X, Y), color="red", cex=10) +
-  geom_label(data=detect.sites[detect.sites$Label == "Upton",], aes(X, Y, label=Description), nudge_x=0, nudge_y=1000, cex=12) +
-  geom_label(data=detect.sites[detect.sites$Label == "Upton",], aes(x=631000, y=319000, label="6."), cex=12) +
-  coord_fixed(ratio=1, xlim=c(630000,660000), ylim=c(300000,320000)) +
+  geom_point(data=detect.sites[detect.sites$Label == "Upton",], aes(X, Y), color="red", cex=3) +
+  geom_label(data=detect.sites[detect.sites$Label == "Upton",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
+  geom_label(data=detect.sites[detect.sites$Label == "Upton",], aes(x=630000, y=330000, label="6."), cex=6) +
+  coord_fixed(ratio=1, xlim=c(630000,660000), ylim=c(300000,330000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0, b=0, l=0), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
-#  blank() +
   ggsn::scalebar(location="bottomleft", x.min=630000, x.max=631000, y.min=300000, y.max=300100, dist=3000, dist_unit="m", st.dist=5, height=4, transform=F)
- 
-png("map/sampling_map.png", width=9000, height=9000, units="px", res=200)
-plot_grid(uk, ch, bo, ky, na, th, up, ncol=3, nrow=3, label_size=25, label_fontfamily=1)
+
+png("map/sampling_map.png", width=4000, height=4000, units="px", res=300)
+plot_grid(uk, ch, bo, ky, na, th, up, ncol=3, nrow=3)
 dev.off()
 ```
+
 
 ```{r log session info}
 sink("log_session_map-creation.txt")
