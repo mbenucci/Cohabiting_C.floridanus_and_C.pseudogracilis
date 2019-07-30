@@ -1,8 +1,8 @@
 
 To cite package ‘broom’ in publications use:
 
-  David Robinson and Alex Hayes (2019). broom: Convert Statistical Analysis Objects into Tidy Tibbles. R package version
-  0.5.2. https://CRAN.R-project.org/package=broom
+  David Robinson and Alex Hayes (2019). broom: Convert Statistical Analysis Objects into Tidy Tibbles. R
+  package version 0.5.2. https://CRAN.R-project.org/package=broom
 
 A BibTeX entry for LaTeX users is
 
@@ -17,8 +17,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘cowplot’ in publications use:
 
-  Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package version 0.9.4.
-  https://CRAN.R-project.org/package=cowplot
+  Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package
+  version 0.9.4. https://CRAN.R-project.org/package=cowplot
 
 A BibTeX entry for LaTeX users is
 
@@ -33,8 +33,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘devtools’ in publications use:
 
-  Hadley Wickham, Jim Hester and Winston Chang (2019). devtools: Tools to Make Developing R Packages Easier. R package
-  version 2.0.2. https://CRAN.R-project.org/package=devtools
+  Hadley Wickham, Jim Hester and Winston Chang (2019). devtools: Tools to Make Developing R Packages Easier.
+  R package version 2.0.2. https://CRAN.R-project.org/package=devtools
 
 A BibTeX entry for LaTeX users is
 
@@ -49,8 +49,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘dplyr’ in publications use:
 
-  Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2019). dplyr: A Grammar of Data Manipulation. R package
-  version 0.8.1. https://CRAN.R-project.org/package=dplyr
+  Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2019). dplyr: A Grammar of Data
+  Manipulation. R package version 0.8.1. https://CRAN.R-project.org/package=dplyr
 
 A BibTeX entry for LaTeX users is
 
@@ -81,8 +81,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘ggsn’ in publications use:
 
-  Oswaldo Santos Baquero (2019). ggsn: North Symbols and Scale Bars for Maps Created with 'ggplot2' or 'ggmap'. R package
-  version 0.5.2. https://github.com/oswaldosantos/ggsn
+  Oswaldo Santos Baquero (2019). ggsn: North Symbols and Scale Bars for Maps Created with 'ggplot2' or
+  'ggmap'. R package version 0.5.2. https://github.com/oswaldosantos/ggsn
 
 A BibTeX entry for LaTeX users is
 
@@ -114,8 +114,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘leaflet’ in publications use:
 
-  Joe Cheng, Bhaskar Karambelkar and Yihui Xie (2018). leaflet: Create Interactive Web Maps with the JavaScript 'Leaflet'
-  Library. R package version 2.0.2. https://CRAN.R-project.org/package=leaflet
+  Joe Cheng, Bhaskar Karambelkar and Yihui Xie (2018). leaflet: Create Interactive Web Maps with the
+  JavaScript 'Leaflet' Library. R package version 2.0.2. https://CRAN.R-project.org/package=leaflet
 
 A BibTeX entry for LaTeX users is
 
@@ -131,8 +131,9 @@ Library},
 
 To cite package ‘maps’ in publications use:
 
-  Original S code by Richard A. Becker, Allan R. Wilks. R version by Ray Brownrigg. Enhancements by Thomas P Minka and Alex
-  Deckmyn. (2018). maps: Draw Geographical Maps. R package version 3.3.0. https://CRAN.R-project.org/package=maps
+  Original S code by Richard A. Becker, Allan R. Wilks. R version by Ray Brownrigg. Enhancements by Thomas P
+  Minka and Alex Deckmyn. (2018). maps: Draw Geographical Maps. R package version 3.3.0.
+  https://CRAN.R-project.org/package=maps
 
 A BibTeX entry for LaTeX users is
 
@@ -144,14 +145,14 @@ A BibTeX entry for LaTeX users is
     url = {https://CRAN.R-project.org/package=maps},
   }
 
-ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may need manual editing,
-see ‘help("citation")’.
+ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may need
+manual editing, see ‘help("citation")’.
 
 
 To cite package ‘maptools’ in publications use:
 
-  Roger Bivand and Nicholas Lewin-Koh (2019). maptools: Tools for Handling Spatial Objects. R package version 0.9-5.
-  https://CRAN.R-project.org/package=maptools
+  Roger Bivand and Nicholas Lewin-Koh (2019). maptools: Tools for Handling Spatial Objects. R package version
+  0.9-5. https://CRAN.R-project.org/package=maptools
 
 A BibTeX entry for LaTeX users is
 
@@ -166,8 +167,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘mapview’ in publications use:
 
-  Tim Appelhans, Florian Detsch, Christoph Reudenbach and Stefan Woellauer (2019). mapview: Interactive Viewing of Spatial
-  Data in R. R package version 2.7.0. https://CRAN.R-project.org/package=mapview
+  Tim Appelhans, Florian Detsch, Christoph Reudenbach and Stefan Woellauer (2019). mapview: Interactive
+  Viewing of Spatial Data in R. R package version 2.7.0. https://CRAN.R-project.org/package=mapview
 
 A BibTeX entry for LaTeX users is
 
@@ -214,8 +215,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘rgdal’ in publications use:
 
-  Roger Bivand, Tim Keitt and Barry Rowlingson (2019). rgdal: Bindings for the 'Geospatial' Data Abstraction Library. R
-  package version 1.4-4. https://CRAN.R-project.org/package=rgdal
+  Roger Bivand, Tim Keitt and Barry Rowlingson (2019). rgdal: Bindings for the 'Geospatial' Data Abstraction
+  Library. R package version 1.4-4. https://CRAN.R-project.org/package=rgdal
 
 A BibTeX entry for LaTeX users is
 
@@ -230,8 +231,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘rgeos’ in publications use:
 
-  Roger Bivand and Colin Rundel (2019). rgeos: Interface to Geometry Engine - Open Source ('GEOS'). R package version
-  0.4-3. https://CRAN.R-project.org/package=rgeos
+  Roger Bivand and Colin Rundel (2019). rgeos: Interface to Geometry Engine - Open Source ('GEOS'). R package
+  version 0.4-3. https://CRAN.R-project.org/package=rgeos
 
 A BibTeX entry for LaTeX users is
 
@@ -266,8 +267,8 @@ A BibTeX entry for LaTeX users is
 
 To cite tmap/tmaptools in publications use:
 
-Tennekes M (2018). “tmap: Thematic Maps in R.” _Journal of Statistical Software_, *84*(6), 1-39. doi: 10.18637/jss.v084.i06
-(URL: http://doi.org/10.18637/jss.v084.i06).
+Tennekes M (2018). “tmap: Thematic Maps in R.” _Journal of Statistical Software_, *84*(6), 1-39. doi:
+10.18637/jss.v084.i06 (URL: http://doi.org/10.18637/jss.v084.i06).
 
 A BibTeX entry for LaTeX users is
 

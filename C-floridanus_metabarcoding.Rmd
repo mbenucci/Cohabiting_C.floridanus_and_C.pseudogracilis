@@ -15,13 +15,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r environment setup, include=F}
 ## R(v3.5.1 - Win)
-.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win")))
+#.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_win")))
 
 ## R(v3.5.1 - OSX)
 #.libPaths(c("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_osx", .libPaths("D:\\Dropbox\\PhD Hull\\PhD docs\\Thesis\\R_stats\\rlib3.5_osx")))
 
 ## R(v3.5.1 - ubuntu)
-#.libPaths(c("/home/mb/Dropbox/PhD Hull/PhD docs/Thesis/R_stats/rlib3.5_unix", .libPaths("/home/mb/Dropbox/PhD\ Hull/PhD\ docs/Thesis/R_stats/rlib3.5_unix")))
+.libPaths(c("/home/mb/Dropbox/PhD Hull/PhD docs/Thesis/R_stats/rlib3.5_unix", .libPaths("/home/mb/Dropbox/PhD\ Hull/PhD\ docs/Thesis/R_stats/rlib3.5_unix")))
 ```
 
 ```{r directory, include=FALSE}
@@ -1227,12 +1227,13 @@ dev.off()
 ```
 
 ```{r community barplot publication}
-a = guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(predator_id, value)) +
+a = ggplot(occup.melt, aes(sample_type, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_barplot, name = "") +
+  scale_x_discrete(limits=c("kick","eDNA","guts")) +
   theme_bw() +
   coord_flip() +
-  facet_grid(time~.) +
+  facet_grid(site~.) +
   labs(x="", y="Community composition (%)") +
   theme(legend.position = "right", axis.text = element_text(size = 15), 
         strip.text = element_text(size=15), axis.title = element_text(size =15),
