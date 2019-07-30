@@ -1145,7 +1145,7 @@ final.data = t(final.data)
 write.csv(final.data, "R_outputs/Crangonyx_summary_table.csv")
 ```
 
-# 11. publication plots
+# 11. Publication plots
 
 ```{r guts NMDS publication}
 png("R_images/NMDS_guts_publication.png", width = 4000, height = 4000, units = "px", res = 300)
@@ -1265,30 +1265,29 @@ Note: having multiple LaTex versions installed can give errors.
 
 ```{r sanger alignment}
 # Import of sanger sequences
-#barcode_alignment=readDNAMultipleAlignment("c.flor_c.pse_SANGER_aligned.fasta")
+barcode_alignment=readDNAMultipleAlignment("c.flor_c.pse_SANGER_aligned.fasta")
+msaCheckNames(barcode_alignment, ".")
 
-#msaCheckNames(barcode_alignment, ".")
+print(barcode_alignment, show="alignment", showNames=T, order="align")
+rownames(barcode_alignment) = gsub("_C_", "_C.", rownames(barcode_alignment))
 
-#print(barcode_alignment, show="alignment", showNames=T, order="align")
-#rownames(barcode_alignment) = gsub("_C_", "_C.", rownames(barcode_alignment))
-
-#msaPrettyPrint(barcode_alignment, output="pdf",
-#               showConsensus="none",
-#               consensusThreshold = 25,
-#               showNames="left",
-#               showLogo="top",
-#               showLegend=F,
-#               paperWidth = 18, paperHeight = 11,
-#               furtherCode=c("\\nomatchresidues{White}{Gray80}{upper}{}",
-#                             "\\conservedresidues{Black}{White}{upper}{}",
-#                             "\\allmatchresidues{Black}{White}{upper}{}",
-#                             "\\logocolor{G}{Black}",
-#                             "\\logocolor{A}{Green}",
-#                             "\\logocolor{T}{Red}",
-#                             "\\logocolor{C}{Blue}",
-#                             "\\shownumbering[Black]{right}",
-#                             "\\showruler{bottom}{THWA03_C_pseudogracilis_SANGER}"),
-#               askForOverwrite=FALSE)
+msaPrettyPrint(barcode_alignment, output="pdf",
+               showConsensus="none",
+               consensusThreshold = 25,
+               showNames="left",
+               showLogo="top",
+               showLegend=F,
+               paperWidth = 18, paperHeight = 11,
+               furtherCode=c("\\nomatchresidues{White}{Gray80}{upper}{}",
+                             "\\conservedresidues{Black}{White}{upper}{}",
+                             "\\allmatchresidues{Black}{White}{upper}{}",
+                             "\\logocolor{G}{Black}",
+                             "\\logocolor{A}{Green}",
+                             "\\logocolor{T}{Red}",
+                             "\\logocolor{C}{Blue}",
+                             "\\shownumbering[Black]{right}",
+                             "\\showruler{bottom}{THWA03_C_pseudogracilis_SANGER}"),
+               askForOverwrite=FALSE)
 ```
 
 ```{r log session info}

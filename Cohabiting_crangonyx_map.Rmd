@@ -330,7 +330,7 @@ up = ggplot(up_map) +
   ggsn::scalebar(location="bottomleft", x.min=630000, x.max=631000, y.min=300000, y.max=300100, dist=3000, dist_unit="m", st.dist=5, height=4, transform=F)
  
 png("map/sampling_map.png", width=9000, height=9000, units="px", res=200)
-plot_grid(uk, ch, bo, ky, na, th, up, ncol=3, nrow=3)
+plot_grid(uk, ch, bo, ky, na, th, up, labels=c("","1.","2.","3.","4.","5.","6."), ncol=3, nrow=3, label_size=25, label_fontfamily=1)
 dev.off()
 ```
 
