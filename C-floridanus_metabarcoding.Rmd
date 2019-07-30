@@ -1237,7 +1237,7 @@ a = ggplot(occup.melt, aes(sample_type, value)) +
   labs(x="", y="Community composition (%)") +
   theme(legend.position = "right", axis.text = element_text(size = 15), 
         strip.text = element_text(size=15), axis.title = element_text(size =15),
-        legend.text = element_text(size=15))
+        legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.4), unit="cm"))
 
 b = melt.kick[melt.kick$order == "Amphipoda",] %>% 
   mutate(variable = factor(variable, levels=c("Corophium","Crangonyx","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
@@ -1245,11 +1245,12 @@ b = melt.kick[melt.kick$order == "Amphipoda",] %>%
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
   scale_fill_manual(values = col_crustacea, name = "") +
   theme_bw() +
+  coord_flip() +
   facet_grid(time~., scales="free_x") +
   labs(x="", y="Abundance (count)") +
   theme(legend.position = "right", axis.text = element_text(size = 15), 
         strip.text = element_text(size=15), axis.title = element_text(size =15),
-        legend.text = element_text(size=15))
+        legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.7), unit="cm"))
 
 png("R_images/barplot_community_pubblication.png", width = 4000, height = 4000, units = "px", res = 310)
 plot_grid(a, b, labels=c("a)","b)"), nrow=2, label_size=25, label_fontface=1)
