@@ -1250,7 +1250,7 @@ b = melt.kick[melt.kick$order == "Amphipoda",] %>%
         strip.text = element_text(size=15), axis.title = element_text(size =15),
         legend.text = element_text(size=15))
 
-png("R_images/barplot_community_pubblication.png", width = 6000, height = 6000, units = "px", res = 310)
+png("R_images/barplot_community_pubblication.png", width = 4000, height = 4000, units = "px", res = 310)
 plot_grid(a, b, labels=c("a)","b)"), nrow=2, label_size=25, label_fontface=1)
 dev.off()
 ```
