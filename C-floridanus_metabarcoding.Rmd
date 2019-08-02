@@ -1110,7 +1110,7 @@ melt.kick[melt.kick$order == "Amphipoda",] %>%
   mutate(variable = factor(variable, levels=c("Corophium","Crangonyx","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
   ggplot(aes(site, value, group=time)) +
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
-  scale_fill_manual(values = col_crustacea, name = "") +
+  scale_fill_manual(values = col_crustacea, name = "", labels=c("Corophium","Crangonyx sp.","C.floridanus","C.pseudogracilis")) +
   theme_bw() +
   facet_grid(time~., scales="free_x") +
   labs(x="", y="Abundance (count)") +
@@ -1243,7 +1243,7 @@ b = melt.kick[melt.kick$order == "Amphipoda",] %>%
   mutate(variable = factor(variable, levels=c("Corophium","Crangonyx","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
   ggplot(aes(site, value, group=time)) +
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
-  scale_fill_manual(values = col_crustacea, name = "") +
+  scale_fill_manual(values = col_crustacea, name = "", labels=c("Corophium","Crangonyx sp.","C.floridanus","C.pseudogracilis")) +
   theme_bw() +
   coord_flip() +
   facet_grid(time~., scales="free_x") +
@@ -1252,8 +1252,32 @@ b = melt.kick[melt.kick$order == "Amphipoda",] %>%
         strip.text = element_text(size=15), axis.title = element_text(size =15),
         legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.7), unit="cm"))
 
+c = guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(predator_id, value)) +
+  geom_bar(stat="identity", position="fill", aes(fill=order)) +
+  scale_fill_manual(values=cols_barplot, name = "") +
+  theme_bw() +
+  coord_flip() +
+  facet_grid(time~.) +
+  labs(x="", y="Community composition (%)") +
+  theme(legend.position = "right")
+
+d = ggplot(melt.occup.edna, aes(site, value)) +
+  geom_bar(stat="identity", position="fill", aes(fill=order)) +
+  scale_x_discrete(limits=c("eCH1","eCH2","eCH3","eCH4","eCH5")) +
+  coord_flip() +
+  labs(y="Community composition (%)", x="") +
+  facet_grid(time~.)
+
+#lay = rbind(c(1,1,1),c(2,3,4))
+
+ga = plot_grid(a, labels=c("a)"), label_size=25, label_fontface=1)
+gb = plot_grid(b, labels=c("b)"), label_size=25, label_fontface=1)
+gc = plot_grid(c, labels=c("c)"), label_size=25, label_fontface=1)
+gd = plot_grid(d, labels=c("d)"), label_size=25, label_fontface=1)
+
 png("R_images/barplot_community_pubblication.png", width = 4000, height = 4000, units = "px", res = 310)
-plot_grid(a, b, labels=c("a)","b)"), nrow=2, label_size=25, label_fontface=1)
+grid.arrange(ga, gb, ncol=1, nrow=4) #layout_matrix=lay)
+#plot_grid(a, b, c, d, labels=c("a)","b)","c)","d)"), ncol=3, label_size=25, label_fontface=1)
 dev.off()
 ```
 

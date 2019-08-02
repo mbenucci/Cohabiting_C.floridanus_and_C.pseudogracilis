@@ -121,11 +121,11 @@ up_map = fortify(upton_shape)
 up2_map = fortify(upton2_shape)
 ```
 
-```{r}
+Removing few objects to avoid memory issues on my machine.
+
+```{r removing}
 rm(bo,ch,ky,na,th,up)
 ```
-
-
 
 We can now start plotting the sampling points and creates the maps, initially individually; then we plot them all together for publication.
 
