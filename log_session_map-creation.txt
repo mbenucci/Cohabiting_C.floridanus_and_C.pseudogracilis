@@ -7,9 +7,9 @@ BLAS: /usr/lib/openblas-base/libblas.so.3
 LAPACK: /usr/lib/libopenblasp-r0.2.18.so
 
 locale:
- [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C               LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8    
- [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8    LC_PAPER=en_GB.UTF-8       LC_NAME=C                 
- [9] LC_ADDRESS=C               LC_TELEPHONE=C             LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
+ [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C               LC_TIME=en_GB.UTF-8        LC_COLLATE=en_GB.UTF-8     LC_MONETARY=en_GB.UTF-8   
+ [6] LC_MESSAGES=en_GB.UTF-8    LC_PAPER=en_GB.UTF-8       LC_NAME=C                  LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
 
 attached base packages:
 [1] grid      stats     graphics  grDevices utils     datasets  methods   base     
@@ -35,8 +35,8 @@ loaded via a namespace (and not attached):
 
 To cite R in publications use:
 
-  R Core Team (2018). R: A language and environment for statistical computing. R Foundation for Statistical Computing,
-  Vienna, Austria. URL https://www.R-project.org/.
+  R Core Team (2018). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna,
+  Austria. URL https://www.R-project.org/.
 
 A BibTeX entry for LaTeX users is
 

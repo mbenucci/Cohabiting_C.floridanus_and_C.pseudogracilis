@@ -33,8 +33,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘devtools’ in publications use:
 
-  Hadley Wickham, Jim Hester and Winston Chang (2019). devtools: Tools to Make Developing R Packages Easier. R package
-  version 2.0.2. https://CRAN.R-project.org/package=devtools
+  Hadley Wickham, Jim Hester and Winston Chang (2019). devtools: Tools to Make Developing R Packages Easier. R package version
+  2.0.2. https://CRAN.R-project.org/package=devtools
 
 A BibTeX entry for LaTeX users is
 
@@ -230,8 +230,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘rgeos’ in publications use:
 
-  Roger Bivand and Colin Rundel (2019). rgeos: Interface to Geometry Engine - Open Source ('GEOS'). R package version
-  0.4-3. https://CRAN.R-project.org/package=rgeos
+  Roger Bivand and Colin Rundel (2019). rgeos: Interface to Geometry Engine - Open Source ('GEOS'). R package version 0.4-3.
+  https://CRAN.R-project.org/package=rgeos
 
 A BibTeX entry for LaTeX users is
 
