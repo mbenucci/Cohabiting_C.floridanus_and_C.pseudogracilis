@@ -1219,8 +1219,10 @@ dev.off()
 name.multi=c("Amphipoda","Cladocera","Copepoda","Diptera","Gastropoda","Oligochaeta","Tricladida")
 col.multi=c("red","cyan3","khaki3","yellow","darkorchid3","tan4","darkgreen")
 
+colnames(food.web) = gsub("_", " ", colnames(food.web))
+
 png("R_images/bipartite_network_publication.png", width=4000, height=2500, units="px", res=300)
-plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lab.dis=0.05, high.lab.dis=0.1, low.spacing=0.012, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network, high.y=2, low.y=1)
+plotweb(food.web, y.width.low=0.1, y.width.high=0.08,	y.lim=c(0,3), labsize=2, low.lab.dis=0.05, high.lab.dis=0.1, low.spacing=0.015, high.spacing = 0.07, text.rot=90, col.high="black", col.low=col.network, high.y=2.1, low.y=0.9)
 legend("bottom", legend=name.multi, fill=col.multi, bty="n", border="black",ncol=4, xpd=T)
 dev.off()
 ```
@@ -1261,10 +1263,11 @@ tot = ggplot(occup.melt, aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_barplot, name = "") +
   scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
+  scale_y_continuous(expand=c(0,0)) +
   theme_bw() +
   coord_flip() +
   facet_grid(sample_type~.) +
-  labs(x="", y="Community composition (%)") +
+  labs(x="", y="Composition (ratio)") +
   theme(legend.position = "right", axis.text = element_text(size = 15), 
         strip.text = element_text(size=15), axis.title = element_text(size =15),
         legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.7), unit="cm"))
@@ -1275,35 +1278,38 @@ kick = melt.kick[melt.kick$order == "Amphipoda",] %>%
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
   scale_fill_manual(values = cols_amphipod, name = "", labels=c("Corophium","Crangonyx sp.","C.floridanus","C.pseudogracilis")) +
   scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
+  scale_y_continuous(limits=c(0,240), expand=c(0,0), breaks=c(0,25,50,75,100,125,150,175,200,225)) +
   theme_bw() +
   coord_flip() +
   facet_grid(time~., scales="free_x") +
-  labs(x="", y="Abundance (count)") +
-  theme(legend.position = "right", axis.text = element_text(size = 15), 
+  labs(x="", y="Abundance (count)", title="Amphipods composition") +
+  theme(legend.position = "right", plot.title = element_text(size=20), axis.text = element_text(size = 15), 
         strip.text = element_text(size=15), axis.title = element_text(size =15),
-        legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.7), unit="cm"))
+        legend.text = element_text(size=15), plot.margin=unit(c(0.25,-0.2,0.25,0.7), unit="cm"))
 
 guts = guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_gut, name = "") +
   scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
+  scale_y_continuous(expand=c(0,0)) +
   theme_bw() +
   coord_flip() +
   facet_grid(time~predator_id) +
-  labs(x="", y="Gut conents composition (%)") +
-  theme(legend.position = "right", axis.text = element_text(size = 15), 
-        strip.text = element_text(size=15), axis.title = element_text(size =15),
+  labs(x="", y="Composition (ratio)", title="Gut contents") +
+  theme(legend.position = "right", plot.title = element_text(size=20), axis.text = element_text(size=15),
+        strip.text = element_text(size=15), axis.title = element_text(size=15),
         legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.7), unit="cm"))
 
 edna = ggplot(melt.occup.edna, aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_edna, name = "") +
   scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
+  scale_y_continuous(expand=c(0,0)) +
   theme_bw() +
   coord_flip() +
-  labs(y="Community composition (%)", x="") +
+  labs(x="", y="Composition (ratio)", title="eDNA") +
   facet_grid(time~.) +
-  theme(legend.position = "right", axis.text = element_text(size = 15), 
+  theme(legend.position = "right", plot.title = element_text(size=20), axis.text = element_text(size = 15), 
         strip.text = element_text(size=15), axis.title = element_text(size =15),
         legend.text = element_text(size=15), plot.margin=unit(c(0.25,1,0.25,0.7), unit="cm"))
 
