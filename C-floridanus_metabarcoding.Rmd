@@ -1048,7 +1048,8 @@ occup.melt = melt(occup.gut.edna.kick)
 
 # Adding order groups to the data frame
 occup.melt$order = "NA"
-occup.melt[grep("Corophium|Crangonyx", occup.melt$variable), "order"] = "Amphipoda"
+occup.melt[grep("Corophium", occup.melt$variable), "order"] = "Corophiida"
+occup.melt[grep("Crangonyx", occup.melt$variable), "order"] = "Crangonyctidae"
 occup.melt[grep("Hydracarina|Limnesia|Platynothrus", occup.melt$variable),"order"] = "Arachnida"
 occup.melt[grep("Chydorus|Daphnia|Diaphanosoma|Eurycercus|Polyphemus|Sida", occup.melt$variable),"order"] = "Cladocera"
 occup.melt[grep("Cyclops|Eucyclops|Eudiaptomus|Maxillopoda|Mesocyclops", occup.melt$variable), "order"] = "Cyclopoida"
@@ -1069,37 +1070,54 @@ occup.melt[grep("Coenagrionidae", occup.melt$variable), "order"] = "Zygoptera"
 
 occup.melt[occup.melt$order == "NA","variable"]
 
-cols_barplot = c("blue","darkorange","cyan3","greenyellow","yellow","deeppink","plum2","grey50","darkgreen","red","purple","aquamarine","green3","khaki4","brown","gainsboro","black")
+cols_barplot = c("blue","olivedrab","darkorange","cyan3","greenyellow","yellow","deeppink","plum2","grey50","darkgreen","red","purple","aquamarine","green3","khaki4","brown","gainsboro","black")
 
 png("R_images/barplot_summary_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
-ggplot(occup.melt, aes(sample_type, value)) +
+occup.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Coleoptera", "Cyclopoida", "Diptera", "Ephemeroptera", "Hemiptera", "Hirudinea", "Hydrozoa", "Isopoda", "Mollusca", "Oligochaeta", "Ostracoda", "Rotifera", "Trichoptera", "Tricladida", "Zygoptera"))) %>% ggplot(aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_barplot, name = "") +
-  scale_x_discrete(limits=c("kick","eDNA","guts")) +
+  scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
+  scale_y_continuous(expand=c(0,0)) +
   theme_bw() +
   coord_flip() +
-  facet_grid(site~.) +
+  facet_grid(sample_type~.) +
   labs(x="", y="Community composition (%)") +
   theme(legend.position = "right")
 dev.off()
 ```
 
 ```{r barplot of gut contents}
-guts.melt=occup.melt[occup.melt$sample_type=="guts",]
+guts.melt=melt(occup.gut.edna.kick[occup.gut.edna.kick$sample_type=="guts",])
 
-# Remove sample with value = 0
-guts.melt = guts.melt[,][guts.melt$value > 0,]
+unique(guts.melt$variable)
 
 # We split Amphipoda in Crangonyx and Corophium
-guts.melt[grep("Corophium", guts.melt$variable), "order"] <- "Corophiida"
-guts.melt[grep("Crangonyx", guts.melt$variable), "order"] <- "Crangonyctidae"
+guts.melt[grep("Corophium", guts.melt$variable), "order"] = "Corophiida"
+guts.melt[grep("Crangonyx", guts.melt$variable), "order"] = "Crangonyctidae"
+guts.melt[grep("Chydorus|Daphnia|Diaphanosoma|Eurycercus|Polyphemus|Sida", guts.melt$variable), "order"] = "Cladocera"
+guts.melt[grep("Hydracarina|Limnesia|Platynothrus", guts.melt$variable),"order"] = "Arachnida"
+guts.melt[grep("Cyclops|Eucyclops|Eudiaptomus|Maxillopoda|Mesocyclops", guts.melt$variable), "order"] = "Cyclopoida"
+guts.melt[grep("Agabus|Dryopidae|Haliplus|Hyphydrus|Limnius|Platambus", guts.melt$variable), "order"] = "Coleoptera"
+guts.melt[grep("Ceratopogonidae|Chironomidae|Cricotopus|Endochironomus|Limoniidae|Polypedilum|Stratiomys|Tabanidae|Tipulidae", guts.melt$variable), "order"]= "Diptera"
+guts.melt[grep("Caenis|Procleon", guts.melt$variable), "order"] = "Ephemeroptera"
+guts.melt[grep("Corixidae", guts.melt$variable), "order"] = "Hemiptera"
+guts.melt[grep("Bereobdella|Erpobdella|Glossiphonia|Haemopis|Helobdella", guts.melt$variable), "order"] = "Hirudinea"
+guts.melt[grep("Hydra", guts.melt$variable), "order"] = "Hydrozoa"
+guts.melt[grep("Asellus", guts.melt$variable), "order"] = "Isopoda"
+guts.melt[grep("Bithynia|Dreissena|Lymnaea|Pisidium|Planorbis|Potamopyrgus|Segmentina|Sphaerium|Valvata", guts.melt$variable), "order"] = "Mollusca"
+guts.melt[grep("Limnodrilus|Lumbriculus|Tubifex", guts.melt$variable), "order"] = "Oligochaeta"
+guts.melt[grep("Cypridopsis|Eucypris", guts.melt$variable), "order"] = "Ostracoda"
+guts.melt[grep("Ascomorpha|Euchlanis|Kellicottia|Keratella|Ploima|Polyarthra|Synchaeta", guts.melt$variable), "order"] = "Rotifera"
+guts.melt[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", guts.melt$variable), "order"] = "Trichoptera"
+guts.melt[grep("Schmidtea", guts.melt$variable), "order"] = "Tricladida"
+guts.melt[grep("Coenagrionidae", guts.melt$variable), "order"] = "Zygoptera"
 
 unique(guts.melt$order)
 
 cols_gut = c("blue","olivedrab","darkorange","greenyellow","yellow","purple","aquamarine","gainsboro")
 
 png("R_images/barplot_summary_guts_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
-guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(predator_id, value)) +
+guts.melt[guts.melt$value > 0,] %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>%  ggplot(aes(predator_id, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_barplot, name = "") +
   theme_bw() +
@@ -1259,7 +1277,7 @@ dev.off()
 ```
 
 ```{r community barplot publication}
-tot = ggplot(occup.melt, aes(site, value)) +
+tot = occup.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Coleoptera", "Cyclopoida", "Diptera", "Ephemeroptera", "Hemiptera", "Hirudinea", "Hydrozoa", "Isopoda", "Mollusca", "Oligochaeta", "Ostracoda", "Rotifera", "Trichoptera", "Tricladida", "Zygoptera"))) %>% ggplot(aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_barplot, name = "") +
   scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
@@ -1287,7 +1305,10 @@ kick = melt.kick[melt.kick$order == "Amphipoda",] %>%
         strip.text = element_text(size=15), axis.title = element_text(size =15),
         legend.text = element_text(size=15), plot.margin=unit(c(0.25,-0.2,0.25,0.7), unit="cm"))
 
-guts = guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(site, value)) +
+length(which(guts.melt$predator_id == "C.floridanus"))
+length(which(guts.melt$predator_id == "C.pseudogracilis"))
+
+guts = guts.melt[guts.melt$value > 0,] %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_gut, name = "") +
   scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
