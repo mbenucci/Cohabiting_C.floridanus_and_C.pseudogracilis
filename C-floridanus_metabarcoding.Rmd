@@ -720,6 +720,7 @@ occup.edna = edna.ratio
 occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))][occup.edna[,!c(colnames(occup.edna) %in% c("time","site","sample_id","sample_type","predator_id"))] > 0] <- 1
 
 # adding genus information to help in plotting
+occup.edna$site = gsub("^e", "", occup.edna$site)
 melt.occup.edna = melt(occup.edna)
 melt.occup.edna$genus = gsub("([_]{1}[A-Za-z0-9-]{+}.{+}[.]{0,1}){0,+}$","", melt.occup.edna$variable)
 
@@ -765,6 +766,8 @@ melt.occup.edna[grep("Cypridopsis|Eucypris", melt.occup.edna$variable), "order"]
 melt.occup.edna[grep("Ascomorpha|Euchlanis|Kellicottia|Keratella|Ploima|Polyarthra|Synchaeta", melt.occup.edna$variable), "order"] = "Rotifera"
 melt.occup.edna[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", melt.occup.edna$variable), "order"] = "Trichoptera"
 melt.occup.edna[grep("Coenagrionidae", melt.occup.edna$variable), "order"] = "Zygoptera"
+
+cols_edna = c("darkorange","greenyellow","yellow","darkgreen","red","purple","green3","khaki4")
 
 png("R_images/eDNA_community.png", width = 3000, height = 3000, units = "px", res=300)
 ggplot(melt.occup.edna, aes(site, value)) +
@@ -934,7 +937,7 @@ dev.off()
 # 8. Community composition of eDNA and kick-samples
 
 ```{r merging kick-samples and eDNA frames}
-occup.edna$site = gsub("^e", "", occup.edna$site)
+#occup.edna$site = gsub("^e", "", occup.edna$site)
 
 occup.kick.edna = full_join(occup.edna[,!c(colnames(occup.edna) %in% "predator_id")], occup.kick)
 occup.kick.edna[is.na(occup.kick.edna)] <- 0
@@ -1014,6 +1017,32 @@ text(0, -0.5, label=paste0("Stress: ",round(meta.full$stress, 6)))
 dev.off()
 ```
 
+List of colours and species for summary barplot:
+
+"blue" = Amphidoda,
+"darkorange" = Cladocera, 
+"cyan3" = Coleoptera,
+"greenyellow" = Cyclopoida,
+"yellow" = Diptera,
+"deeppink" = Ephemeroptera,
+"plum2" = Hemiptera,
+"grey50" = Hirudinea,
+"darkgreen" = Hydrozoa,
+"red" = Isopoda,
+"purple" = Mollusca,
+"aquamarine" = Oligochaeta,
+"green3" = Ostracoda,
+"khaki4" = Rotifera,
+"brown" = Trichoptera,
+"gainsboro" = Tricladida,
+"black" = Zygoptera,
+
+List of colours and species for the kick-sample barplot
+"olivedrab" = Corophium,
+"dodgerblue" = Crangonyx sp.,
+"darkblue" = Crangonyx floridanus,
+"cyan" = Crangonyx pseudogracilis
+
 ```{r barplot of guts and community}
 occup.melt = melt(occup.gut.edna.kick)
 
@@ -1040,8 +1069,7 @@ occup.melt[grep("Coenagrionidae", occup.melt$variable), "order"] = "Zygoptera"
 
 occup.melt[occup.melt$order == "NA","variable"]
 
-cols_barplot = c("red","darkorange", "cyan3", "greenyellow", "plum2", "deeppink", "yellow", "grey50",  "green","blue","palevioletred","aquamarine","goldenrod","khaki4","brown","gainsboro","tan4")
-#, "","","black","darkgreen","khaki3",)
+cols_barplot = c("blue","darkorange","cyan3","greenyellow","yellow","deeppink","plum2","grey50","darkgreen","red","purple","aquamarine","green3","khaki4","brown","gainsboro","black")
 
 png("R_images/barplot_summary_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
 ggplot(occup.melt, aes(sample_type, value)) +
@@ -1067,6 +1095,8 @@ guts.melt[grep("Corophium", guts.melt$variable), "order"] <- "Corophiida"
 guts.melt[grep("Crangonyx", guts.melt$variable), "order"] <- "Crangonyctidae"
 
 unique(guts.melt$order)
+
+cols_gut = c("blue","olivedrab","darkorange","greenyellow","yellow","purple","aquamarine","gainsboro")
 
 png("R_images/barplot_summary_guts_by_order.png", width = 3000, height = 3000, units = "px", res = 300)
 guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(predator_id, value)) +
@@ -1103,14 +1133,14 @@ melt.kick[grep("Ascomorpha|Euchlanis|Kellicottia|Keratella|Ploima|Polyarthra|Syn
 melt.kick[grep("Ceraclea|Hydropsychidae|Psychomiidae|Psychomyia", melt.kick$variable), "order"] = "Trichoptera"
 melt.kick[grep("Coenagrionidae", melt.kick$variable), "order"] = "Zygoptera"
 
-col_crustacea = c("olivedrab","springgreen","darkblue","steelblue1","skyblue1","darkorchid2","plum","orchid1","tomato","tan1")
+cols_amphipod = c("olivedrab","dodgerblue","darkblue","cyan")
 
 png("R_images/barplot_summary_amphipod.png", width = 3000, height = 3000, units = "px", res = 300)
 melt.kick[melt.kick$order == "Amphipoda",] %>% 
   mutate(variable = factor(variable, levels=c("Corophium","Crangonyx","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
   ggplot(aes(site, value, group=time)) +
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
-  scale_fill_manual(values = col_crustacea, name = "", labels=c("Corophium","Crangonyx sp.","C.floridanus","C.pseudogracilis")) +
+  scale_fill_manual(values = cols_amphipod, name = "", labels=c("Corophium","Crangonyx sp.","C.floridanus","C.pseudogracilis")) +
   theme_bw() +
   facet_grid(time~., scales="free_x") +
   labs(x="", y="Abundance (count)") +
@@ -1227,23 +1257,24 @@ dev.off()
 ```
 
 ```{r community barplot publication}
-a = ggplot(occup.melt, aes(sample_type, value)) +
+tot = ggplot(occup.melt, aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
   scale_fill_manual(values=cols_barplot, name = "") +
-  scale_x_discrete(limits=c("kick","eDNA","guts")) +
+  scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
   theme_bw() +
   coord_flip() +
-  facet_grid(site~.) +
+  facet_grid(sample_type~.) +
   labs(x="", y="Community composition (%)") +
   theme(legend.position = "right", axis.text = element_text(size = 15), 
         strip.text = element_text(size=15), axis.title = element_text(size =15),
-        legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.4), unit="cm"))
+        legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.7), unit="cm"))
 
-b = melt.kick[melt.kick$order == "Amphipoda",] %>% 
+kick = melt.kick[melt.kick$order == "Amphipoda",] %>% 
   mutate(variable = factor(variable, levels=c("Corophium","Crangonyx","Crangonyx_floridanus","Crangonyx_pseudogracilis"))) %>% 
   ggplot(aes(site, value, group=time)) +
   geom_bar(stat="identity", position="stack", aes(fill=variable)) +
-  scale_fill_manual(values = col_crustacea, name = "", labels=c("Corophium","Crangonyx sp.","C.floridanus","C.pseudogracilis")) +
+  scale_fill_manual(values = cols_amphipod, name = "", labels=c("Corophium","Crangonyx sp.","C.floridanus","C.pseudogracilis")) +
+  scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
   theme_bw() +
   coord_flip() +
   facet_grid(time~., scales="free_x") +
@@ -1252,32 +1283,37 @@ b = melt.kick[melt.kick$order == "Amphipoda",] %>%
         strip.text = element_text(size=15), axis.title = element_text(size =15),
         legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.7), unit="cm"))
 
-c = guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(predator_id, value)) +
+guts = guts.melt %>% mutate(order=factor(order, levels=c("Crangonyctidae", "Corophiida", "Cladocera", "Cyclopoida", "Diptera", "Mollusca", "Oligochaeta", "Tricladida"))) %>% ggplot(aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
-  scale_fill_manual(values=cols_barplot, name = "") +
+  scale_fill_manual(values=cols_gut, name = "") +
+  scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
   theme_bw() +
   coord_flip() +
-  facet_grid(time~.) +
-  labs(x="", y="Community composition (%)") +
-  theme(legend.position = "right")
+  facet_grid(time~predator_id) +
+  labs(x="", y="Gut conents composition (%)") +
+  theme(legend.position = "right", axis.text = element_text(size = 15), 
+        strip.text = element_text(size=15), axis.title = element_text(size =15),
+        legend.text = element_text(size=15), plot.margin=unit(c(0.25,0,0.25,0.7), unit="cm"))
 
-d = ggplot(melt.occup.edna, aes(site, value)) +
+edna = ggplot(melt.occup.edna, aes(site, value)) +
   geom_bar(stat="identity", position="fill", aes(fill=order)) +
-  scale_x_discrete(limits=c("eCH1","eCH2","eCH3","eCH4","eCH5")) +
+  scale_fill_manual(values=cols_edna, name = "") +
+  scale_x_discrete(limits=c("CH6","CH5","CH4","CH3","CH2","CH1")) +
+  theme_bw() +
   coord_flip() +
   labs(y="Community composition (%)", x="") +
-  facet_grid(time~.)
+  facet_grid(time~.) +
+  theme(legend.position = "right", axis.text = element_text(size = 15), 
+        strip.text = element_text(size=15), axis.title = element_text(size =15),
+        legend.text = element_text(size=15), plot.margin=unit(c(0.25,1,0.25,0.7), unit="cm"))
 
-#lay = rbind(c(1,1,1),c(2,3,4))
+ga = plot_grid(tot, labels=c("a)"), label_size=25, label_fontface=1)
+gb = plot_grid(edna, labels=c("b)"), label_size=25, label_fontface=1)
+gc = plot_grid(guts, labels=c("c)"), label_size=25, label_fontface=1)
+gd = plot_grid(kick, labels=c("d)"), label_size=25, label_fontface=1)
 
-ga = plot_grid(a, labels=c("a)"), label_size=25, label_fontface=1)
-gb = plot_grid(b, labels=c("b)"), label_size=25, label_fontface=1)
-gc = plot_grid(c, labels=c("c)"), label_size=25, label_fontface=1)
-gd = plot_grid(d, labels=c("d)"), label_size=25, label_fontface=1)
-
-png("R_images/barplot_community_pubblication.png", width = 4000, height = 4000, units = "px", res = 310)
-grid.arrange(ga, gb, ncol=1, nrow=4) #layout_matrix=lay)
-#plot_grid(a, b, c, d, labels=c("a)","b)","c)","d)"), ncol=3, label_size=25, label_fontface=1)
+png("R_images/barplot_community_pubblication.png", width = 4000, height = 6000, units = "px", res = 300)
+grid.arrange(ga, gb, gc, gd, ncol=1, nrow=4)
 dev.off()
 ```
 
