@@ -15,17 +15,15 @@ attached base packages:
  [1] stats4    parallel  grid      stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] tmap_2.2             rworldmap_1.3-6      rgeos_0.4-3          rgdal_1.4-4          RColorBrewer_1.1-2  
- [6] raster_2.9-5         mapview_2.7.0        maptools_0.9-5       sp_1.3-1             maps_3.3.0          
-[11] leaflet_2.0.2        ggsn_0.5.2           broom_0.5.2          UpSetR_1.3.3         tidyr_0.8.3         
-[16] stringi_1.4.3        spaa_0.2.2           reshape2_1.4.3       plyr_1.8.4           msa_1.14.0          
-[21] Biostrings_2.50.2    XVector_0.22.0       IRanges_2.16.0       S4Vectors_0.20.1     BiocGenerics_0.28.0 
-[26] mgcv_1.8-28          nlme_3.1-140         lmtest_0.9-37        zoo_1.8-5            lme4_1.1-21         
-[31] Matrix_1.2-17        iNEXT_2.0.19         gridExtra_2.3        gplots_3.0.1.1       ggsignif_0.5.0      
-[36] EcoSimR_0.1.0        MASS_7.3-51.4        dplyr_0.8.1          usethis_1.5.0        devtools_2.0.2      
-[41] cowplot_0.9.4        ggplot2_3.1.1        boot_1.3-22          bipartite_2.11       sna_2.4             
-[46] network_1.15         statnet.common_4.2.0 vegan_2.5-5          lattice_0.20-38      permute_0.9-5       
-[51] aod_1.3.1           
+ [1] UpSetR_1.3.3         tidyr_0.8.3          stringi_1.4.3        spaa_0.2.2           reshape2_1.4.3       plyr_1.8.4          
+ [7] msa_1.14.0           Biostrings_2.50.2    XVector_0.22.0       IRanges_2.16.0       S4Vectors_0.20.1     BiocGenerics_0.28.0 
+[13] mgcv_1.8-28          nlme_3.1-140         lmtest_0.9-37        zoo_1.8-5            lme4_1.1-21          Matrix_1.2-17       
+[19] iNEXT_2.0.19         gplots_3.0.1.1       ggsignif_0.5.0       EcoSimR_0.1.0        MASS_7.3-51.4        boot_1.3-22         
+[25] bipartite_2.11       sna_2.4              network_1.15         statnet.common_4.2.0 vegan_2.5-5          lattice_0.20-38     
+[31] permute_0.9-5        aod_1.3.1            tmap_2.2             rworldmap_1.3-6      rgeos_0.4-3          rgdal_1.4-4         
+[37] RColorBrewer_1.1-2   raster_2.9-5         mapview_2.7.0        maptools_0.9-5       sp_1.3-1             maps_3.3.0          
+[43] leaflet_2.0.2        gridExtra_2.3        ggsn_0.5.2           dplyr_0.8.1          usethis_1.5.0        devtools_2.0.2      
+[49] cowplot_0.9.4        ggplot2_3.1.1        broom_0.5.2         
 
 loaded via a namespace (and not attached):
  [1] backports_1.1.4    spam_2.2-2         lwgeom_0.1-7       igraph_1.2.4.1     lazyeval_0.2.2     splines_3.5.1     
@@ -60,6 +58,6 @@ A BibTeX entry for LaTeX users is
     url = {https://www.R-project.org/},
   }
 
-We have invested a lot of time and effort in creating R, please cite it when using it for data analysis. See
-also ‘citation("pkgname")’ for citing R packages.
+We have invested a lot of time and effort in creating R, please cite it when using it for data analysis. See also
+‘citation("pkgname")’ for citing R packages.
 
