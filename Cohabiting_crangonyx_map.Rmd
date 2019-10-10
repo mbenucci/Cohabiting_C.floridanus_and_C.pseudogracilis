@@ -49,7 +49,6 @@ Plotting the map for Chapter 5 on DNA metabarcoding of trophic interactions of c
 
 Before mapping we load the files for the coordinates and the shapefiles.
 
-
 ```{r input data}
 detect.sites = read.csv("map/Cf_detection_sites.csv")
 ch.sites = read.csv("map/Chasewater_sites.csv")
@@ -254,11 +253,11 @@ uk = ggplot(uk_map) +
   geom_rect(data=detect.sites[detect.sites$Label == "Nar",], aes(xmin=560000, xmax=590000, ymin=300000, ymax=330000), color="black", fill="transparent", cex=1) +
   geom_rect(data=detect.sites[detect.sites$Label == "Thwai",], aes(xmin=469000, xmax=541000, ymin=405000, ymax=475000), color="black", fill="transparent", cex=1) +
   geom_rect(data=detect.sites[detect.sites$Label == "Upton",], aes(xmin=630000, xmax=659000, ymin=301000, ymax=329000), color="black", fill="transparent", cex=1) +
-  geom_text(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label="2"), nudge_y=-50000, cex=7) +
+  geom_text(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label="5"), nudge_y=-50000, cex=7) +
   geom_text(data=detect.sites[detect.sites$Label == "Chase",], aes(X,Y, label="1"), nudge_x=-30000, cex=7) +
-  geom_text(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X,Y, label="3"), nudge_y=-70000, cex=7) +
-  geom_text(data=detect.sites[detect.sites$Label == "Nar",], aes(X,Y, label="4"), nudge_x=10000, nudge_y=-50000, cex=7) +
-  geom_text(data=detect.sites[detect.sites$Label == "Thwai",], aes(X,Y, label="5"), nudge_x=70000, cex=7) +
+  geom_text(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X,Y, label="4"), nudge_y=-70000, cex=7) +
+  geom_text(data=detect.sites[detect.sites$Label == "Nar",], aes(X,Y, label="3"), nudge_x=10000, nudge_y=-50000, cex=7) +
+  geom_text(data=detect.sites[detect.sites$Label == "Thwai",], aes(X,Y, label="2"), nudge_x=70000, cex=7) +
   geom_text(data=detect.sites[detect.sites$Label == "Upton",], aes(X,Y, label="6"), nudge_x=50000, cex=7) +
   coord_fixed(1) +
   theme_void() +
@@ -274,7 +273,7 @@ bo = ggplot(bo_map) +
   geom_polygon(data=bo6_map, aes(long,lat,group = group), fill="grey90", color="black") +
   geom_point(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y), shape=24, fill="red", color="red", cex=4) +
 #  geom_label(data=detect.sites[detect.sites$Label == "Bourn",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
-  geom_label(data=detect.sites[detect.sites$Label == "Bourn",], aes(x=390400, y=108250, label="2."), cex=10) +
+  geom_label(data=detect.sites[detect.sites$Label == "Bourn",], aes(x=390400, y=108250, label="5."), cex=10) +
   coord_fixed(ratio=1, xlim=c(390000,420000), ylim=c(79000,108500)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0, r=0, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
@@ -297,7 +296,7 @@ ky = ggplot(ky_map) +
   geom_rect(aes(xmin=500000, xmax=527500, ymin=267000, ymax=274000), color="white", fill="white") +
   geom_point(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X, Y), shape=22 ,color="red", fill="red", cex=4) +
 #  geom_label(data=detect.sites[detect.sites$Label == "Kyngs",], aes(X, Y, label=Description), nudge_y=-3000, cex=4) +
-  geom_label(data=detect.sites[detect.sites$Label == "Kyngs",], aes(x=500800, y=329500, label="3."), cex=10) +
+  geom_label(data=detect.sites[detect.sites$Label == "Kyngs",], aes(x=500800, y=329500, label="4."), cex=10) +
   coord_fixed(ratio=1, xlim=c(500000,560000), ylim=c(270000,330000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0.25, b=0.25, l=0), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
@@ -307,7 +306,7 @@ na = ggplot(na_map) +
   geom_polygon(aes(long,lat,group = group), fill="grey90", color="black") +
   geom_point(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y), shape=24, fill="red", color="red", cex=4) +
 #  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(X, Y, label=Description), nudge_x=0, nudge_y=2000, cex=4) +
-  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(x=560400, y=329800, label="4."), cex=10) +
+  geom_label(data=detect.sites[detect.sites$Label == "Nar",], aes(x=560400, y=329800, label="3."), cex=10) +
   geom_rect(aes(xmin=555500, xmax=572000, ymin=299000, ymax=301800), color="white", fill="white") +
   coord_fixed(ratio=1, xlim=c(560000,590000), ylim=c(300000,330000)) +
   theme_void() +
@@ -322,7 +321,7 @@ th = ggplot(th_map) +
   geom_rect(aes(xmin=460000, xmax=499700, ymin=402000, ymax=408500), fill="white", color="white") +
   geom_point(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y), shape=24, fill="red", color="red", cex=4) +
 #  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(X, Y, label=Description), nudge_y=-3000, cex=4) +
-  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(x=469700,y=474400, label="5."), cex=10) +
+  geom_label(data=detect.sites[detect.sites$Label == "Thwai",], aes(x=469700,y=474400, label="2."), cex=10) +
   coord_fixed(ratio=1, xlim=c(469000,542000), ylim=c(405000,475000)) +
   theme_void() +
   theme(plot.margin=unit(c(t=0.25, r=0, b=0.25, l=0.25), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
@@ -341,7 +340,7 @@ up = ggplot(up_map) +
   ggsn::scalebar(location="bottomleft", x.min=629500, x.max=631000, y.min=302000, y.max=303100, dist=5, dist_unit="km", st.dist=1, height=0.7, transform=F)
 
 png("map/sampling_map.png", width=4000, height=4000, units="px", res=300)
-plot_grid(uk, ch, bo, ky, na, th, up, ncol=3, nrow=3)
+plot_grid(uk, ch, th, na, ky, na, bo, up, ncol=3, nrow=3)
 dev.off()
 ```
 

@@ -1228,7 +1228,7 @@ text(-0.55,0.7,label="b)",cex=3)
 
 # Common legend
 plot.new()
-legend("top", legend=c("Crangonyx pseudogracilis","Crangonyx floridanus","May","Oct"), col=c("black","black","black","black"), pch=c(17,15,16,1),cex=2,ncol=2, bty="n")
+legend("top", legend=c("C. pseudogracilis - May","C. pseudogracilis - Oct","C. floridanus - May","C. floridanus - Oct","May","Oct"), col=c("black","black","black","black"), pch=c(17,24,15,22,16,1),cex=2,ncol=3, bty="n")
 dev.off()
 ```
 
