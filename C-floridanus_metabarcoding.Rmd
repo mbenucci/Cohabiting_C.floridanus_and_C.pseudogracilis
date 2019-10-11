@@ -169,7 +169,7 @@ shapiro.test(colSums(oct17.reads))
 t.test(colSums(may17.reads), colSums(oct17.reads), var.equal = T)
 ```
 
-## Read depth threshold
+Read depth threshold
 
 The coverage filter (based on `mean(sample_DNA_reads)-sd(sample_DNA_reads)`) for the sequencing from May 2017 results negative. So we decided to use a standard 1000 reads as coverage filter. The coverage calculated for the sequencing from October 2017 instead is equal to 1902 reads.
 
@@ -574,11 +574,11 @@ abund.guts = as.data.frame(ratio.guts)
 abund.guts.site = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id","sample_type"))] %>% group_by(time, site, predator_id) %>% summarise_all(list(sum)))
 
 # replacing predator id with initials
-abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "C.floridanus"
-abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "C.pseudogracilis"
+abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "C.flor"
+abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "C.pseud"
 
-abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "C.floridanus"
-abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "C.pseudogracilis"
+abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "C.flor"
+abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "C.pseud"
 
 # setting rownames and removing extra variables
 rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$site, abund.guts.site$time, sep="_")
@@ -604,12 +604,12 @@ meta.guts = metaMDS(adonis.guts, trymax=200, distance="euclidean")
 # full symbols for May, hollow symbols for October
 png("R_images/guts_predator_NMDS_euclidean.png", width = 4000, height = 4000, units = "px", res = 300)
 plot(meta.guts, type="n", xlim=c(-1,1.5), ylim=c(-1.5,2))
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseudogracilis" & fact_time.guts[,1]=="May"),col="black", pch=17)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseudogracilis" & fact_time.guts[,1]=="Oct"),col="black", pch=24)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.floridanus" & fact_time.guts[,1]=="May"),col="blue", pch=15)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.floridanus" & fact_time.guts[,1]=="Oct"),col="blue", pch=22)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseud" & fact_time.guts[,1]=="May"),col="black", pch=17)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseud" & fact_time.guts[,1]=="Oct"),col="black", pch=24)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.flor" & fact_time.guts[,1]=="May"),col="blue", pch=15)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.flor" & fact_time.guts[,1]=="Oct"),col="blue", pch=22)
 ordispider(meta.guts, group=fact_predator.guts[,1],col=c("blue","orange"),label=T)
-ordiellipse(meta.guts, group=fact_predator.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
+ordiellipse(meta.guts, group=fact_time.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
 text(1,-1,label=paste0("Stress: ",round(meta.guts$stress, 6)))
 dev.off()
 ```
@@ -705,6 +705,7 @@ dev.off()
 ```
 
 # 6. Diversity analysis of eDNA samples
+
 To avoid over-estimating the diversity present in the eDNA samples, the data set need to be cleaned a bit further. For this purpose assignment at higher taxonomic rank (mainly Order), were removed from the dataset, while assignments to Family, were spearated from the assignments to Genus and Species level. 
 
 ```{r eDNA samples rarefaction curves}
@@ -794,6 +795,37 @@ sd(may_rich)/sqrt(length(may_rich))
 oct_rich = sp_richness[grep("CH._Oct", names(sp_richness))]
 mean(oct_rich)
 sd(oct_rich)/sqrt(length(oct_rich))
+```
+
+NMDS and PERMANOVA of eDNA samples
+
+```{r adonis eDNA}
+adonis.edna = as.data.frame(occup.edna[,!c(colnames(occup.edna) %in% c("sample_id","sample_type","predator_id"))] %>% group_by(site, time) %>% summarise_all(list(sum)))
+
+fact_time.edna = matrix(c(adonis.edna$time), ncol=1)
+fact_site.edna = matrix(c(adonis.edna$site), ncol=1)
+
+rownames(adonis.edna) = paste(adonis.edna$site, adonis.edna$time, sep="_")
+
+adonis.edna = vegdist(as.matrix(adonis.edna[,!c(colnames(adonis.edna) %in% c("site","time"))]))
+
+adonis(adonis.edna~fact_time.edna, permutations = 9999, method="jaccard")
+```
+
+```{r PERMANOVA of eDNA}
+meta.edna = metaMDS(adonis.edna, trymax=200, distance="jaccard")
+```
+
+```{r NMDS plot of kick-samples}
+#full symbols for May, hollow symbols for October
+#png("R_images/eDNA_NMDS_jaccard.png", width = 3000, height = 3000, units = "px", res = 300)
+plot(meta.edna, type="n", xlim=c(-0.6,0.6), ylim=c(-0.6,0.6))
+points(meta.edna, select=which(fact_time.edna[,1]=="May"),col="black",pch=20)
+points(meta.edna, select=which(fact_time.edna[,1]=="Oct"),col="black",pch=1)
+ordispider(meta.edna, group=fact_time.edna[,1],col=c("blue","orange"),label=T)
+ordiellipse(meta.edna, group=fact_time.edna[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
+text(-0.5,-0.4, label=paste0("Stress: ", round(meta.edna$stress,6)))
+#dev.off()
 ```
 
 # 7. Diversity analysis in kick-samples
@@ -1196,35 +1228,55 @@ write.csv(final.data, "R_outputs/Crangonyx_summary_table.csv")
 # 11. Publication plots
 
 ```{r guts NMDS publication}
-png("R_images/NMDS_guts_publication.png", width = 4000, height = 4000, units = "px", res = 300)
-lay.matrix = matrix(c(1,2,3,3), ncol=2, nrow=2, byrow=T)
-layout(lay.matrix, heights=c(2,1), widths=c(2,2))
+png("R_images/NMDS_multiplot.png", width = 4000, height = 4000, units = "px", res = 300)
+lay.matrix = matrix(c(1,2,3,4,5,5), ncol=2, nrow=3, byrow=T)
+layout(lay.matrix, heights=c(2,2,1), widths=c(2,2))
 
 plot(meta.guts, type="n", xlim=c(-1,1.5), ylim=c(-1,2), cex.axis=2, cex.lab=1.5)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseudogracilis" & fact_time.guts[,1]=="May"),col="black",pch=17,cex=2)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseudogracilis" & fact_time.guts[,1]=="Oct"),col="black",pch=24,cex=2)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.floridanus" & fact_time.guts[,1]=="May"),col="black",pch=15,cex=2)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.floridanus" & fact_time.guts[,1]=="Oct"),col="black",pch=22,cex=2)
-ordispider(meta.guts,group=fact_predator.guts[,1],col=c("red","orange"),label=F,cex=2)
-ordiellipse(meta.guts,group=fact_predator.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
-text(1.1,-1,label=paste0("Stress: ",round(meta.guts$stress,4)),cex=1.5)
-text(0.7,1.3,label="C.pseudogracilis",cex=1.5)
-text(-0.7,0.3,label="C.floridanus",cex=1.5)
-text(-0.9,2,label="a)",cex=3)
-text(0.2,2,label="gut contents",cex=2.5)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseud" & fact_time.guts[,1]=="May"),col="black",pch=17,cex=2)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseud" & fact_time.guts[,1]=="Oct"),col="black",pch=24,cex=2)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.flor" & fact_time.guts[,1]=="May"),col="black",pch=15,cex=2)
+points(meta.guts, select=which(fact_predator.guts[,1]=="C.flor" & fact_time.guts[,1]=="Oct"),col="black",pch=22,cex=2)
+ordispider(meta.guts,group=fact_predator.guts[,1],col=c("red","orange"),label=T,cex=2)
+ordiellipse(meta.guts,group=fact_time.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
+text(1.5,-1,label=paste0("Stress: ",round(meta.guts$stress,4)),cex=1.5)
+text(0.5,1.3,label="May",cex=2.5)
+text(-0.9,-0.3,label="Oct",cex=2.5)
+text(-1.8,1.9,label="a)",cex=3)
+text(0.2,1.9,label="gut contents",cex=2.5)
 
 plot(meta.full, type="n", xlim=c(-0.6,0.6), ylim=c(-0.5,0.5), cex.axis=2, cex.lab=1.5)
 points(meta.full, select=which(fact_time.full[,1]=="May"),col="black",pch=16,cex=2)
 points(meta.full, select=which(fact_time.full[,1]=="Oct"),col="black",pch=1,cex=2)
 ordispider(meta.full, group=fact_type.full[,1],col=c("blue","orange","green"),label=F,cex=2)
 ordiellipse(meta.full, group=fact_type.full[,1],kind="ehull",lty=c(1,5,3),label=F,lwd=1)
-text(0.4,-0.7,label=paste0("Stress: ",round(meta.full$stress,4)),cex=1.5)
-text(1.1,-1.45,label=paste0("Stress: ",round(meta.guts$stress,4)),cex=1.5)
+text(0.4,-0.5,label=paste0("Stress: ",round(meta.full$stress,4)),cex=1.5)
 text(0,-0.35,label="kick",cex=2.5)
 text(0.45,0.35,label="eDNA",cex=2.5)
 text(-0.4,0.35,label="gut contents",cex=2.5)
-text(-0.55,0.7,label="b)",cex=3)
+text(-0.67,0.45,label="b)",cex=3)
 
+plot(meta.kick, type="n", xlim=c(-0.5,0.5), ylim=c(-0.4,0.4), cex.axis=2, cex.lab=1.5)
+points(meta.kick, select=which(fact_time.kick[,1]=="May"),col="black",pch=16,cex=2)
+points(meta.kick, select=which(fact_time.kick[,1]=="Oct"),col="black",pch=1,cex=2)
+ordispider(meta.kick, group=fact_time.kick[,1],col=c("green","darkgreen"),label=F,cex=2)
+ordiellipse(meta.kick, group=fact_time.kick[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
+text(0.35,-0.4, label=paste0("Stress: ", round(meta.kick$stress,4)),cex=1.5)
+text(-0.3,0.2, label="May",cex=2.5)
+text(0.4,0.05, label="Oct",cex=2.5)
+text(-0.55,0.37, label="c)", cex=3)
+text(0,0.37, label="kick-samples", cex=2.5)
+
+plot(meta.kick.edna, type="n", xlim=c(-2.7,2), ylim=c(-1,1.5), cex.axis=2, cex.lab=1.5)
+points(meta.kick.edna, select=which(fact_time.edki[,1]=="May"),col="black",pch=16,cex=2)
+points(meta.kick.edna, select=which(fact_time.edki[,1]=="Oct"),col="black",pch=1,cex=2)
+orditorp(meta.kick.edna, display="species",type="n",cex=1.5)
+ordispider(meta.kick.edna, group=fact_type.edki[,1],col=c("blue","green"),label=F,cex=2)
+ordiellipse(meta.kick.edna, group=fact_type.edki[,1],kind="ehull",lty=c(1,3),label=F,lwd=1)
+text(1,-1.4,label=paste0("Stress: ",round(meta.kick.edna$stress,4)),cex=1.5)
+text(-2,1.7,label="eDNA",cex=2.5)
+text(1.3,1,label="kick",cex=2.5)
+text(-2.6,1.8, label="d)", cex=3)
 
 # Common legend
 plot.new()
