@@ -574,11 +574,11 @@ abund.guts = as.data.frame(ratio.guts)
 abund.guts.site = as.data.frame(abund.guts[,!c(colnames(abund.guts) %in% c("sample_id","sample_type"))] %>% group_by(time, site, predator_id) %>% summarise_all(list(sum)))
 
 # replacing predator id with initials
-abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "C.flor"
-abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "C.pseud"
+abund.guts.site[grep("Crangonyx_floridanus", abund.guts.site$predator_id),"predator_id"] <- "Cf"
+abund.guts.site[grep("Crangonyx_pseudogracilis", abund.guts.site$predator_id),"predator_id"] <- "Cp"
 
-abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "C.flor"
-abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "C.pseud"
+abund.guts[grep("Crangonyx_floridanus", abund.guts$predator_id),"predator_id"] <- "Cf"
+abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id"] <- "Cp"
 
 # setting rownames and removing extra variables
 rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$site, abund.guts.site$time, sep="_")
@@ -604,10 +604,10 @@ meta.guts = metaMDS(adonis.guts, trymax=200, distance="euclidean")
 # full symbols for May, hollow symbols for October
 png("R_images/guts_predator_NMDS_euclidean.png", width = 4000, height = 4000, units = "px", res = 300)
 plot(meta.guts, type="n", xlim=c(-1,1.5), ylim=c(-1.5,2))
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseud" & fact_time.guts[,1]=="May"),col="black", pch=17)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseud" & fact_time.guts[,1]=="Oct"),col="black", pch=24)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.flor" & fact_time.guts[,1]=="May"),col="blue", pch=15)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.flor" & fact_time.guts[,1]=="Oct"),col="blue", pch=22)
+points(meta.guts, select=which(fact_predator.guts[,1]=="Cp" & fact_time.guts[,1]=="May"),col="black", pch=17)
+points(meta.guts, select=which(fact_predator.guts[,1]=="Cp" & fact_time.guts[,1]=="Oct"),col="black", pch=24)
+points(meta.guts, select=which(fact_predator.guts[,1]=="Cf" & fact_time.guts[,1]=="May"),col="blue", pch=15)
+points(meta.guts, select=which(fact_predator.guts[,1]=="Cf" & fact_time.guts[,1]=="Oct"),col="blue", pch=22)
 ordispider(meta.guts, group=fact_predator.guts[,1],col=c("blue","orange"),label=T)
 ordiellipse(meta.guts, group=fact_time.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
 text(1,-1,label=paste0("Stress: ",round(meta.guts$stress, 6)))
@@ -1233,10 +1233,10 @@ lay.matrix = matrix(c(1,2,3,4,5,5), ncol=2, nrow=3, byrow=T)
 layout(lay.matrix, heights=c(2,2,1), widths=c(2,2))
 
 plot(meta.guts, type="n", xlim=c(-1,1.5), ylim=c(-1,2), cex.axis=2, cex.lab=1.5)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseud" & fact_time.guts[,1]=="May"),col="black",pch=17,cex=2)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.pseud" & fact_time.guts[,1]=="Oct"),col="black",pch=24,cex=2)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.flor" & fact_time.guts[,1]=="May"),col="black",pch=15,cex=2)
-points(meta.guts, select=which(fact_predator.guts[,1]=="C.flor" & fact_time.guts[,1]=="Oct"),col="black",pch=22,cex=2)
+points(meta.guts, select=which(fact_predator.guts[,1]=="Cp" & fact_time.guts[,1]=="May"),col="black",pch=17,cex=2)
+points(meta.guts, select=which(fact_predator.guts[,1]=="Cp" & fact_time.guts[,1]=="Oct"),col="black",pch=24,cex=2)
+points(meta.guts, select=which(fact_predator.guts[,1]=="Cf" & fact_time.guts[,1]=="May"),col="black",pch=15,cex=2)
+points(meta.guts, select=which(fact_predator.guts[,1]=="Cf" & fact_time.guts[,1]=="Oct"),col="black",pch=22,cex=2)
 ordispider(meta.guts,group=fact_predator.guts[,1],col=c("red","orange"),label=T,cex=2)
 ordiellipse(meta.guts,group=fact_time.guts[,1],kind="ehull",lty=c(1,5),label=F,lwd=1)
 text(1.5,-1,label=paste0("Stress: ",round(meta.guts$stress,4)),cex=1.5)
@@ -1352,7 +1352,7 @@ kick = melt.kick[melt.kick$order == "Amphipoda",] %>%
   theme_bw() +
   coord_flip() +
   facet_grid(time~., scales="free_x") +
-  labs(x="", y="Abundance (count)", title="Amphipods composition") +
+  labs(x="", y="Abundance (count)", title="Amphipod composition") +
   theme(legend.position = "right", plot.title = element_text(size=20), axis.text = element_text(size = 15), 
         strip.text = element_text(size=15), axis.title = element_text(size =15),
         legend.text = element_text(size=15), plot.margin=unit(c(0.25,-0.2,0.25,0.7), unit="cm"))
