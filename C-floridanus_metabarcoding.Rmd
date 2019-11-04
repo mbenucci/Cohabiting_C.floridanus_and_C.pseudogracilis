@@ -583,8 +583,8 @@ ggplot(melt.guts, aes(site, value)) +
 ```
 
 
-```{r transforming into abundances}
-# removing `sample_type` and `sample_id` variables and transforming detections into abundances
+```{r transforming into presence/absence}
+# removing `sample_type` and `sample_id` variables and transforming detections into presence/absence
 ratio.guts[,!c(colnames(ratio.guts) %in% c("time","site","predator_id","sample_id","sample_type"))][ratio.guts[,!c(colnames(ratio.guts) %in% c("time","site","predator_id","sample_id","sample_type"))] > 0] <- 1
 
 abund.guts = as.data.frame(ratio.guts)
