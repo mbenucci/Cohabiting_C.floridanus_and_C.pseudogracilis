@@ -144,6 +144,8 @@ ggplot(full.depth, aes(time, value)) +
   theme_bw() + labs(x="Data sets", y="Sample read depth (N reads)")
 ```
 
+Calculating the read depth before any QC applied.
+
 ```{r mean read depth, include=F}
 may17.reads = subset(may17.reads, select=colSums(may17.reads) > 0)
 oct17.reads = subset(oct17.reads, select=colSums(oct17.reads) > 0)
@@ -152,11 +154,26 @@ oct17.reads = subset(oct17.reads, select=colSums(oct17.reads) > 0)
 mean(may.depth$value)
 sd(may.depth$value)/sqrt(length(may.depth$value))
 
+## Mean values + SE May eDNA
+mean(unlist(may.depth[grep("e",may.depth$variable),"value"]))
+sd(unlist(may.depth[grep("e",may.depth$variable),"value"]))/sqrt(length(unlist(may.depth[grep("e",may.depth$variable),"value"])))
+
+## Mean values + SE May gut contents
+mean(unlist(may.depth[grep("^CH.",may.depth$variable),"value"]))
+sd(unlist(may.depth[grep("^CH.",may.depth$variable),"value"]))/sqrt(length(unlist(may.depth[grep("^CH.",may.depth$variable),"value"])))
+
 ## Mean values + standard error October
 mean(oct.depth$value)
 sd(oct.depth$value)/sqrt(length(oct.depth$value))
 
-# to calculate SE for the read depths
+## Mean values + SE Oct eDNA
+mean(unlist(oct.depth[grep("e",oct.depth$variable),"value"]))
+sd(unlist(oct.depth[grep("e",oct.depth$variable),"value"]))/sqrt(length(unlist(oct.depth[grep("e",oct.depth$variable),"value"])))
+
+## Mean values + SE Oct gut contents
+mean(unlist(oct.depth[grep("^CH.",oct.depth$variable),"value"]))
+sd(unlist(oct.depth[grep("^CH.",oct.depth$variable),"value"]))/sqrt(length(unlist(oct.depth[grep("^CH.",oct.depth$variable),"value"])))
+
 
 hist(colSums(may17.reads), breaks=15)
 hist(colSums(oct17.reads), breaks=15)
