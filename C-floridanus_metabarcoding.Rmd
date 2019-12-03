@@ -33,7 +33,7 @@ ls()
 Setting up the environment for R using the following packages.
 
 ```{r packages loading, include=F}
-pack.list = c("aod","bipartite","boot","cowplot","devtools","dplyr","EcoSimR","ggplot2","ggsignif","gplots","grid","gridExtra","iNEXT","lattice","lme4","lmtest","MASS","mgcv","msa","network","plyr","reshape2","spaa","stringi","tidyr","UpSetR","vegan","zoo")
+pack.list = c("adegenet","aod","ape","bipartite","boot","cowplot","devtools","dplyr","EcoSimR","ggplot2","ggsignif","gplots","grid","gridExtra","iNEXT","lattice","lme4","lmtest","MASS","mgcv","msa","network","pegas","plyr","reshape2","spaa","stringi","tidyr","UpSetR","vegan","zoo")
 new.packages = pack.list[!(pack.list %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos="https://cran.rstudio.com")
 lapply(pack.list, require, character.only=T)
@@ -1413,6 +1413,7 @@ grid.arrange(ga, gb, gc, gd, ncol=1, nrow=4)
 dev.off()
 ```
 
+#12. Sanger sequence aligment
 
 This last chunk requires msa (R-package) and LaTex Live to be installed.
 To install LaTex Live on Ubuntu 16.04 from terminal:
@@ -1448,6 +1449,58 @@ msaPrettyPrint(barcode_alignment, output="pdf",
                askForOverwrite=FALSE)
 ```
 
+#13. Haplotypes network
+
+```{r load DNA file for haplotypes}
+seq_cfcp = read.dna("Crangonyx_confirmation/4-infer_phylogeny/supplementary/MT-CO1@ALL@gt90_trimmed_aln.fasta", format="fasta")
+```
+
+```{r setting rownames}
+rownames(seq_cfcp) = gsub("_Mb-","-Mb_", rownames(seq_cfcp))
+
+for (i in seq(1:length(rownames(seq_cfcp)))){
+#  print(paste(strsplit(rownames(seq_cfcp), split="_")[[i]][2], strsplit(rownames(seq_cfcp), split="_")[[i]][3]))
+  rownames(seq_cfcp)[i] = paste(strsplit(rownames(seq_cfcp), split="_")[[i]][2], strsplit(rownames(seq_cfcp), split="_")[[i]][3])
+#  print("ok")
+}
+
+rownames(seq_cfcp) = gsub("Ci [A-Z0-9]{1,}","Ci", rownames(seq_cfcp))
+rownames(seq_cfcp) = gsub("Uni", "UK", rownames(seq_cfcp))
+```
+
+First we need to remove the outgroup, namely _Crangonyx islandicus_
+
+```{r remove outgroup and create network}
+seq_cfcp = seq_cfcp[grep("Ci", rownames(seq_cfcp), invert=T),]
+
+hap_cfcp = haplotype(seq_cfcp)
+net_cfcp = haploNet(hap_cfcp)
+
+ind_cfcp = with(stack(setNames(attr(hap_cfcp, "index"), rownames(hap_cfcp))),table(hap=ind, individuals=rownames(seq_cfcp)[values]))
+
+colnames(ind_cfcp)
+```
+
+We then remove the singletons, so all haplotypes that were represented by only one sequence.
+
+```{r remove singletons}
+hap_cfcp2 = haplotype(seq_cfcp)
+
+hap_cfcp2 = subset(hap_cfcp2, minfreq=2)
+net_cfcp2 = haploNet(hap_cfcp2)
+
+ind_cfcp2 = with(stack(setNames(attr(hap_cfcp2, "index"), rownames(hap_cfcp2))),table(hap=ind, individuals=rownames(seq_cfcp)[values]))
+```
+
+```{r plot haplotypes no single}
+png("R_images/haplotype_network_publication.png", width = 6000, height = 4000, units = "px", res = 300)
+plot(net_cfcp2, size = attr(net_cfcp2, "freq"), show.mutation=1, scale.ratio=0.5, cex=1.2, label=F, pie=ind_cfcp2)
+legend("topleft", colnames(ind_cfcp2), col=rainbow(ncol(ind_cfcp2)), pch=19, ncol=1)
+dev.off()
+```
+
+# END
+
 ```{r log session info}
 sink("log_session_analysis.txt")
 sessionInfo()
@@ -1466,3 +1519,5 @@ sink()
 ```{r end}
 print("end")
 ```
+
+

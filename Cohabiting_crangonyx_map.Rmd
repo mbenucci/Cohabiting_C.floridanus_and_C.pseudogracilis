@@ -339,6 +339,8 @@ up = ggplot(up_map) +
   theme(plot.margin=unit(c(t=0.25, r=0, b=0, l=0), unit="cm"), panel.border=element_rect(color="black", fill=NA, size=2)) +
   ggsn::scalebar(location="bottomleft", x.min=629500, x.max=631000, y.min=302000, y.max=303100, dist=5, dist_unit="km", st.dist=1, height=0.7, transform=F)
 
+legend()
+
 png("map/sampling_map.png", width=4000, height=4000, units="px", res=300)
 plot_grid(uk, ch, th, na, ky, na, bo, up, ncol=3, nrow=3)
 dev.off()
