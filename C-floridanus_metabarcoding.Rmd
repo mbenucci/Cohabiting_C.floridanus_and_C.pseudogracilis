@@ -1320,6 +1320,8 @@ dev.off()
 name.multi=c("Amphipoda","Cladocera","Copepoda","Diptera","Gastropoda","Oligochaeta","Tricladida")
 col.multi=c("red","cyan3","khaki3","yellow","darkorchid3","tan4","darkgreen")
 
+colnames(food.web) = gsub("Cf","C.floridanus", colnames(food.web))
+colnames(food.web) = gsub("Cp","C.pseudogracilis", colnames(food.web))
 colnames(food.web) = gsub("_", " ", colnames(food.web))
 
 png("R_images/bipartite_network_publication.png", width=4000, height=2500, units="px", res=300)
