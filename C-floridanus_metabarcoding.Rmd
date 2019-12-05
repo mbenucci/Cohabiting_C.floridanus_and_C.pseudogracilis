@@ -1451,11 +1451,14 @@ msaPrettyPrint(barcode_alignment, output="pdf",
 
 #13. Haplotypes network
 
+The file "Crangonyx_confirmation/4-infer_phylogeny/supplementary/MT-CO1@ALL@gt90_trimmed_aln.fasta" was only modified manually to remove the " <unknown description>" from the first sequence (first line of the file), since it was giving errors in the read.dna function. The "unknown description" was introduced during ML tree construction.
+
 ```{r load DNA file for haplotypes}
 seq_cfcp = read.dna("Crangonyx_confirmation/4-infer_phylogeny/supplementary/MT-CO1@ALL@gt90_trimmed_aln.fasta", format="fasta")
 ```
 
 ```{r setting rownames}
+rownames(seq_cfcp) = gsub(" <unknown description>", "", rownames(seq_cfcp))
 rownames(seq_cfcp) = gsub("_Mb-","-Mb_", rownames(seq_cfcp))
 
 for (i in seq(1:length(rownames(seq_cfcp)))){
@@ -1493,9 +1496,11 @@ ind_cfcp2 = with(stack(setNames(attr(hap_cfcp2, "index"), rownames(hap_cfcp2))),
 ```
 
 ```{r plot haplotypes no single}
-png("R_images/haplotype_network_publication.png", width = 6000, height = 4000, units = "px", res = 300)
+png("R_images/haplotype_network_publication.png", width = 3000, height = 4000, units = "px", res = 300)
 plot(net_cfcp2, size = attr(net_cfcp2, "freq"), show.mutation=1, scale.ratio=0.5, cex=1.2, label=F, pie=ind_cfcp2)
-legend("topleft", colnames(ind_cfcp2), col=rainbow(ncol(ind_cfcp2)), pch=19, ncol=1)
+text(0, -32, labels="C. floridanus", cex=2.5)
+text(25, 70, labels="C. pseudogracilis", cex=2.5)
+legend("topleft", colnames(ind_cfcp2), col=rainbow(ncol(ind_cfcp2)), pch=19, ncol=1, cex=1.5)
 dev.off()
 ```
 
