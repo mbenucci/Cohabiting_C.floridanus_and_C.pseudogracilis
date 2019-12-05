@@ -599,6 +599,20 @@ abund.guts[grep("Crangonyx_pseudogracilis", abund.guts$predator_id),"predator_id
 
 # setting rownames and removing extra variables
 rownames(abund.guts.site) = paste(abund.guts.site$predator_id, abund.guts.site$site, abund.guts.site$time, sep="_")
+
+for (i in seq(1:nrow(abund.guts))){
+  if (abund.guts[i,"Crangonyx"] >= 1){
+    if (abund.guts[i,"predator_id"] == "Cp"){
+      print(abund.guts[i,"predator_id"])
+      abund.guts[i,"Crangonyx_floridanus"] <- (abund.guts[i,"Crangonyx"] + abund.guts[i,"Crangonyx_floridanus"])
+    } else if (abund.guts[i,"predator_id"] == "Cf"){
+      print(abund.guts[i,"predator_id"])
+      abund.guts[i,"Crangonyx_pseudogracilis"] <- (abund.guts[i,"Crangonyx"] + abund.guts[i,"Crangonyx_pseudogracilis"])
+    }
+  }
+}
+
+abund.guts = abund.guts[,!c(colnames(abund.guts) %in% "Crangonyx")]
 ```
 
 
