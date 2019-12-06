@@ -481,6 +481,58 @@ oct.post.filter$predator_id[oct.post.filter$sample_id %in% c("CH305","CH310","CH
 oct.clean$predator_id = oct.post.filter$predator_id
 ```
 
+Calculating predator:prey DNA ratio across all gut contents samples
+
+```{r predator:prey ratio set up}
+#sd(x)/sqrt(length(x)
+pred.cf.may = may.post.filter[may.post.filter$predator_id == "Crangonyx_floridanus","Crangonyx_floridanus"]
+prey.cf.may = rowSums(may.post.filter[may.post.filter$predator_id == "Crangonyx_floridanus", !c(colnames(may.post.filter) %in% c("Crangonyx_floridanus","time","site","sample_id","sample_type","predator_id"))])
+
+pred.cp.may = may.post.filter[may.post.filter$predator_id == "Crangonyx_pseudogracilis","Crangonyx_pseudogracilis"]
+prey.cp.may = rowSums(may.post.filter[may.post.filter$predator_id == "Crangonyx_pseudogracilis", !c(colnames(may.post.filter) %in% c("Crangonyx_pseudogracilis","time","site","sample_id","sample_type","predator_id"))])
+
+pred.cf.oct = oct.post.filter[oct.post.filter$predator_id == "Crangonyx_floridanus","Crangonyx_floridanus"]
+prey.cf.oct = rowSums(oct.post.filter[oct.post.filter$predator_id == "Crangonyx_floridanus", !c(colnames(oct.post.filter) %in% c("Crangonyx_floridanus","time","site","sample_id","sample_type","predator_id"))])
+
+pred.cp.oct = oct.post.filter[oct.post.filter$predator_id == "Crangonyx_pseudogracilis","Crangonyx_pseudogracilis"]
+prey.cp.oct = rowSums(oct.post.filter[oct.post.filter$predator_id == "Crangonyx_pseudogracilis", !c(colnames(oct.post.filter) %in% c("Crangonyx_pseudogracilis","time","site","sample_id","sample_type","predator_id"))])
+```
+
+
+```{r predator:prey ratio}
+print("Mean C.floridanus predator - May")
+mean(pred.cf.may)
+sd(pred.cf.may)/sqrt(length(pred.cf.may))
+
+print("Mean C.floridanus preys - May")
+mean(prey.cf.may)
+sd(prey.cf.may)/sqrt(length(prey.cf.may))
+
+print("Mean C.pseudogracilis predator - May")
+mean(pred.cp.may)
+sd(pred.cp.may)/sqrt(length(pred.cp.may))
+
+print("Mean C.pseudogracilis preys - May")
+mean(prey.cp.may)
+sd(pred.cp.may)/sqrt(length(pred.cp.may))
+
+print("Mean C.floridanus predator - Oct")
+mean(pred.cf.oct)
+sd(pred.cf.oct)/sqrt(length(pred.cf.oct))
+
+print("Mean C.floridanus prey - Oct")
+mean(prey.cf.oct)
+sd(prey.cf.oct)/sqrt(length(prey.cf.oct))
+
+print("Mean C.pseudogracilis predator - Oct")
+mean(pred.cp.oct)
+sd(pred.cp.oct)/sqrt(length(pred.cp.oct))
+
+print("Mean C.pseudogracilis prey - Oct")
+mean(prey.cp.oct)
+sd(prey.cp.oct)/sqrt(length(prey.cp.oct))
+```
+
 Now that all variable have been added, the ratio and DNA reads of predators can be set to be equal to 0. This will allow further downstream analysis to calulate accurate indexes of prey diversity and diet breadth without the risk of overinflating.
 
 ```{r removing predator ratio}
@@ -517,58 +569,6 @@ for (i in o.row){
 # Confirming the function worked
 oct.post.filter[o.row,unique(o.col)]
 ```
-
-```{r predator:prey ratio set up}
-#sd(x)/sqrt(length(x)
-pred.cf.may = may.post.filter[may.post.filter$predator_id == "Crangonyx_floridanus","Crangonyx_floridanus"]
-prey.cf.may = rowSums(may.post.filter[may.post.filter$predator_id == "Crangonyx_floridanus", !c(colnames(may.post.filter) %in% c("Crangonyx_floridanus","time","site","sample_id","sample_type","predator_id"))])
-
-pred.cp.may = may.post.filter[may.post.filter$predator_id == "Crangonyx_pseudogracilis","Crangonyx_pseudogracilis"]
-prey.cp.may = rowSums(may.post.filter[may.post.filter$predator_id == "Crangonyx_pseudogracilis", !c(colnames(may.post.filter) %in% c("Crangonyx_pseudogracilis","time","site","sample_id","sample_type","predator_id"))])
-
-
-
-pred.cf.oct = oct.post.filter[oct.post.filter$predator_id == "Crangonyx_floridanus","Crangonyx_floridanus"]
-prey.cf.oct = rowSums(oct.post.filter[oct.post.filter$predator_id == "Crangonyx_floridanus", !c(colnames(oct.post.filter) %in% c("Crangonyx_floridanus","time","site","sample_id","sample_type","predator_id"))])
-
-pred.cp.oct = oct.post.filter[oct.post.filter$predator_id == "Crangonyx_pseudogracilis","Crangonyx_pseudogracilis"]
-prey.cp.oct = rowSums(oct.post.filter[oct.post.filter$predator_id == "Crangonyx_pseudogracilis", !c(colnames(oct.post.filter) %in% c("Crangonyx_pseudogracilis","time","site","sample_id","sample_type","predator_id"))])
-```
-
-```{r predator:prey ratio}
-print("Mean C.floridanus predator - May")
-mean(pred.cf.may)
-sd(pred.cf.may)/sqrt(length(pred.cf.may))
-
-print("Mean C.floridanus preys - May")
-mean(prey.cf.may)
-sd(prey.cf.may)/sqrt(length(prey.cf.may))
-
-print("Mean C.pseudogracilis predator - May")
-mean(pred.cp.may)
-sd(pred.cp.may)/sqrt(length(pred.cp.may))
-
-print("Mean C.pseudogracilis preys - May")
-mean(prey.cp.may)
-sd(pred.cp.may)/sqrt(length(pred.cp.may))
-
-print("Mean C.floridanus predator - Oct")
-mean(pred.cf.oct)
-sd(pred.cf.oct)/sqrt(length(pred.cf.oct))
-
-print("Mean C.floridanus prey - Oct")
-mean(prey.cf.oct)
-sd(prey.cf.oct)/sqrt(length(prey.cf.oct))
-
-print("Mean C.pseudogracilis predator - Oct")
-mean(pred.cp.oct)
-sd(pred.cp.oct)/sqrt(length(pred.cp.oct))
-
-print("Mean C.pseudogracilis prey - Oct")
-mean(prey.cp.oct)
-sd(prey.cp.oct)/sqrt(length(prey.cp.oct))
-```
-
 
 Now that predators DNA ratio have been removed, the focus can move towards the prey id. The current data are going to be saved into ".csv" files before continuing.
 
