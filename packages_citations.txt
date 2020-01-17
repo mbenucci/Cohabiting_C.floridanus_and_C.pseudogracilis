@@ -1,11 +1,11 @@
 
 To cite the adegenet package:
 
-  Jombart, T. (2008) adegenet: a R package for the multivariate analysis of genetic markers.
-  Bioinformatics 24: 1403-1405. doi: 10.1093/bioinformatics/btn129
+  Jombart, T. (2008) adegenet: a R package for the multivariate analysis of genetic markers. Bioinformatics 24:
+  1403-1405. doi: 10.1093/bioinformatics/btn129
 
-  Jombart T. and Ahmed I. (2011) adegenet 1.3-1: new tools for the analysis of genome-wide SNP data.
-  Bioinformatics. doi: 10.1093/bioinformatics/btr521
+  Jombart T. and Ahmed I. (2011) adegenet 1.3-1: new tools for the analysis of genome-wide SNP data. Bioinformatics.
+  doi: 10.1093/bioinformatics/btr521
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -29,8 +29,8 @@ A BibTeX entry for LaTeX users is
 
 To cite ape in a publication use:
 
-  Paradis E. & Schliep K. 2018. ape 5.0: an environment for modern phylogenetics and evolutionary
-  analyses in R. Bioinformatics 35: 526-528.
+  Paradis E. & Schliep K. 2018. ape 5.0: an environment for modern phylogenetics and evolutionary analyses in R.
+  Bioinformatics 35: 526-528.
 
 A BibTeX entry for LaTeX users is
 
@@ -43,21 +43,21 @@ A BibTeX entry for LaTeX users is
     pages = {526-528},
   }
 
-As ape is evolving quickly, you may want to cite also its version number (found with 'library(help =
-ape)' or 'packageVersion("ape")').
+As ape is evolving quickly, you may want to cite also its version number (found with 'library(help = ape)' or
+'packageVersion("ape")').
 
 
-To cite bipartite in publications please use Dormann et al. (2008 R News); for network-level analyses
-Dormann et al. (2009 Open Ecol J) and for species-level analyses Dormann (2011 Network Biology):
+To cite bipartite in publications please use Dormann et al. (2008 R News); for network-level analyses Dormann et al.
+(2009 Open Ecol J) and for species-level analyses Dormann (2011 Network Biology):
 
-  Dormann, C.F., Fruend, J., Bluethgen, N. & Gruber B. 2009. Indices, graphs and null models: analyzing
-  bipartite ecological networks. The Open Ecology Journal, 2, 7-24.
+  Dormann, C.F., Fruend, J., Bluethgen, N. & Gruber B. 2009. Indices, graphs and null models: analyzing bipartite
+  ecological networks. The Open Ecology Journal, 2, 7-24.
 
-  Dormann, C.F., Gruber B. & Fruend, J. (2008). Introducing the bipartite Package: Analysing Ecological
-  Networks. R news Vol 8/2, 8 - 11.
+  Dormann, C.F., Gruber B. & Fruend, J. (2008). Introducing the bipartite Package: Analysing Ecological Networks. R
+  news Vol 8/2, 8 - 11.
 
-  Dormann, C.F. (2011). How to be a specialist? Quantifying specialisation in pollination networks.
-  Network Biology 1, 1 - 20.
+  Dormann, C.F. (2011). How to be a specialist? Quantifying specialisation in pollination networks. Network Biology
+  1, 1 - 20.
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -67,8 +67,8 @@ To cite the 'boot' package in publications use:
 
   Angelo Canty and Brian Ripley (2019). boot: Bootstrap R (S-Plus) Functions. R package version 1.3-22.
 
-  Davison, A. C. & Hinkley, D. V. (1997) Bootstrap Methods and Their Applications. Cambridge University
-  Press, Cambridge. ISBN 0-521-57391-2
+  Davison, A. C. & Hinkley, D. V. (1997) Bootstrap Methods and Their Applications. Cambridge University Press,
+  Cambridge. ISBN 0-521-57391-2
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -76,8 +76,8 @@ To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'to
 
 To cite package ‘cowplot’ in publications use:
 
-  Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package
-  version 0.9.4. https://CRAN.R-project.org/package=cowplot
+  Claus O. Wilke (2019). cowplot: Streamlined Plot Theme and Plot Annotations for 'ggplot2'. R package version
+  0.9.4. https://CRAN.R-project.org/package=cowplot
 
 A BibTeX entry for LaTeX users is
 
@@ -92,8 +92,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘devtools’ in publications use:
 
-  Hadley Wickham, Jim Hester and Winston Chang (2019). devtools: Tools to Make Developing R Packages
-  Easier. R package version 2.0.2. https://CRAN.R-project.org/package=devtools
+  Hadley Wickham, Jim Hester and Winston Chang (2019). devtools: Tools to Make Developing R Packages Easier. R
+  package version 2.0.2. https://CRAN.R-project.org/package=devtools
 
 A BibTeX entry for LaTeX users is
 
@@ -108,8 +108,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘dplyr’ in publications use:
 
-  Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2019). dplyr: A Grammar of Data
-  Manipulation. R package version 0.8.1. https://CRAN.R-project.org/package=dplyr
+  Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2019). dplyr: A Grammar of Data Manipulation. R
+  package version 0.8.1. https://CRAN.R-project.org/package=dplyr
 
 A BibTeX entry for LaTeX users is
 
@@ -122,9 +122,8 @@ A BibTeX entry for LaTeX users is
   }
 
 
-  Nicholas J. Gotelli, Edmund M. Hart and Aaron M. Ellison (2015) EcoSimR: Null model analysis for
-  ecological data. R package version 0.1.0. http://github.com/gotellilab/EcoSimR DOI:
-  10.5281/zenodo.16522
+  Nicholas J. Gotelli, Edmund M. Hart and Aaron M. Ellison (2015) EcoSimR: Null model analysis for ecological data.
+  R package version 0.1.0. http://github.com/gotellilab/EcoSimR DOI: 10.5281/zenodo.16522
 
 A BibTeX entry for LaTeX users is
 
@@ -156,8 +155,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘ggsignif’ in publications use:
 
-  Constantin Ahlmann-Eltze (2019). ggsignif: Significance Brackets for 'ggplot2'. R package version
-  0.5.0. https://CRAN.R-project.org/package=ggsignif
+  Constantin Ahlmann-Eltze (2019). ggsignif: Significance Brackets for 'ggplot2'. R package version 0.5.0.
+  https://CRAN.R-project.org/package=ggsignif
 
 A BibTeX entry for LaTeX users is
 
@@ -172,10 +171,9 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘gplots’ in publications use:
 
-  Gregory R. Warnes, Ben Bolker, Lodewijk Bonebakker, Robert Gentleman, Wolfgang Huber Andy Liaw,
-  Thomas Lumley, Martin Maechler, Arni Magnusson, Steffen Moeller, Marc Schwartz and Bill Venables
-  (2019). gplots: Various R Programming Tools for Plotting Data. R package version 3.0.1.1.
-  https://CRAN.R-project.org/package=gplots
+  Gregory R. Warnes, Ben Bolker, Lodewijk Bonebakker, Robert Gentleman, Wolfgang Huber Andy Liaw, Thomas Lumley,
+  Martin Maechler, Arni Magnusson, Steffen Moeller, Marc Schwartz and Bill Venables (2019). gplots: Various R
+  Programming Tools for Plotting Data. R package version 3.0.1.1. https://CRAN.R-project.org/package=gplots
 
 A BibTeX entry for LaTeX users is
 
@@ -187,14 +185,14 @@ A BibTeX entry for LaTeX users is
     url = {https://CRAN.R-project.org/package=gplots},
   }
 
-ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may
-need manual editing, see ‘help("citation")’.
+ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may need manual
+editing, see ‘help("citation")’.
 
 
 The ‘grid’ package is part of R.  To cite R in publications use:
 
-  R Core Team (2018). R: A language and environment for statistical computing. R Foundation for
-  Statistical Computing, Vienna, Austria. URL https://www.R-project.org/.
+  R Core Team (2018). R: A language and environment for statistical computing. R Foundation for Statistical
+  Computing, Vienna, Austria. URL https://www.R-project.org/.
 
 A BibTeX entry for LaTeX users is
 
@@ -207,14 +205,14 @@ A BibTeX entry for LaTeX users is
     url = {https://www.R-project.org/},
   }
 
-We have invested a lot of time and effort in creating R, please cite it when using it for data
-analysis. See also ‘citation("pkgname")’ for citing R packages.
+We have invested a lot of time and effort in creating R, please cite it when using it for data analysis. See also
+‘citation("pkgname")’ for citing R packages.
 
 
 To cite package ‘gridExtra’ in publications use:
 
-  Baptiste Auguie (2017). gridExtra: Miscellaneous Functions for "Grid" Graphics. R package version
-  2.3. https://CRAN.R-project.org/package=gridExtra
+  Baptiste Auguie (2017). gridExtra: Miscellaneous Functions for "Grid" Graphics. R package version 2.3.
+  https://CRAN.R-project.org/package=gridExtra
 
 A BibTeX entry for LaTeX users is
 
@@ -229,12 +227,12 @@ A BibTeX entry for LaTeX users is
 
 To cite iNEXT in publications use:
 
-  T. C. Hsieh, K. H. Ma and Anne Chao. 2019 iNEXT: iNterpolation and EXTrapolation for species
-  diversity. R package version 2.0.19 URL: http://chao.stat.nthu.edu.tw/blog/software-download/.
+  T. C. Hsieh, K. H. Ma and Anne Chao. 2019 iNEXT: iNterpolation and EXTrapolation for species diversity. R package
+  version 2.0.19 URL: http://chao.stat.nthu.edu.tw/blog/software-download/.
 
-  Anne Chao, Nicholas J. Gotelli, T. C. Hsieh, Elizabeth L. Sander, K. H. Ma, Robert K. Colwell, and
-  Aaron M. Ellison 2014. Rarefaction and extrapolation with Hill numbers: a framework for sampling and
-  estimation in species diversity studies. Ecological Monographs 84:45-67.
+  Anne Chao, Nicholas J. Gotelli, T. C. Hsieh, Elizabeth L. Sander, K. H. Ma, Robert K. Colwell, and Aaron M.
+  Ellison 2014. Rarefaction and extrapolation with Hill numbers: a framework for sampling and estimation in species
+  diversity studies. Ecological Monographs 84:45-67.
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -260,8 +258,8 @@ A BibTeX entry for LaTeX users is
 
 To cite lme4 in publications use:
 
-  Douglas Bates, Martin Maechler, Ben Bolker, Steve Walker (2015). Fitting Linear Mixed-Effects Models
-  Using lme4. Journal of Statistical Software, 67(1), 1-48. doi:10.18637/jss.v067.i01.
+  Douglas Bates, Martin Maechler, Ben Bolker, Steve Walker (2015). Fitting Linear Mixed-Effects Models Using lme4.
+  Journal of Statistical Software, 67(1), 1-48. doi:10.18637/jss.v067.i01.
 
 A BibTeX entry for LaTeX users is
 
@@ -279,8 +277,8 @@ A BibTeX entry for LaTeX users is
 
 To cite lmtest in publications use:
 
-  Achim Zeileis, Torsten Hothorn (2002). Diagnostic Checking in Regression Relationships. R News 2(3),
-  7-10. URL https://CRAN.R-project.org/doc/Rnews/
+  Achim Zeileis, Torsten Hothorn (2002). Diagnostic Checking in Regression Relationships. R News 2(3), 7-10. URL
+  https://CRAN.R-project.org/doc/Rnews/
 
 A BibTeX entry for LaTeX users is
 
@@ -298,8 +296,8 @@ A BibTeX entry for LaTeX users is
 
 To cite the MASS package in publications use:
 
-  Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer,
-  New York. ISBN 0-387-95457-0
+  Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN
+  0-387-95457-0
 
 A BibTeX entry for LaTeX users is
 
@@ -315,24 +313,21 @@ A BibTeX entry for LaTeX users is
   }
 
 
-2011 for generalized additive model method; 2016 for beyond exponential family; 2004 for strictly
-additive GCV based model method and basics of gamm; 2017 for overview; 2003 for thin plate regression
-splines.
+2011 for generalized additive model method; 2016 for beyond exponential family; 2004 for strictly additive GCV based
+model method and basics of gamm; 2017 for overview; 2003 for thin plate regression splines.
 
-  Wood, S.N. (2011) Fast stable restricted maximum likelihood and marginal likelihood estimation of
-  semiparametric generalized linear models. Journal of the Royal Statistical Society (B) 73(1):3-36
+  Wood, S.N. (2011) Fast stable restricted maximum likelihood and marginal likelihood estimation of semiparametric
+  generalized linear models. Journal of the Royal Statistical Society (B) 73(1):3-36
 
-  Wood S.N., N. Pya and B. Saefken (2016) Smoothing parameter and model selection for general smooth
-  models (with discussion). Journal of the American Statistical Association 111:1548-1575.
+  Wood S.N., N. Pya and B. Saefken (2016) Smoothing parameter and model selection for general smooth models (with
+  discussion). Journal of the American Statistical Association 111:1548-1575.
 
-  Wood, S.N. (2004) Stable and efficient multiple smoothing parameter estimation for generalized
-  additive models. Journal of the American Statistical Association. 99:673-686.
+  Wood, S.N. (2004) Stable and efficient multiple smoothing parameter estimation for generalized additive models.
+  Journal of the American Statistical Association. 99:673-686.
 
-  Wood, S.N. (2017) Generalized Additive Models: An Introduction with R (2nd edition). Chapman and
-  Hall/CRC.
+  Wood, S.N. (2017) Generalized Additive Models: An Introduction with R (2nd edition). Chapman and Hall/CRC.
 
-  Wood, S.N. (2003) Thin-plate regression splines. Journal of the Royal Statistical Society (B)
-  65(1):95-114.
+  Wood, S.N. (2003) Thin-plate regression splines. Journal of the Royal Statistical Society (B) 65(1):95-114.
 
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
@@ -340,8 +335,8 @@ To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'to
 
 To cite package 'msa' in publications use:
 
-  U. Bodenhofer, E. Bonatesta, C. Horejs-Kainrath, and S. Hochreiter (2015) msa: an R package for
-  multiple sequence alignment. Bioinformatics 31(24):3997-9999. DOI: 10.1093/bioinformatics/btv176.
+  U. Bodenhofer, E. Bonatesta, C. Horejs-Kainrath, and S. Hochreiter (2015) msa: an R package for multiple sequence
+  alignment. Bioinformatics 31(24):3997-9999. DOI: 10.1093/bioinformatics/btv176.
 
 A BibTeX entry for LaTeX users is
 
@@ -361,30 +356,28 @@ If you use one of the three alignment algorithms, please cite the corresponding 
 To obtain the reference in BibTex format, enter 'toBibtex(citation("msa"))'
 
 
-‘network’ is part of the Statnet suite of packages. If you are using the ‘network’ package for research
-that will be published, we request that you acknowledge this by citing the following. For BibTeX
-format, use toBibtex(citation("network")).
+‘network’ is part of the Statnet suite of packages. If you are using the ‘network’ package for research that will be
+published, we request that you acknowledge this by citing the following. For BibTeX format, use
+toBibtex(citation("network")).
 
-Butts C (2015). _network: Classes for Relational Data_. The Statnet Project (<URL:
-http://www.statnet.org>). R package version 1.13.0.1, <URL:
-https://CRAN.R-project.org/package=network>.
+Butts C (2015). _network: Classes for Relational Data_. The Statnet Project (<URL: http://www.statnet.org>). R
+package version 1.13.0.1, <URL: https://CRAN.R-project.org/package=network>.
 
-Butts C (2008). “network: a Package for Managing Relational Data in R.” _Journal of Statistical
-Software_, *24*(2). <URL: http://www.jstatsoft.org/v24/i02/paper>.
+Butts C (2008). “network: a Package for Managing Relational Data in R.” _Journal of Statistical Software_, *24*(2).
+<URL: http://www.jstatsoft.org/v24/i02/paper>.
 
-Some additional information regarding the C-level network API can be found in the README file within
-the network.api subdirectory under the package "inst" directory -- check your installed library tree.
-We have invested a lot of time and effort in creating the Statnet suite of packages for use by other
-researchers. Please cite it in all papers where it is used. The package ‘network’ is distributed under
-the terms of the license GPL (>= 2).
+Some additional information regarding the C-level network API can be found in the README file within the network.api
+subdirectory under the package "inst" directory -- check your installed library tree. We have invested a lot of time
+and effort in creating the Statnet suite of packages for use by other researchers. Please cite it in all papers
+where it is used. The package ‘network’ is distributed under the terms of the license GPL (>= 2).
 To see these entries in BibTeX format, use 'print(<citation>, bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
 
 
 To cite pegas in a publication use:
 
-  Paradis E. 2010. pegas: an R package for population genetics with an integrated-modular approach.
-  Bioinformatics 26: 419-420.
+  Paradis E. 2010. pegas: an R package for population genetics with an integrated-modular approach. Bioinformatics
+  26: 419-420.
 
 A BibTeX entry for LaTeX users is
 
@@ -397,14 +390,13 @@ A BibTeX entry for LaTeX users is
     pages = {419-420},
   }
 
-As pegas is evolving quickly, you may want to cite also its version number (found with 'library(help =
-pegas)').
+As pegas is evolving quickly, you may want to cite also its version number (found with 'library(help = pegas)').
 
 
 To cite plyr in publications use:
 
-  Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data Analysis. Journal of Statistical
-  Software, 40(1), 1-29. URL http://www.jstatsoft.org/v40/i01/.
+  Hadley Wickham (2011). The Split-Apply-Combine Strategy for Data Analysis. Journal of Statistical Software, 40(1),
+  1-29. URL http://www.jstatsoft.org/v40/i01/.
 
 A BibTeX entry for LaTeX users is
 
@@ -422,8 +414,8 @@ A BibTeX entry for LaTeX users is
 
 To cite reshape2 in publications use:
 
-  Hadley Wickham (2007). Reshaping Data with the reshape Package. Journal of Statistical Software,
-  21(12), 1-20. URL http://www.jstatsoft.org/v21/i12/.
+  Hadley Wickham (2007). Reshaping Data with the reshape Package. Journal of Statistical Software, 21(12), 1-20. URL
+  http://www.jstatsoft.org/v21/i12/.
 
 A BibTeX entry for LaTeX users is
 
@@ -472,8 +464,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘tidyr’ in publications use:
 
-  Hadley Wickham and Lionel Henry (2019). tidyr: Easily Tidy Data with 'spread()' and 'gather()'
-  Functions. R package version 0.8.3. https://CRAN.R-project.org/package=tidyr
+  Hadley Wickham and Lionel Henry (2019). tidyr: Easily Tidy Data with 'spread()' and 'gather()' Functions. R
+  package version 0.8.3. https://CRAN.R-project.org/package=tidyr
 
 A BibTeX entry for LaTeX users is
 
@@ -488,8 +480,8 @@ A BibTeX entry for LaTeX users is
 
 To cite package ‘UpSetR’ in publications use:
 
-  Nils Gehlenborg (2017). UpSetR: A More Scalable Alternative to Venn and Euler Diagrams for
-  Visualizing Intersecting Sets. R package version 1.3.3. https://CRAN.R-project.org/package=UpSetR
+  Nils Gehlenborg (2017). UpSetR: A More Scalable Alternative to Venn and Euler Diagrams for Visualizing
+  Intersecting Sets. R package version 1.3.3. https://CRAN.R-project.org/package=UpSetR
 
 A BibTeX entry for LaTeX users is
 
@@ -505,10 +497,9 @@ Visualizing Intersecting Sets},
 
 To cite package ‘vegan’ in publications use:
 
-  Jari Oksanen, F. Guillaume Blanchet, Michael Friendly, Roeland Kindt, Pierre Legendre, Dan McGlinn,
-  Peter R. Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, Eduard Szoecs
-  and Helene Wagner (2019). vegan: Community Ecology Package. R package version 2.5-5.
-  https://CRAN.R-project.org/package=vegan
+  Jari Oksanen, F. Guillaume Blanchet, Michael Friendly, Roeland Kindt, Pierre Legendre, Dan McGlinn, Peter R.
+  Minchin, R. B. O'Hara, Gavin L. Simpson, Peter Solymos, M. Henry H. Stevens, Eduard Szoecs and Helene Wagner
+  (2019). vegan: Community Ecology Package. R package version 2.5-5. https://CRAN.R-project.org/package=vegan
 
 A BibTeX entry for LaTeX users is
 
@@ -520,14 +511,14 @@ A BibTeX entry for LaTeX users is
     url = {https://CRAN.R-project.org/package=vegan},
   }
 
-ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may
-need manual editing, see ‘help("citation")’.
+ATTENTION: This citation information has been auto-generated from the package DESCRIPTION file and may need manual
+editing, see ‘help("citation")’.
 
 
 To cite zoo in publications use:
 
-  Achim Zeileis and Gabor Grothendieck (2005). zoo: S3 Infrastructure for Regular and Irregular Time
-  Series. Journal of Statistical Software, 14(6), 1-27. doi:10.18637/jss.v014.i06
+  Achim Zeileis and Gabor Grothendieck (2005). zoo: S3 Infrastructure for Regular and Irregular Time Series. Journal
+  of Statistical Software, 14(6), 1-27. doi:10.18637/jss.v014.i06
 
 A BibTeX entry for LaTeX users is
 
